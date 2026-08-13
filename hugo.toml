@@ -1,4 +1,4 @@
-baseURL = 'https://yourname.pages.dev/'   # потім заміниш
+baseURL = 'https://site-for.pages.dev/'   # потім заміниш
 locale = "en-us" 
 title = 'HomeLab Starter'
 theme = 'PaperMod'
@@ -44,7 +44,7 @@ enableGitInfo = true
 
   [[params.socialIcons]]
     name = "github"
-    url = "https://github.com/yourusername"
+    url = "https://github.com/Vosikkk"
 
 [menu]
   [[menu.main]]
