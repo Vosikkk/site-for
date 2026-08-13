@@ -1,0 +1,59 @@
+baseURL = 'https://yourname.pages.dev/'   # потім заміниш
+languageCode = 'en-us'
+title = 'HomeLab Starter'
+theme = 'PaperMod'
+
+enableRobotsTXT = true
+enableGitInfo = true
+
+[pagination]
+  pagerSize = 10
+
+[params]
+  env = 'production'
+  description = 'Practical guides for building and running a modern homelab in 2026'
+  author = 'Your Name'
+  defaultTheme = 'auto'          # auto / dark / light
+  ShowShareButtons = true
+  ShowReadingTime = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+  ShowRssButtonInSectionTermList = true
+  UseHugoToc = true
+  disableSpecial1stPost = false
+  disableScrollToTop = false
+  comments = false
+  hidemeta = false
+  hideSummary = false
+  showtoc = true
+  tocopen = false
+
+  [params.assets]
+    disableHLJS = false
+    disableFingerprinting = false
+
+  [params.label]
+    text = "HomeLab Starter"
+    # icon = "/favicon.ico"
+
+  [params.homeInfoParams]
+    Title = "Practical Homelab Guides"
+    Content = "Clear, no-fluff guides to help you build and run a modern homelab in 2026. From beginner setups to Proxmox, self-hosting and more."
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/yourusername"
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 10
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 20
