@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Beginners on HomeLab Starter</title>
-    <link>http://localhost:1313/tags/beginners/</link>
-    <description>Recent content in Beginners on HomeLab Starter</description>
+    <title>Mini Pc on HomeLab Starter</title>
+    <link>http://localhost:1313/tags/mini-pc/</link>
+    <description>Recent content in Mini Pc on HomeLab Starter</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 13 Aug 2026 22:53:31 +0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/beginners/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/mini-pc/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Best Home Lab for Beginners 2026</title>
       <link>http://localhost:1313/posts/best-home-lab-for-beginners-2026/</link>

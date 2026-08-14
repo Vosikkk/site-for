@@ -8,7 +8,7 @@
 <title>Homelab | HomeLab Starter</title>
 <meta name="keywords" content="">
 <meta name="description" content="Practical guides for building and running a modern homelab in 2026">
-<meta name="author" content="Your Name">
+<meta name="author" content="Vosik">
 <link rel="canonical" href="http://localhost:1313/tags/homelab/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
@@ -152,20 +152,65 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Best Home Lab for Beginners 2026
+    <h2 class="entry-hint-parent">Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One
     </h2>
   </header>
   <div class="entry-content">
-    <p> Excellent community support and helper scripts It has a slightly steeper learning curve than plain Docker, but the flexibility is worth it for most people.
-Easier alternatives if Proxmox feels intimidating at first:
-Docker on Debian or Ubuntu CasaOS (very beginner-friendly) Unraid (paid, extremely easy for storage-focused labs) Essential Services for Your First Month Start with these:
-Dashboard — Homepage or Homarr DNS-level ad blocking — AdGuard Home or Pi-hole Password manager — Vaultwarden Photo management — Immich (excellent Google Photos alternative) Media server — Jellyfin (optional) Monitoring — Uptime Kuma This combination already feels like a real, useful homelab.
+    <p>This is one of the most confusing Proxmox errors, because it usually shows up after you’ve already done the “obvious” fix — installed the guest agent, confirmed it’s running inside the VM, and it still says not running on the Proxmox side. The reason is that “guest agent not running” can mean five or six genuinely different things, and the error message doesn’t tell you which one you’re dealing with.
 ...</p>
   </div>
   <footer class="entry-footer">
 
-<span title='2026-08-13 19:20:00 +0300 EEST'>August 13, 2026</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>180 words</span>&nbsp;·&nbsp;<span>Your Name</span></footer>
+<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>732 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One" href="http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Proxmox Wake-on-LAN Not Working? You&#39;re Probably Solving Two Different Problems
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Almost every Proxmox WoL thread is actually two unrelated conversations happening at once, because “wake-on-lan on Proxmox” means one of two very different things depending on what you’re trying to wake up:
+Waking the physical Proxmox host from a full shutdown — this is regular hardware WoL, and it works, with some Proxmox-specific gotchas. Waking a VM that’s powered off — this is a different problem entirely, and traditional magic-packet WoL fundamentally doesn’t work for it, because a VM’s network card isn’t a physical device that can sit in a low-power state. If you’ve been mixing solutions from both categories and nothing works, that’s why. Let’s do them separately.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>842 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Proxmox Wake-on-LAN Not Working? You&#39;re Probably Solving Two Different Problems" href="http://localhost:1313/posts/proxmox-wake-on-lan-not-working/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Best Home Lab for Beginners 2026
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Starting a homelab in 2026 is one of the smartest tech decisions you can make if you want to learn real skills, take back control of your data, and run useful services at home without paying monthly subscriptions.
+This guide is written specifically for beginners. No prior knowledge of Proxmox, containers, or reverse proxies is required. By the end you will have a clear and realistic path from zero to a working homelab.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-13 10:00:00 +0300 EEST'>August 13, 2026</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>1005 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
   <a class="entry-link" aria-label="post link to Best Home Lab for Beginners 2026" href="http://localhost:1313/posts/best-home-lab-for-beginners-2026/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Proxmox &#39;No Valid Subscription&#39;: Why It Happens and How to Fix It (PVE 8 &amp; 9)
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>If you just installed Proxmox VE and you’re seeing a “No valid subscription” popup every time you log into the web UI — or apt update is failing with a 401 error — don’t panic. Nothing is broken. This is expected behavior on a fresh install without a paid subscription, and it’s a two-minute fix.
+There are actually two separate issues hiding under one confusing message, and most guides mix them together. Let’s untangle them.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-13 00:00:00 +0000 UTC'>August 13, 2026</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>761 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Proxmox &#39;No Valid Subscription&#39;: Why It Happens and How to Fix It (PVE 8 & 9)" href="http://localhost:1313/posts/proxmox-no-valid-subscription-fix/"></a>
 </article>
     </main>
     

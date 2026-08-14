@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Proxmox on HomeLab Starter</title>
-    <link>http://localhost:1313/tags/proxmox/</link>
+    <link>http://localhost:1313/categories/proxmox/</link>
     <description>Recent content in Proxmox on HomeLab Starter</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 14 Aug 2026 08:32:26 +0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/proxmox/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/categories/proxmox/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One</title>
       <link>http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/</link>
@@ -21,13 +21,6 @@
       <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/proxmox-wake-on-lan-not-working/</guid>
       <description>Wake-on-LAN failing on Proxmox? There are two completely separate WoL problems people mean by this — waking the physical host, and waking a VM. Here&amp;#39;s both.</description>
-    </item>
-    <item>
-      <title>Best Home Lab for Beginners 2026</title>
-      <link>http://localhost:1313/posts/best-home-lab-for-beginners-2026/</link>
-      <pubDate>Thu, 13 Aug 2026 10:00:00 +0300</pubDate>
-      <guid>http://localhost:1313/posts/best-home-lab-for-beginners-2026/</guid>
-      <description>Complete beginner-friendly guide to building a practical and useful home lab in 2026. Realistic hardware recommendations, software stack, budget tiers, and a clear 14-day launch plan.</description>
     </item>
     <item>
       <title>Proxmox &#39;No Valid Subscription&#39;: Why It Happens and How to Fix It (PVE 8 &amp; 9)</title>

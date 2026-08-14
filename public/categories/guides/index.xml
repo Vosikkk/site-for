@@ -6,34 +6,14 @@
     <description>Recent content in Guides on HomeLab Starter</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Aug 2026 19:13:38 +0300</lastBuildDate>
+    <lastBuildDate>Thu, 13 Aug 2026 22:53:31 +0300</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/guides/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Best Home Lab for Beginners 2026</title>
       <link>http://localhost:1313/posts/best-home-lab-for-beginners-2026/</link>
-      <pubDate>Thu, 13 Aug 2026 19:20:00 +0300</pubDate>
+      <pubDate>Thu, 13 Aug 2026 10:00:00 +0300</pubDate>
       <guid>http://localhost:1313/posts/best-home-lab-for-beginners-2026/</guid>
-      <description>&lt;ul&gt;
-&lt;li&gt;Excellent community support and helper scripts&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;It has a slightly steeper learning curve than plain Docker, but the flexibility is worth it for most people.&lt;/p&gt;
-&lt;p&gt;Easier alternatives if Proxmox feels intimidating at first:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Docker on Debian or Ubuntu&lt;/li&gt;
-&lt;li&gt;CasaOS (very beginner-friendly)&lt;/li&gt;
-&lt;li&gt;Unraid (paid, extremely easy for storage-focused labs)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;essential-services-for-your-first-month&#34;&gt;Essential Services for Your First Month&lt;/h4&gt;
-&lt;p&gt;Start with these:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Dashboard — Homepage or Homarr&lt;/li&gt;
-&lt;li&gt;DNS-level ad blocking — AdGuard Home or Pi-hole&lt;/li&gt;
-&lt;li&gt;Password manager — Vaultwarden&lt;/li&gt;
-&lt;li&gt;Photo management — Immich (excellent Google Photos alternative)&lt;/li&gt;
-&lt;li&gt;Media server — Jellyfin (optional)&lt;/li&gt;
-&lt;li&gt;Monitoring — Uptime Kuma&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;This combination already feels like a real, useful homelab.&lt;/p&gt;</description>
+      <description>Complete beginner-friendly guide to building a practical and useful home lab in 2026. Realistic hardware recommendations, software stack, budget tiers, and a clear 14-day launch plan.</description>
     </item>
   </channel>
 </rss>
