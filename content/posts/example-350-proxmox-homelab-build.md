@@ -1,6 +1,6 @@
 ---
 title: "A $350 Proxmox Home Lab: Example Build Based on Current Pricing (2026)"
-date: 2026-08-14T12:00:00+03:00
+date: 2026-08-14
 draft: false
 tags: ["homelab", "proxmox", "mini pc", "hardware"]
 categories: ["Guides"]
