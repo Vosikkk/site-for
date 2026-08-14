@@ -1,6 +1,6 @@
-baseURL = 'https://site-for.pages.dev/'   # потім заміниш
+baseURL = 'https://runahomelab.com/'   # потім заміниш
 locale = "en-US" 
-title = 'HomeLab Starter'
+title = 'Run a Home Lab'
 theme = 'PaperMod'
 
 enableRobotsTXT = true
@@ -35,7 +35,7 @@ enableGitInfo = true
     disableFingerprinting = false
 
   [params.label]
-    text = "HomeLab Starter"
+    text = "Run a Home Lab"
     icon = "/favicon.ico"
 
   [params.homeInfoParams]
