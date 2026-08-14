@@ -1,5 +1,5 @@
 baseURL = 'https://site-for.pages.dev/'   # потім заміниш
-locale = "en-us" 
+locale = "en-US" 
 title = 'HomeLab Starter'
 theme = 'PaperMod'
 
@@ -36,7 +36,7 @@ enableGitInfo = true
 
   [params.label]
     text = "HomeLab Starter"
-    # icon = "/favicon.ico"
+    icon = "/favicon.ico"
 
   [params.homeInfoParams]
     Title = "Practical Homelab Guides"

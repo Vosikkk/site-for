@@ -160,6 +160,17 @@ Minimum RAM?
 Should beginners buy used enterprise servers?  
 Usually no. They are loud, power-hungry, and overkill for most beginner use cases.
 
+### Common Issues You'll Hit Early On
+
+Once your lab is up and running, a few specific problems tend to show up in the first week or two — especially if you're on Proxmox. Here's what to check when you hit them:
+
+- **["No valid subscription" popup or apt update errors](/posts/proxmox-no-valid-subscription-fix/)** — expected on any install without a paid subscription, two-minute fix.
+- **["Guest agent is not running" even though it clearly is](/posts/proxmox-guest-agent-not-running-fix/)** — usually a virtio-serial channel issue, not the agent itself.
+- **[Wake-on-LAN not working](/posts/proxmox-wake-on-lan-not-working/)** — there are two separate WoL problems people run into (waking the host vs. waking a VM), covered separately.
+
+Bookmark this page — you'll likely hit at least one of these in your first month.
+
+
 ### Final Recommendations
 
 For most beginners in 2026 the best path is:
