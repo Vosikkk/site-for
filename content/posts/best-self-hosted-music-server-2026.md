@@ -4,7 +4,6 @@ date: 2026-08-14
 draft: false
 description: "Comparing the three most popular self-hosted music streaming servers — Navidrome, Funkwhale, and Airsonic-Advanced — on resource usage, mobile apps, and setup complexity."
 tags: ["self-hosting", "homelab", "music"]
-categories: ["Self-Hosting"]
 ShowToc: true
 TocOpen: true
 ---

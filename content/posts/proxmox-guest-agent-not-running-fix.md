@@ -4,7 +4,6 @@ date: 2026-08-14
 draft: false
 description: "Proxmox showing 'QEMU guest agent is not running' even though the agent is clearly installed and started? Here's every common cause, for both Linux and Windows guests."
 tags: ["proxmox", "homelab", "troubleshooting"]
-categories: ["Proxmox"]
 author: "Vosik"
 ShowToc: true
 TocOpen: true

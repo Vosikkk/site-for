@@ -4,7 +4,6 @@ date: 2026-08-16
 draft: false
 description: "How to build an Active Directory lab on Proxmox — domain controller setup, client join, and why it's one of the most valuable skills you can practice at home."
 tags: ["proxmox", "homelab", "networking", "windows"]
-categories: ["Guides"]
 ShowToc: true
 TocOpen: true
 ---

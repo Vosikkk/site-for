@@ -4,7 +4,6 @@ date: 2026-08-14
 draft: false
 description: "Wake-on-LAN failing on Proxmox? There are two completely separate WoL problems people mean by this — waking the physical host, and waking a VM. Here's both."
 tags: ["proxmox", "homelab", "troubleshooting", "networking"]
-categories: ["Proxmox"]
 author: "Vosik"
 ShowToc: true
 TocOpen: true

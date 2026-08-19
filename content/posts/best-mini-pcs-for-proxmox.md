@@ -4,7 +4,6 @@ date: 2026-08-17
 draft: false
 description: "Looking for the best Mini PC for Proxmox? Compare virtualization, RAM, NVMe storage, networking and expansion options for a practical home lab."
 tags: ["proxmox", "homelab", "hardware", "mini pc"]
-categories: ["Guides"]
 ShowToc: true
 TocOpen: true
 ---

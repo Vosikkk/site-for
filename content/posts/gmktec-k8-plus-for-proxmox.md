@@ -4,7 +4,6 @@ date: 2026-08-17
 draft: false
 description: "A hands-on setup and verification walkthrough for running Proxmox on the GMKtec K8 Plus — IOMMU groups, PCI passthrough, and what its dual 2.5GbE and OCuLink port are actually good for in a home lab."
 tags: ["proxmox", "homelab", "hardware", "mini pc"]
-categories: ["Guides"]
 ShowToc: true
 TocOpen: true
 ---

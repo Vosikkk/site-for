@@ -4,7 +4,6 @@ date: 2026-08-13
 draft: false
 description: "Proxmox showing a 'No valid subscription' popup or apt update errors? Here's exactly why it happens and two separate fixes for PVE 8 and PVE 9."
 tags: ["proxmox", "homelab", "troubleshooting"]
-categories: ["Proxmox"]
 author: "Vosik"
 ShowToc: true
 TocOpen: true

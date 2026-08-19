@@ -3,7 +3,6 @@ title: "Best Home Lab for Beginners 2026"
 date: 2026-08-13T10:00:00+03:00
 draft: false
 tags: ["homelab", "beginners", "proxmox", "self-hosting", "mini pc"]
-categories: ["Guides"]
 description: "Complete beginner-friendly guide to building a practical and useful home lab in 2026. Realistic hardware recommendations, software stack, budget tiers, and a clear 14-day launch plan."
 ShowToc: true
 TocOpen: false

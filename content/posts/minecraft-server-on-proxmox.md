@@ -4,7 +4,6 @@ date: 2026-08-16
 draft: false
 description: "A complete guide to self-hosting a Minecraft server on Proxmox — whether to use an LXC container or a VM, Java Edition vs Bedrock, and realistic resource allocation."
 tags: ["proxmox", "homelab", "self-hosting", "minecraft"]
-categories: ["Self-Hosting"]
 ShowToc: true
 TocOpen: true
 ---
