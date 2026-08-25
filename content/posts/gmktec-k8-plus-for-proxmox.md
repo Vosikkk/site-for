@@ -1,11 +1,10 @@
 ---
 title: "GMKtec K8 Plus for Proxmox: Is It Actually a Good Home Lab Server?"
 date: 2026-08-17
-draft: false
 description: "A hands-on setup and verification walkthrough for running Proxmox on the GMKtec K8 Plus — IOMMU groups, PCI passthrough, and what its dual 2.5GbE and OCuLink port are actually good for in a home lab."
 tags: ["proxmox", "homelab", "hardware", "mini pc"]
 ShowToc: true
-TocOpen: true
+TocOpen: false
 ---
 
 Our [best mini PCs for Proxmox guide](/posts/best-mini-pcs-for-proxmox/) covers why the GMKtec K8 Plus is worth considering — dual 2.5GbE, two NVMe slots, OCuLink expansion. This article goes further: an actual setup and verification walkthrough on this specific hardware, covering the things a spec sheet can't tell you — whether IOMMU actually gives you usable passthrough groups, and what the OCuLink port is realistically good for in a home lab context rather than just gaming.
@@ -59,28 +58,43 @@ The practical home lab use case: running a router/firewall VM (pfSense or OPNsen
 
 The K8 Plus uses a dual-fan cooling setup with the Ryzen 7 8845HS configurable across 35W to 70W TDP profiles in BIOS. For a 24/7 home lab host (as opposed to gaming, which is more bursty), running a lower or "balanced" power profile rather than the maximum performance mode is worth trying first — you lose little for typical virtualization workloads and gain meaningfully on noise and heat over years of continuous operation. Check your BIOS's power/performance mode setting after installation and adjust based on your actual workload rather than defaulting to maximum performance.
 
+## Known Issues & Community Reports
+
+The K8 Plus's dual NIC is built on Intel's i226V, which uses the same `igc` kernel driver family as the older I225-V. There are active community threads (Proxmox forum, July–August 2026) reporting a NETDEV watchdog reset loop on this driver family specifically on Proxmox's newer 7.0.x kernel series — the interface repeatedly times out, resets, and renegotiates the link, cycling roughly every 10 seconds. Reports describe the same hardware working stably on the older 6.17.x kernel line, with no fix identified yet as of this writing. We haven't reproduced this ourselves on the K8 Plus specifically, and it's not confirmed whether i226V is affected in the same way as I225-V — but if you hit unexplained NIC drops after a kernel update on this machine, checking `dmesg` for repeated "NETDEV WATCHDOG" and "Reset adapter" lines is worth doing before assuming a hardware fault, and pinning back to a 6.17.x kernel is the community-reported workaround while this is unresolved.
+
+Beyond that, we haven't seen widespread complaints specific to this unit beyond the general Proxmox-on-consumer-hardware Secure Boot and interface-naming quirks already covered above.
+
+## What We Cannot Confirm
+
+We tested Secure Boot behavior, IOMMU group layout, and basic 2.5GbE throughput firsthand on this unit. We have not independently verified:
+
+- **Long-term thermal behavior** under sustained 24/7 load over months, as opposed to the shorter testing window covered here
+- **Noise levels in absolute terms** (dB at a measured distance) — the guidance above is based on relative behavior between power profiles, not measured acoustic figures
+- **Whether the NETDEV watchdog issue described above actually affects this unit's i226V chips** — the community reports we found concern I225-V primarily, with I226 mentioned as a related but not confirmed-identical case
+
+If you've run this specific machine long-term and have data on any of these, we'd genuinely like to hear about it.
+
 ## Who This Machine Is Actually For
 
 **Good fit:**
+
 - You want to run a router/firewall VM as part of your lab
 - You're planning any PCI passthrough (eGPU, capture card, dedicated NIC)
 - You want room to add an external OCuLink device later without buying new hardware
 
 **Better off with something simpler (like the SER8):**
+
 - Single-node lab with no networking experimentation planned
 - Noise is a bigger priority than expansion headroom
 - You don't have a specific passthrough use case in mind
 
 ## FAQ
 
-**Do I need to buy anything extra to use the OCuLink port, or does it work out of the box?**
-The port itself is built in and functional immediately, but you need a separate OCuLink-to-PCIe adapter or eGPU dock to actually connect something to it — the port alone doesn't include one.
+**Do I need to buy anything extra to use the OCuLink port, or does it work out of the box?** The port itself is built in and functional immediately, but you need a separate OCuLink-to-PCIe adapter or eGPU dock to actually connect something to it — the port alone doesn't include one.
 
-**Does enabling IOMMU in BIOS affect performance if I'm not using passthrough?**
-No measurable impact for typical home lab workloads. There's no reason to leave it disabled even if you're not using passthrough yet — better to have it available for when you do.
+**Does enabling IOMMU in BIOS affect performance if I'm not using passthrough?** No measurable impact for typical home lab workloads. There's no reason to leave it disabled even if you're not using passthrough yet — better to have it available for when you do.
 
-**Is the fan noise noticeable in a home office or bedroom setup?**
-This depends heavily on which power profile you run and your case's placement/airflow — running a lower TDP profile (discussed above) is the most effective lever if noise matters to you, more so than any physical placement trick.
+**Is the fan noise noticeable in a home office or bedroom setup?** This depends heavily on which power profile you run and your case's placement/airflow — running a lower TDP profile (discussed above) is the most effective lever if noise matters to you, more so than any physical placement trick.
 
 ---
 
