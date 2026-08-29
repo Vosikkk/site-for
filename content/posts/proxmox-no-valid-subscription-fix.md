@@ -5,11 +5,10 @@ draft: false
 description: "Fix Proxmox “no valid subscription” for apt on PVE 8 and 9, then optionally remove the web UI nag. Two separate problems, two fixes."
 tags: ["proxmox", "homelab", "troubleshooting"]
 author: "Vosik"
+headline: "Proxmox No Valid Subscription: Why It Happens and How to Fix It (PVE 8 & 9)"
 ShowToc: true
 TocOpen: true
 ---
-
-# Proxmox No Valid Subscription: Why It Happens and How to Fix It (PVE 8 & 9)
 
 If you just installed Proxmox VE and you're seeing a "No valid subscription" popup every time you log into the web UI — or `apt update` is failing with a 401 error — don't panic. Nothing is broken. This is expected behavior on a fresh install without a paid subscription, and it's a two-minute fix.
 

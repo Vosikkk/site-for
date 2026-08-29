@@ -4,11 +4,10 @@ date: 2026-08-17
 draft: false
 description: "Best mini PC for Proxmox in 2026 — GMKtec K8 Plus, Beelink SER8, N150 budget boxes, 10GbE class machines, and used Dell/Lenovo tinies."
 tags: [mini-pc, proxmox, hardware, homelab]
+headline: "Best Mini PC for Proxmox in 2026: What Actually Matters"
 ShowToc: true
 TocOpen: true
 ---
-
-# Best Mini PC for Proxmox in 2026: What Actually Matters
 
 If you're building a Proxmox home lab, you don't necessarily need a large server.
 
