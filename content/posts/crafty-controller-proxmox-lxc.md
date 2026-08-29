@@ -8,8 +8,6 @@ ShowToc: true
 TocOpen: true
 ---
 
-# Crafty Controller on Proxmox LXC: Minecraft Server Manager
-
 You already can run a raw Paper/Vanilla jar in an LXC. Crafty Controller is the layer on top: a web UI to start/stop servers, edit files, pull backups, and keep more than one Minecraft version without SSH-ing into the box every time.
 
 This sits next to the [Minecraft-on-Proxmox guide](/posts/minecraft-server-on-proxmox/). That post is "LXC vs VM, Java vs Bedrock." This one is "how to manage those servers once they exist."
