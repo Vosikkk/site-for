@@ -1,17 +1,14 @@
 baseURL = 'https://runahomelab.com/'   # потім заміниш
 locale = "en-US" 
-title = 'Run a Home Lab'
+title = 'Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)'
 theme = 'PaperMod'
-
 enableRobotsTXT = true
 enableGitInfo = true
-
 [pagination]
   pagerSize = 10
-
 [params]
   env = 'production'
-  description = 'Practical guides for building and running a modern homelab in 2026'
+  description = 'Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.'
   author = 'Vosik'
   defaultTheme = 'auto'          # auto / dark / light
   ShowShareButtons = false
@@ -29,23 +26,18 @@ enableGitInfo = true
   hideSummary = false
   showtoc = true
   tocopen = false
-
   [params.assets]
     disableHLJS = false
     disableFingerprinting = false
-
   [params.label]
     text = "Run a Home Lab"
     icon = "/favicon.ico"
-
   [params.homeInfoParams]
-    Title = "Practical Homelab Guides"
-    Content = "Clear, no-fluff guides to help you build and run a modern homelab in 2026. From beginner setups to Proxmox, self-hosting and more."
-
+    Title = "Practical Homelab Guides for Proxmox and Self-Hosting"
+    Content = "Clear Proxmox fixes, mini PC picks, and self-hosted app guides. No fluff, current for 2026."
   [[params.socialIcons]]
     name = "github"
     url = "https://github.com/Vosikkk"
-
 [menu]
   [[menu.main]]
     identifier = "posts"
