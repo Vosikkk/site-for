@@ -1,8 +1,8 @@
 ---
-title: "How to Host a Minecraft Server on Proxmox (LXC vs VM, Java vs Bedrock)"
+title: "Minecraft Server on Proxmox: LXC vs VM, Java vs Bedrock"
 date: 2026-08-16
 draft: false
-description: "A complete guide to self-hosting a Minecraft server on Proxmox — whether to use an LXC container or a VM, Java Edition vs Bedrock, and realistic resource allocation."
+description: "Host a Minecraft server on Proxmox. LXC vs VM, Java vs Bedrock, RAM/CPU starting points, and how Crafty Controller fits in."
 tags: ["proxmox", "homelab", "self-hosting", "minecraft"]
 ShowToc: true
 TocOpen: true
@@ -56,6 +56,8 @@ With a Paper server and the right JVM flags, even a modest 4-core allocation can
 - **Not setting up automated backups before players join.** Proxmox snapshots are trivial to schedule and take seconds — set this up before you have a world worth losing, not after.
 - **Running the server on the same VM/container as other exposed services.** Keep it isolated. If a player-facing service has a vulnerability, you don't want it sharing a blast radius with your password manager or photo library.
 
+Want a web UI on top of the LXC instead of managing `server.jar` over SSH? See [Crafty Controller on Proxmox LXC](/posts/crafty-controller-proxmox-lxc/).
+
 ## FAQ
 
 **Do I need to port forward for friends to join?**
@@ -63,6 +65,9 @@ Yes, unless you're using a tool like Tailscale to give friends access to your ho
 
 **Can I run multiple Minecraft servers on the same Proxmox host?**
 Yes — this is one of the strongest arguments for LXC over VM here, since containers are lightweight enough that running 2-3 small servers (say, a survival world and a creative build server) on modest hardware is completely realistic.
+
+**Should I use Crafty Controller?**
+Use it if you want a browser panel, multiple worlds, or you are not the only person who restarts the server. A single Paper instance is fine with systemd.
 
 **How much does this actually save compared to a paid Minecraft hosting service?**
 Paid hosting for a comparable server (4-8GB RAM) typically runs $10-20/month. On home lab hardware you already own, the electricity cost for that allocation is usually under $2/month — the math favors self-hosting quickly if you're already running a home lab for other services.

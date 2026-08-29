@@ -158,3 +158,5 @@ Used enterprise hardware can offer excellent compute value, but that doesn't aut
 ---
 
 *New here? Start with the [complete beginner's guide to building a home lab](/posts/best-home-lab-for-beginners-2026/) for the full software stack and 14-day launch plan this hardware is built to run.*
+
+*Hardware context for this build lives in [best mini PC for Proxmox](/posts/best-mini-pcs-for-proxmox/). If the node is already up and throwing warnings, start with [no valid subscription](/posts/proxmox-no-valid-subscription-fix/) and [guest agent](/posts/proxmox-guest-agent-not-running-fix/).*

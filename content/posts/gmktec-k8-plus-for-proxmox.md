@@ -1,7 +1,7 @@
 ---
-title: "GMKtec K8 Plus for Proxmox: Is It Actually a Good Home Lab Server?"
+title: "GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For"
 date: 2026-08-17
-description: "A hands-on setup and verification walkthrough for running Proxmox on the GMKtec K8 Plus — IOMMU groups, PCI passthrough, and what its dual 2.5GbE and OCuLink port are actually good for in a home lab."
+description: "Is the GMKtec K8 Plus a good Proxmox host? Dual 2.5GbE, two NVMe slots, OCuLink, RAM ceiling, and when a SER8 or used Tiny is smarter."
 tags: ["proxmox", "homelab", "hardware", "mini pc"]
 ShowToc: true
 TocOpen: false
@@ -98,4 +98,4 @@ If you've run this specific machine long-term and have data on any of these, we'
 
 ---
 
-*Comparing this against the Beelink SER8 for a simpler setup? We cover both directly in our [best mini PCs for Proxmox guide](/posts/best-mini-pcs-for-proxmox/).*
+*This is the expandable pick from our [best mini PC for Proxmox](/posts/best-mini-pcs-for-proxmox/) guide. If you want quiet more than dual NIC, look at the SER8 section there.*

@@ -1,8 +1,8 @@
 ---
-title: "Best Self-Hosted Music Server in 2026: Navidrome vs Funkwhale vs Airsonic-Advanced"
+title: "Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server"
 date: 2026-08-14
 draft: false
-description: "Comparing the three most popular self-hosted music streaming servers — Navidrome, Funkwhale, and Airsonic-Advanced — on resource usage, mobile apps, and setup complexity."
+description: "Navidrome vs Funkwhale vs Airsonic-Advanced in 2026 — plus Navidrome alternatives if you want Plex-like features, podcasts, or multi-user libraries."
 tags: ["self-hosting", "homelab", "music"]
 ShowToc: true
 TocOpen: true
@@ -60,7 +60,32 @@ If you're following our [beginner's home lab guide](/posts/best-home-lab-for-beg
 
 One distinction worth making: this is different from **Jellyfin**, which we already recommend in the beginner guide as a general media server. Jellyfin handles video and TV as well as music, but its music-specific experience and mobile app ecosystem aren't as polished as a dedicated Subsonic-API server. If music is your primary use case, a dedicated server from this list will usually feel better day-to-day than trying to make Jellyfin's music section do the job.
 
+## Navidrome alternatives
+
+If Navidrome is the wrong shape for your library, these are the realistic alternatives — not a 20-item dump of dead projects.
+
+| You want | Use | Why not Navidrome |
+|---|---|---|
+| Small, fast, Subsonic/OpenSubsonic apps | **Navidrome** | — |
+| Federation / social library | **Funkwhale** | Navidrome is a personal server, not a Fediverse app |
+| Already run a Java stack | **Airsonic-Advanced** | Heavier. Makes sense only if Java is already a given |
+| Movies + TV + music in one app | **Jellyfin** (music library) | You are no longer choosing a music server; you are choosing a media suite |
+| One vendor app on every phone, playlists synced for a household | **Plex** | Not really self-hosted in spirit, and you pay for the good clients |
+| Podcasts as a first-class library | **Audiobookshelf** | Different problem. Point it at podcasts/audiobooks, keep Navidrome for music |
+
+For a first homelab box, the alternative that actually replaces Navidrome is almost always **Funkwhale** (if you care about federation) or **Jellyfin** (if you do not want a second service). Airsonic-Advanced is the legacy-shaped option.
+
+Skip random GitHub clones with one release in 2022. The three in the title plus Jellyfin cover what people mean by "navidrome alternatives" in 2026.
+
+If you are comparing pairwise:
+
+- [Navidrome vs Funkwhale](#funkwhale--best-if-you-want-federation-or-a-social-layer)
+- [Navidrome vs Airsonic](#airsonic-advanced--the-java-option)
+
 ## FAQ
+
+**What are the best Navidrome alternatives?**
+Funkwhale for federation, Jellyfin if you already want movies/TV on the same box, Airsonic-Advanced if you are committed to Java. For a dedicated music server, Navidrome is still the default.
 
 **Can I run more than one of these at the same time to compare them?**
 Yes, and it's a reasonable way to decide — spin each up in its own LXC container or Docker container pointed at a read-only copy of your library, try the mobile apps for a few days, and keep whichever one you actually prefer using.

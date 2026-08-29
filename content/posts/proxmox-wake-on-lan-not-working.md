@@ -1,71 +1,102 @@
 ---
-title: "Proxmox Wake-on-LAN Not Working? You're Probably Solving Two Different Problems"
-date: 2026-08-14
-draft: false
-description: "Wake-on-LAN failing on Proxmox? There are two completely separate WoL problems people mean by this — waking the physical host, and waking a VM. Here's both."
-tags: ["proxmox", "homelab", "troubleshooting", "networking"]
-author: "Vosik"
-ShowToc: true
-TocOpen: true
+title: "Proxmox Wake-on-LAN Not Working: Fix Host and VM"
+description: "Fix Proxmox Wake-on-LAN for the physical host (BIOS, ethtool, vmbr0) and why a stopped VM cannot use classic magic-packet WoL."
+tags: ["proxmox", "networking", "troubleshooting"]
 ---
 
-Almost every Proxmox WoL thread is actually two unrelated conversations happening at once, because "wake-on-lan on Proxmox" means one of two very different things depending on what you're trying to wake up:
+Wake-on-LAN failing on Proxmox? There are two completely separate problems people mean by this:
 
-1. **Waking the physical Proxmox host** from a full shutdown — this is regular hardware WoL, and it works, with some Proxmox-specific gotchas.
-2. **Waking a VM** that's powered off — this is a different problem entirely, and traditional magic-packet WoL fundamentally doesn't work for it, because a VM's network card isn't a physical device that can sit in a low-power state.
+1. **Waking the physical Proxmox host** from a full shutdown — this is regular hardware WoL. It works, with a few Proxmox-specific gotchas.
+2. **Waking a VM** that is powered off — classic magic-packet WoL does not work here. A virtual NIC is not a physical card sitting in a low-power state.
 
-If you've been mixing solutions from both categories and nothing works, that's why. Let's do them separately.
+If you mixed solutions from both threads and nothing worked, that is why. Do them separately.
 
-## Waking the Physical Host
+## Waking the physical host
 
-### Step 1: Confirm your NIC actually supports it
+### Step 1: confirm the NIC supports magic packets
 
+Replace `<interface>` with the physical NIC (`eno1`, `enp3s0`, …), not `vmbr0`.
+
+```bash
+ethtool <interface> | grep -i wake
 ```
-ethtool <interface> | grep Wake-on
-```
 
-You want to see `g` in the "Supports Wake-on" line. If `g` isn't listed at all, your network card's hardware doesn't support magic-packet wake, and no amount of configuration will fix that — you'd need different hardware (a cheap add-in NIC is often more reliable here than motherboard-integrated ones, which have a surprisingly inconsistent track record with WoL).
+You want `g` in **Supports Wake-on**. If `g` is missing, the card cannot do magic-packet wake. No sysctl will invent that. A cheap add-in NIC is often more reliable than the board’s integrated port.
 
-### Step 2: Two BIOS settings, not one
+### Step 2: two BIOS settings, not one
 
-Everyone remembers to enable "Wake on LAN" or "Power On by PCI-E" in BIOS. The setting people miss is **Deep Sleep Control** (sometimes called ErP Ready or similar). If this is set to allow full S4/S5 sleep states, your NIC loses power completely on shutdown and can't receive the magic packet at all — even with WoL "enabled." Set it to disabled, or to whichever option keeps the NIC powered during shutdown.
+Everyone enables **Wake on LAN** / **Power On by PCI-E**. The setting people miss is **Deep Sleep / ErP Ready / Deep S4/S5**.
 
-A quick way to tell if this is your issue: if the ethernet port's lights go completely dark after shutdown, the NIC has no power and WoL can't work, regardless of any other setting.
+If Deep Sleep is allowed, the NIC loses power on shutdown and cannot hear the packet — even with WoL “enabled.” Disable Deep Sleep, or pick the option that keeps standby power on the NIC.
 
-### Step 3: Enable it at the OS level
+Quick test: after shutdown, do the ethernet port lights stay faintly on? If the port goes completely dark, the NIC has no power and WoL cannot work.
 
-```
+### Step 3: enable it in the OS
+
+```bash
 ethtool -s <interface> wol g
+ethtool <interface> | grep -i wake
 ```
 
-### Step 4: Make it survive a reboot
+**Wake-on** should now show `g`. If it flips back to `d` after a minute, the driver or a power-management policy is resetting it. Persist it in the next step.
 
-This is the step that trips people up most, because the fix is different depending on whether your NIC sits directly on the host or behind a bridge (which it almost always does in Proxmox, via `vmbr0`). The `ethtool` command above doesn't persist by default — you need to add it as a `post-up` hook in `/etc/network/interfaces`.
+### Step 4: make it survive a reboot (the Proxmox part)
 
-The gotcha: it needs to go in the **bridge's** section (`vmbr0`), not the physical interface's section. Since Proxmox routes everything through the bridge, applying the setting to the underlying NIC directly often gets silently ignored or reset.
+`ethtool -s … wol g` does not persist. On Proxmox the NIC almost always sits behind `vmbr0`, and that is the gotcha.
 
-## Waking a Virtual Machine
+Add a `post-up` hook in `/etc/network/interfaces` on the **bridge** that owns the physical port, not only on the raw NIC. Example:
 
-Here's the part most guides don't explain clearly: **a genuine magic-packet WoL to a VM doesn't work**, and it's not a configuration problem you can fix. Physical WoL relies on the network card staying electrically powered in a low-power state while the rest of the machine is off, listening for a specific packet. A VM's virtual NIC doesn't exist at all when the VM is stopped — there's no powered-down-but-listening state to wake it from, because there's no hardware.
+```
+auto vmbr0
+iface vmbr0 inet static
+    address 192.168.1.10/24
+    gateway 192.168.1.1
+    bridge-ports eno1
+    bridge-stp off
+    bridge-fd 0
+    post-up ethtool -s eno1 wol g
+```
 
-What people actually want in this situation is usually "start this VM remotely when I send a signal," not literal WoL. The two practical ways to get that:
+Then:
 
-- **The Proxmox API.** You can trigger `qm start <vmid>` remotely through Proxmox's own API, authenticated with an API token. This is the officially supported path and doesn't rely on faking hardware behavior.
-- **A listener script that mimics the trigger.** Some home labbers run a small script on the Proxmox host that listens for a specific network signal (not necessarily even a real magic packet) and calls `qm start` when it sees it — effectively a custom WoL-like trigger. This works, but it's a DIY workaround, not something Proxmox supports natively, and it needs a firewall rule scoped tightly to your LAN if you go this route — an open listening port that can start VMs is not something you want reachable from outside your network.
+```bash
+ifreload -a
+ethtool eno1 | grep -i wake
+```
 
-If you're setting this up from scratch, start with the API approach. It's more reliable long-term and doesn't depend on a script that might silently stop listening after a restart.
+Applying WoL only to `eno1` and ignoring the bridge is how the setting silently dies after the next boot or after `ifreload`.
+
+### Host still dead after a kernel update
+
+This happens after some `pve-kernel` updates. NIC drivers reset **Wake-on** to `d`. Re-run `ethtool` and confirm the `post-up` line is still in `interfaces`. If the driver dropped `g` support after the update, that is a hardware/driver issue, not a Proxmox UI issue.
+
+## Waking a virtual machine
+
+A genuine magic packet to a **stopped VM** does not work. That is not a missing checkbox.
+
+Physical WoL depends on the card staying electrically powered while the machine is off. A stopped VM has no virtual NIC at all. There is nothing listening.
+
+What people actually want is “start this VM remotely.” Two practical options:
+
+- **Proxmox API.** Create an API token and call `qm start <vmid>` (or the REST equivalent). This is the supported path.
+- **A small listener on the host.** Some labs run a script that watches for a packet or HTTP call on the LAN and then runs `qm start`. That is a workaround, not native WoL. Bind it to the LAN only. An open listener that can start VMs is not something you want on the public internet.
+
+If you are setting this up from scratch, use the API. It survives host reboots if the token and systemd unit are set up correctly, and you are not pretending a virtio NIC is a hardware PHY.
 
 ## FAQ
 
-**I can wake my Proxmox host but not a specific VM on it — is that normal?**
-Yes, completely. Those are the two separate problems above. Host-level WoL and VM auto-start are unrelated mechanisms.
+**I can wake the Proxmox host but not a VM on it. Is that normal?**  
+Yes. Those are the two problems above. Unrelated mechanisms.
 
-**Does this differ between Proxmox VE 8 and 9?**
-No — the host-level BIOS/NIC/bridge behavior described here is the same across versions; it comes from the underlying Linux networking stack, not Proxmox itself.
+**Does this change between Proxmox VE 8 and 9?**  
+No. Host WoL is BIOS + NIC + Linux `ethtool` / `vmbr0`. Same on both.
 
-**My host was waking up fine and suddenly stopped after an update — what changed?**
-This does happen occasionally after kernel or `pve-kernel` updates, since NIC driver behavior can shift between kernel versions. Re-check the `ethtool` output after any kernel update — if `Wake-on` reset to `d` (disabled), your `post-up` hook either didn't reapply or the driver reset the setting on its own.
+**My host woke fine and stopped after an update.**  
+Re-check `ethtool`. If Wake-on is `d`, the `post-up` hook did not reapply, or the new driver reset it.
+
+**Can I WoL a VM that is only hibernated / paused?**  
+Paused/hibernated guests are still not physical NICs. Use `qm start` / `qm resume` via the API.
 
 ---
 
-*If you're setting up remote access to manage your host in the first place, our [Proxmox "no valid subscription" fix](/posts/proxmox-no-valid-subscription-fix/) and [guest agent troubleshooting guide](/posts/proxmox-guest-agent-not-running-fix/) cover two other early speed bumps you'll likely hit.*
+*If you are wiring remote access for the first time, the early landmines are usually [no valid subscription](/posts/proxmox-no-valid-subscription-fix/) and [guest agent not running](/posts/proxmox-guest-agent-not-running-fix/).*

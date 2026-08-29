@@ -1,8 +1,9 @@
 ---
-title: "Home Lab Active Directory Setup: A Practical Guide on Proxmox"
+title: "Proxmox Active Directory Integration for a Home Lab"
 date: 2026-08-16
 draft: false
-description: "How to build an Active Directory lab on Proxmox — domain controller setup, client join, and why it's one of the most valuable skills you can practice at home."
+description: "Set up Active Directory in a home lab on Proxmox — when you need it, VM sizing, and how it ties into Windows guests and the QEMU guest agent.
+"
 tags: ["proxmox", "homelab", "networking", "windows"]
 ShowToc: true
 TocOpen: true
@@ -69,3 +70,5 @@ Cloud-hosted labs are convenient but usually cost money past a free trial period
 ---
 
 *Building this on a fresh Proxmox install? Start with our [beginner's home lab guide](/posts/best-home-lab-for-beginners-2026/) and check our [guest agent troubleshooting guide](/posts/proxmox-guest-agent-not-running-fix/) if your Windows VMs show agent errors after setup.*
+
+*Windows guests in this lab will also want a working [QEMU guest agent](/posts/proxmox-guest-agent-not-running-fix/). Without it, Proxmox cannot shut them down cleanly or take filesystem-consistent snapshots.*

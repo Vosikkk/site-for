@@ -182,3 +182,5 @@ For most beginners in 2026 the best path is:
 You do not need a perfect lab on day one. You need a working lab that you actually enjoy using and learning from.
 
 Start small, keep notes, and expand step by step. That is how good homelabs are built.
+
+*When you are ready to pick hardware: [best mini PC for Proxmox](/posts/best-mini-pcs-for-proxmox/). First two errors after install are usually [no valid subscription](/posts/proxmox-no-valid-subscription-fix/) and [guest agent not running](/posts/proxmox-guest-agent-not-running-fix/).*
