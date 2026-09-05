@@ -1,14 +1,14 @@
 ---
-title: "Proxmox Guest Agent Not Running: Linux and Windows Fixes"
-description: "Fix “QEMU guest agent is not running” on Proxmox. Linux, Ubuntu, Windows, qemu-ga-x86_64.msi, virtio-serial, and why a reboot is not enough."
+title: "Proxmox Guest Agent Not Running? Fix It on Linux & Windows"
+description: "Seeing 'QEMU guest agent is not running' in Proxmox? Fix it on Ubuntu, Debian or Windows, check virtio-serial, and learn why a reboot may not be enough."
 tags: ["proxmox", "troubleshooting", "qemu", "windows", "ubuntu"]
 ---
 
-Proxmox showing **QEMU guest agent is not running** even though the agent is installed and started? This is one of the most confusing Proxmox errors, because it usually shows up *after* you’ve already done the obvious fix.
+If Proxmox says **QEMU guest agent is not running**, reinstalling the agent is often not the fix.
 
-The message can mean five or six different things. The UI does not tell you which one you have. Work through the checks in order — Linux and Windows guests both included.
+First check that the agent is enabled in Proxmox, confirm the service is running inside the VM, then **fully stop and start the VM from Proxmox**. A reboot from inside Linux or Windows may not recreate the virtio-serial channel the guest agent needs.
 
-## Quick check: is the agent actually reachable?
+## Quick fix
 
 From the Proxmox host:
 
@@ -17,41 +17,113 @@ qm config <vmid> | grep -E 'agent|serial'
 qm agent <vmid> ping
 ```
 
-- `agent: 1` or `agent: enabled=1` must be present.
-- A working agent returns with no error (`{"return":{}}` on many versions).
-- `QEMU guest agent is not running` means Proxmox cannot talk to the guest over virtio-serial. The service inside the VM being “started” is not enough.
+You want to see the guest agent enabled:
 
-Then **fully stop and start** the VM. A reboot from inside the guest does not recreate the virtio-serial channel. That single distinction fixes this more often than reinstalling the agent.
-
-## First: confirm the agent is enabled in the VM config
-
-Enabling QEMU Guest Agent in the UI does not apply retroactively to a running VM.
-
-```bash
-qm config <vmid> | grep agent
+```text
+agent: 1
 ```
 
-If you don’t see `agent: 1` (or `agent: enabled=1`):
+or:
+
+```text
+agent: enabled=1
+```
+
+If it is not enabled:
 
 ```bash
 qm set <vmid> --agent enabled=1
 ```
 
-Then stop and start the VM from Proxmox — not a guest reboot. The virtio-serial channel is created at power-on. People enable the option, click Reboot inside the OS, and wonder why nothing changed.
+Then:
 
-In the UI: **VM → Options → QEMU Guest Agent → Enabled**. Same rule: stop/start after you flip it.
+1. Fully **stop** the VM in Proxmox.
+2. Start it again.
+3. Wait 30–60 seconds.
+4. Run:
 
-## Second: confirm the agent is running inside the guest
+```bash
+qm agent <vmid> ping
+```
 
-### Proxmox guest agent not running on Linux / Ubuntu
+A working agent normally returns without an error.
 
-SSH or open the console:
+If you still get:
+
+```text
+QEMU guest agent is not running
+```
+
+continue through the checks below.
+
+## Why Proxmox says “QEMU guest agent is not running”
+
+The message does not necessarily mean the `qemu-guest-agent` package is missing.
+
+Proxmox needs several things to work at the same time:
+
+- QEMU Guest Agent enabled in the VM configuration
+- the guest agent installed inside Linux or Windows
+- the guest agent service running
+- a working virtio-serial channel between host and guest
+
+That last one causes a lot of confusion.
+
+The service inside the VM can show as **Running**, while Proxmox still cannot communicate with it.
+
+## Make sure QEMU Guest Agent is enabled in Proxmox
+
+Check the VM configuration:
+
+```bash
+qm config <vmid> | grep agent
+```
+
+If you do not see `agent: 1` or `agent: enabled=1`:
+
+```bash
+qm set <vmid> --agent enabled=1
+```
+
+You can also enable it in the UI:
+
+**VM → Options → QEMU Guest Agent → Enabled**
+
+Now fully stop and start the VM.
+
+Do not just reboot from inside the guest OS.
+
+The virtio-serial channel used by the agent is created when the VM powers on. If you enable QEMU Guest Agent while the VM is already running, a normal guest reboot may leave you with the same error.
+
+## “No guest agent configured” / “Requires guest agent installed”
+
+If Proxmox or another management tool reports **no guest agent configured**, start by checking whether Proxmox itself can reach QEMU Guest Agent:
+
+```bash
+qm agent <vmid> ping
+```
+
+If that fails, fix the Proxmox-to-guest communication first.
+
+There is not a separate generic “Proxmox guest agent” you need to install on top of QEMU Guest Agent.
+
+For Linux, the package is normally:
+
+```text
+qemu-guest-agent
+```
+
+For Windows, QEMU Guest Agent is available through the VirtIO driver ISO.
+
+## Proxmox Guest Agent not running on Ubuntu / Debian
+
+Inside an Ubuntu or Debian VM:
 
 ```bash
 systemctl status qemu-guest-agent
 ```
 
-Debian / Ubuntu:
+If it is not installed:
 
 ```bash
 apt update
@@ -59,14 +131,13 @@ apt install -y qemu-guest-agent
 systemctl enable --now qemu-guest-agent
 ```
 
-RHEL / Rocky / Alma:
+Check it again:
 
 ```bash
-dnf install -y qemu-guest-agent
-systemctl enable --now qemu-guest-agent
+systemctl status qemu-guest-agent --no-pager
 ```
 
-If the unit is masked or failed:
+If the service is masked or failed:
 
 ```bash
 systemctl unmask qemu-guest-agent
@@ -75,126 +146,273 @@ systemctl enable --now qemu-guest-agent
 journalctl -u qemu-guest-agent -b --no-pager
 ```
 
-`dependency failed for qemu guest agent` almost always means a missing virtio-serial device or a unit that was masked after a broken package upgrade — not a mysterious Proxmox bug.
+Then return to the Proxmox host:
 
-### Proxmox guest agent not running on Windows
+```bash
+qm set <vmid> --agent enabled=1
+```
 
-Install the agent from the **VirtIO driver ISO**, not a random standalone download:
+Fully stop the VM, start it again, and test:
 
-`guest-agent\qemu-ga-x86_64.msi`
+```bash
+qm agent <vmid> ping
+```
 
-Match the MSI to the same VirtIO ISO version you used for the rest of the drivers. Mixed versions are a common silent failure on Windows guests, including Windows 11.
+### Ubuntu-specific trap
 
-Then in PowerShell:
+A common sequence is:
+
+1. Install `qemu-guest-agent` in Ubuntu.
+2. Enable QEMU Guest Agent in Proxmox.
+3. Reboot Ubuntu.
+4. Proxmox still says the guest agent is not running.
+
+The package may be completely fine.
+
+Fully **stop and start the VM from Proxmox** instead of rebooting it from Ubuntu.
+
+## Proxmox Guest Agent not running on RHEL / Rocky / AlmaLinux
+
+Install and enable the service:
+
+```bash
+dnf install -y qemu-guest-agent
+systemctl enable --now qemu-guest-agent
+```
+
+Then verify:
+
+```bash
+systemctl status qemu-guest-agent
+```
+
+If you see a dependency failure, check the virtio-serial channel and make sure the agent is enabled in the Proxmox VM configuration.
+
+## Proxmox Guest Agent not running on Windows
+
+For Windows guests, install QEMU Guest Agent from the **VirtIO driver ISO**.
+
+The installer is normally:
+
+```text
+guest-agent\qemu-ga-x86_64.msi
+```
+
+Use the VirtIO ISO version that matches the rest of the VirtIO drivers installed in the VM.
+
+After installation, open PowerShell:
 
 ```powershell
 Get-Service QEMU-GA
 ```
 
-It should be **Running** and **Automatic**. If it is Stopped:
+The service should be **Running** and configured to start automatically.
+
+If it is stopped:
 
 ```powershell
 Start-Service QEMU-GA
 Set-Service QEMU-GA -StartupType Automatic
 ```
 
-Windows-specific gotcha: if you enabled QEMU Guest Agent in Proxmox *after* installing VirtIO, the serial device sometimes never binds. Disable the agent option, fully stop the VM, enable it again, start the VM. That forces Proxmox to recreate the device.
-
-On the host you can also test:
+Then test from the Proxmox host:
 
 ```bash
 qm agent <vmid> ping
 qm agent <vmid> network-get-interfaces
 ```
 
-If ping fails but `Get-Service QEMU-GA` says Running, you do not have an install problem. You have a channel problem. Go to the next section.
+If `Get-Service QEMU-GA` says **Running** but `qm agent <vmid> ping` still fails, reinstalling the MSI is probably not the next thing to try.
 
-## Third: check the virtio-serial device exists
+The problem is likely the communication channel between Proxmox and the VM.
 
-Even with the agent enabled and the service running, the host/guest channel can be missing.
+## Windows Guest Agent installed but still not running
+
+This is especially common if QEMU Guest Agent was enabled in Proxmox after Windows and the VirtIO drivers were already installed.
+
+Try:
+
+1. Disable **QEMU Guest Agent** in the VM options.
+2. Fully stop the Windows VM.
+3. Enable **QEMU Guest Agent** again.
+4. Start the VM.
+5. Wait 30–60 seconds.
+6. Test:
+
+```bash
+qm agent <vmid> ping
+```
+
+This forces Proxmox to recreate the device.
+
+## Check the virtio-serial device
+
+Even with the guest agent installed and running, communication can fail if the host/guest channel is missing.
+
+From the Proxmox host:
 
 ```bash
 qm config <vmid> | grep serial
 ```
 
-Enabling the agent option is supposed to add this automatically. If it is missing, something went wrong at VM creation or an old template was cloned without the device.
+Enabling QEMU Guest Agent is supposed to configure the required channel automatically.
 
-Fix:
+If the agent is enabled and running but Proxmox still cannot reach it:
 
-1. Options → QEMU Guest Agent → disable
-2. Fully stop the VM
-3. Enable the agent again
-4. Start the VM
-5. Repeat `qm agent <vmid> ping`
+1. Go to **VM → Options → QEMU Guest Agent**.
+2. Disable it.
+3. Fully stop the VM.
+4. Enable QEMU Guest Agent again.
+5. Start the VM.
+6. Run:
+
+```bash
+qm agent <vmid> ping
+```
 
 Do not soft-reboot between those steps.
 
-## Fourth: give it a minute
+## Give Proxmox a minute
 
-Proxmox does not poll the agent continuously. IP and agent status on the Summary tab update on a delay. After a start, wait 30–60 seconds before deciding it failed.
+Proxmox does not update every guest-agent field in the UI instantly.
 
-If Summary still shows no guest IP after a minute and `qm agent <vmid> ping` errors, it is still broken. If ping works but Summary is empty, wait or refresh — that one is cosmetic.
+After starting the VM, wait roughly 30–60 seconds before deciding that it is still broken.
 
-## Proxmox Ubuntu guest agent not running
+If:
 
-Same stack as Linux above. The two Ubuntu-specific traps:
+```bash
+qm agent <vmid> ping
+```
 
-- You installed `qemu-guest-agent` but never enabled the option on the **Proxmox** side.
-- You rebooted from inside Ubuntu after enabling the option. That does not create `virtio-serial`. Stop/start from the host.
+works but the Summary page still does not show the guest IP, refresh the UI after a minute.
+
+If `qm agent` works, communication between the host and guest agent is working.
+
+## Install qemu-ga-x86_64.msi on Windows
+
+For a Windows VM:
+
+1. Get the current stable VirtIO driver ISO.
+2. Attach the ISO as a CD/DVD drive to the VM.
+3. Open the ISO inside Windows.
+4. Run:
+
+```text
+guest-agent\qemu-ga-x86_64.msi
+```
+
+5. Verify the service:
+
+```powershell
+Get-Service QEMU-GA
+```
+
+6. Make sure **QEMU Guest Agent** is enabled in Proxmox.
+7. Fully stop and start the VM once.
+8. Test from the host:
+
+```bash
+qm agent <vmid> ping
+```
+
+Avoid standalone MSI files from random mirrors. Keeping the guest agent and the rest of the VirtIO stack on matching versions removes another possible source of problems.
+
+## Why QEMU Guest Agent matters
+
+A missing guest agent is not always critical.
+
+Your VM can run normally without it.
+
+But QEMU Guest Agent gives Proxmox additional communication with the guest, including information and operations used for VM management.
+
+Two places where you may notice the difference are shutdowns and backups.
+
+### Clean shutdowns
+
+Without working guest communication, scheduled shutdown or reboot operations can fail or take longer than expected.
+
+### Backup consistency
+
+With a working guest agent, Proxmox can coordinate filesystem freeze/thaw operations during supported snapshot workflows.
+
+Without it, a VM backup can still run, but it may only represent the filesystem as it existed at the instant of the snapshot rather than after guest-assisted quiescing.
+
+If the only symptom is a missing IP address on the Summary page, fixing the agent may not be urgent.
+
+If backups or scheduled VM operations are affected, it is worth fixing.
+
+## FAQ
+
+### Why does Proxmox say “QEMU guest agent is not running” when it is installed?
+
+Because installing the package is only one part of the setup.
+
+Proxmox must also have QEMU Guest Agent enabled for that VM and be able to communicate with the service through the guest channel.
+
+Check:
+
+```bash
+qm config <vmid> | grep agent
+qm agent <vmid> ping
+```
+
+### I reinstalled qemu-guest-agent and it still says not running. What now?
+
+Check the VM configuration and virtio-serial communication before reinstalling it again.
+
+If the service is running, make sure the agent is enabled in Proxmox and fully stop/start the VM.
+
+### Does a normal reboot fix QEMU Guest Agent?
+
+Not always.
+
+If you just enabled QEMU Guest Agent in the Proxmox configuration, fully stopping and starting the VM is safer because the required virtual device is created at power-on.
+
+### How do I fix Proxmox Guest Agent on Ubuntu?
+
+Install and enable it:
 
 ```bash
 apt install -y qemu-guest-agent
 systemctl enable --now qemu-guest-agent
-systemctl status qemu-guest-agent --no-pager
 ```
 
-Then on the host: `qm set <vmid> --agent enabled=1`, stop, start, `qm agent <vmid> ping`.
+Then enable QEMU Guest Agent in Proxmox, fully stop/start the VM and test:
 
-## Install qemu-ga-x86_64.msi the way that actually works
+```bash
+qm agent <vmid> ping
+```
 
-1. Download the current **Stable** VirtIO ISO from Fedora’s virtio-win project (the same ISO you use for the NIC and SCSI drivers).
-2. Attach it as a CD/DVD on the Windows VM.
-3. Run `guest-agent\qemu-ga-x86_64.msi`.
-4. Confirm `QEMU-GA` is Running.
-5. Confirm Proxmox has QEMU Guest Agent enabled.
-6. Stop/start the VM once.
+### How do I fix Proxmox Guest Agent on Windows?
 
-Skip standalone `.msi` files from random mirrors. Version skew against the rest of the VirtIO stack is how you get “installed, running, still not running” on the Proxmox side.
+Install:
 
-## “Requires guest agent installed” / “no guest agent configured”
+```text
+guest-agent\qemu-ga-x86_64.msi
+```
 
-Backup tools, monitoring packs, and some IPS/management agents report this when Proxmox itself cannot reach `qemu-ga`.
+from the VirtIO ISO.
 
-Fix the Proxmox-side channel first (`qm agent <vmid> ping` must succeed). Installing another vendor agent on top of a dead QEMU channel will not help.
+Check:
 
-If a product says **IPS no guest agent configured**, it is asking for the same QEMU guest agent — there is not a second Proxmox agent to install.
+```powershell
+Get-Service QEMU-GA
+```
 
-## Why this matters beyond the popup
+Then enable QEMU Guest Agent in Proxmox and fully stop/start the VM.
 
-This is not purely cosmetic like the subscription nag. A dead guest agent breaks two things you will notice:
+### `qm agent <vmid> ping` works but the Proxmox UI still says the agent is not running
 
-- **Clean shutdowns fail.** Without the agent, Proxmox cannot send a proper ACPI/guest shutdown, so scheduled stop/reboot jobs hang until they time out.
-- **Backups are crash-consistent, not filesystem-consistent.** With the agent, Proxmox can freeze the guest filesystem before a snapshot. Without it, the backup still runs — it is just a crash-consistent image. Usually fine. Occasionally not, depending on what the VM was writing.
+Wait 30–60 seconds and refresh the page.
 
-If you only miss the IP on the Summary tab, priority is low. If scheduled backups or shutdowns fail, fix it.
+If `qm agent <vmid> ping` succeeds, the host can communicate with the guest agent.
 
-## FAQ
+### Is it safe to ignore “Guest Agent Not Running”?
 
-**I reinstalled the agent and it still says “not running.” What now?**  
-Reinstalling almost never fixes this by itself. The usual cause is the virtio-serial channel, not the package. Full stop/start from Proxmox after `agent: 1` is set.
+Usually, yes, if the VM itself is otherwise healthy and you do not need guest-assisted operations.
 
-**Does this affect Linux VMs and Windows VMs the same way?**  
-The missing-channel cause is identical. Windows adds a second failure point: VirtIO / `qemu-ga-x86_64.msi` version mismatch.
-
-**Is it safe to ignore?**  
-Yes, if you do not care about scheduled shutdowns or filesystem-consistent snapshots. The guest OS itself runs normally.
-
-**`qm agent <vmid> ping` works, Summary still says not running.**  
-Wait a minute and refresh. If ping works, communication is fine. The UI lags.
-
-**Proxmox Gast Agent läuft nicht — same fix?**  
-Yes. Enable agent in Options, install `qemu-guest-agent` (Linux) or `qemu-ga-x86_64.msi` (Windows), then Stop/Start — kein Gast-Reboot.
+But it is worth fixing if you rely on Proxmox for automated shutdowns, guest information or filesystem-consistent snapshots.
 
 ---
 
-*Also hitting the subscription banner on a fresh node? Read [Proxmox no valid subscription](/posts/proxmox-no-valid-subscription-fix/). Setting up a Windows lab VM next to this? Guest agent is also why [Minecraft on Proxmox](/posts/minecraft-server-on-proxmox/) mentions it in the pitfalls list.*
+*Also seeing the subscription warning on a fresh node? Read [Proxmox no valid subscription](/posts/proxmox-no-valid-subscription-fix/). Setting up a Windows lab VM next to this? Guest agent is also why [Minecraft on Proxmox](/posts/minecraft-server-on-proxmox/) mentions it in the pitfalls list.*
