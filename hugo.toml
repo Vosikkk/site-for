@@ -34,7 +34,7 @@ enableGitInfo = true
     icon = "/favicon.ico"
   [params.homeInfoParams]
     Title = "Practical Homelab Guides for Proxmox and Self-Hosting"
-    Content = "Clear Proxmox fixes, mini PC picks, and self-hosted app guides. No fluff, current for 2026."
+    Content = "Clear Proxmox fixes, mini PC hardware guides, and practical self-hosting. Build it, fix it, run it."
   [[params.socialIcons]]
     name = "github"
     url = "https://github.com/Vosikkk"

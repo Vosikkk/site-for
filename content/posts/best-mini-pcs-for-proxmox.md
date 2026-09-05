@@ -619,7 +619,6 @@ The best Proxmox Mini PC is the one that fits the lab you actually intend to bui
 
 ## Related Proxmox Guides
 
-Use these links to connect the commercial page with your existing informational content.
 
 - [Proxmox Guest Agent Not Running: How to Fix It](/posts/proxmox-guest-agent-not-running-fix/)
 - [Proxmox Wake on LAN: How to Configure It](/posts/proxmox-wake-on-lan-not-working/)

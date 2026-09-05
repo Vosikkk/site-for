@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server | Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
+<meta name="keywords" content="self-hosting, homelab, music">
+<meta name="description" content="Navidrome vs Funkwhale vs Airsonic-Advanced in 2026 — plus Navidrome alternatives if you want Plex-like features, podcasts, or multi-user libraries.">
+<meta name="author" content="Vosik">
+<link rel="canonical" href="http://localhost:1313/posts/best-self-hosted-music-server-2026/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7818a8d618bfd77c7c3c61970845e66d9e9bb07ba17e3f781040f210712b209b.css" integrity="sha256-eBio1hi/13x8PGGXCEXmbZ6bsHuhfj94EEDyEHErIJs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/best-self-hosted-music-server-2026/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/posts/best-self-hosted-music-server-2026/">
+  <meta property="og:site_name" content="Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)">
+  <meta property="og:title" content="Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server">
+  <meta property="og:description" content="Navidrome vs Funkwhale vs Airsonic-Advanced in 2026 — plus Navidrome alternatives if you want Plex-like features, podcasts, or multi-user libraries.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-08-14T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-08-29T09:24:38+03:00">
+    <meta property="article:tag" content="Self-Hosting">
+    <meta property="article:tag" content="Homelab">
+    <meta property="article:tag" content="Music">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server">
+  <meta name="twitter:description" content="Navidrome vs Funkwhale vs Airsonic-Advanced in 2026 — plus Navidrome alternatives if you want Plex-like features, podcasts, or multi-user libraries.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server",
+      "item": "http://localhost:1313/posts/best-self-hosted-music-server-2026/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server",
+  "name": "Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server",
+  "description": "Navidrome vs Funkwhale vs Airsonic-Advanced in 2026 — plus Navidrome alternatives if you want Plex-like features, podcasts, or multi-user libraries.",
+  "keywords": [
+    "self-hosting", "homelab", "music"
+  ],
+  "articleBody": "If you’re tired of algorithmic playlists and losing access to music you already paid for, self-hosting your own streaming server solves both problems — you point it at your existing library, and it just works, on your terms. The question is which server to actually run. Here’s a straight comparison of the three real contenders.\nQuick Answer For most people building their first home lab, Navidrome is the right default. It’s lightweight, actively maintained, and works with the best mobile apps available. Reach for Funkwhale specifically if you want federation/social features. Airsonic-Advanced is worth considering mainly if you’re already comfortable with the Java ecosystem or have a specific reason to avoid the other two.\nThe Three Options Navidrome — best overall for most people Navidrome is written in Go, which means it’s genuinely lightweight — it runs comfortably on a Raspberry Pi Zero, no exaggeration. Point it at your existing music folder (it doesn’t move or modify your files) and it indexes everything automatically, reading tags to organize by artist/album rather than relying on folder structure.\nResource usage: Low enough to run on the smallest hardware in your home lab Mobile apps: No official app, but it speaks the Subsonic API — meaning excellent third-party apps (Symfonium and DSub on Android, play:Sub and Amperfy on iOS) work immediately Active development: Frequent releases; recent updates added Jukebox mode (play audio directly on a device connected to the server, controlled remotely) and smarter multi-disk album handling Best for: Anyone who wants a fast, no-fuss personal music server and is fine using a third-party mobile app Funkwhale — best if you want federation or a social layer Funkwhale runs on Django with PostgreSQL and Redis, which makes it noticeably heavier — budget 500MB-1GB of RAM rather than the minimal footprint Navidrome needs. What you get in exchange is real federation support via ActivityPub, meaning your instance can connect with other Funkwhale servers, plus built-in podcast support and radio modes that Navidrome doesn’t have.\nResource usage: Needs a real server, not just a Pi — 2-4GB RAM is a safer target Mobile apps: Also Subsonic-API compatible, so the same third-party app ecosystem works Best for: People who specifically want the social/federation angle, or want podcasts and radio-style browsing alongside music Airsonic-Advanced — the Java option A community-maintained fork of the original Airsonic project. It runs on the JVM, which means a higher baseline memory requirement (Airsonic-Advanced’s Java heap alone needs a minimum of 512MB) and a setup process that’s slightly more involved than the other two, though still Docker-based and manageable.\nResource usage: Higher baseline than Navidrome, comparable to or slightly less than Funkwhale Mobile apps: Same Subsonic API compatibility as the other two Best for: People with an existing Airsonic library who want an actively maintained fork, or who specifically prefer the Java/Spring ecosystem for other reasons Feature Comparison Navidrome Funkwhale Airsonic-Advanced Language/Stack Go Django (Python) + PostgreSQL + Redis Java/JVM Typical RAM usage Minimal (runs on Pi Zero) 500MB–1GB 512MB+ (JVM heap alone) Subsonic API support Yes Yes Yes Official mobile app No (third-party via Subsonic) No (third-party via Subsonic) No (third-party via Subsonic) Federation (ActivityPub) No Yes No Podcast support No Yes No Jukebox mode Yes No No Best hardware fit Raspberry Pi or any mini PC Dedicated server, 2-4GB+ RAM Mid-range, JVM-comfortable hardware How This Fits Into Your Home Lab If you’re following our beginner’s home lab guide or running the $350 example build, any of these three run comfortably alongside the rest of your service stack (AdGuard, Vaultwarden, Immich, etc.) without needing dedicated hardware. Navidrome in particular is close to “free” in terms of resource cost on a 16GB mini PC.\nOne distinction worth making: this is different from Jellyfin, which we already recommend in the beginner guide as a general media server. Jellyfin handles video and TV as well as music, but its music-specific experience and mobile app ecosystem aren’t as polished as a dedicated Subsonic-API server. If music is your primary use case, a dedicated server from this list will usually feel better day-to-day than trying to make Jellyfin’s music section do the job.\nNavidrome alternatives If Navidrome is the wrong shape for your library, these are the realistic alternatives — not a 20-item dump of dead projects.\nYou want Use Why not Navidrome Small, fast, Subsonic/OpenSubsonic apps Navidrome — Federation / social library Funkwhale Navidrome is a personal server, not a Fediverse app Already run a Java stack Airsonic-Advanced Heavier. Makes sense only if Java is already a given Movies + TV + music in one app Jellyfin (music library) You are no longer choosing a music server; you are choosing a media suite One vendor app on every phone, playlists synced for a household Plex Not really self-hosted in spirit, and you pay for the good clients Podcasts as a first-class library Audiobookshelf Different problem. Point it at podcasts/audiobooks, keep Navidrome for music For a first homelab box, the alternative that actually replaces Navidrome is almost always Funkwhale (if you care about federation) or Jellyfin (if you do not want a second service). Airsonic-Advanced is the legacy-shaped option.\nSkip random GitHub clones with one release in 2022. The three in the title plus Jellyfin cover what people mean by “navidrome alternatives” in 2026.\nIf you are comparing pairwise:\nNavidrome vs Funkwhale Navidrome vs Airsonic FAQ What are the best Navidrome alternatives? Funkwhale for federation, Jellyfin if you already want movies/TV on the same box, Airsonic-Advanced if you are committed to Java. For a dedicated music server, Navidrome is still the default.\nCan I run more than one of these at the same time to compare them? Yes, and it’s a reasonable way to decide — spin each up in its own LXC container or Docker container pointed at a read-only copy of your library, try the mobile apps for a few days, and keep whichever one you actually prefer using.\nDo any of these require re-organizing my music files? No. All three read your existing folder/file structure and metadata tags without moving or modifying anything. Point them at your library as read-only if you want extra peace of mind while testing.\nWhich one has the best web player if I mostly listen from a browser? Navidrome’s web UI is generally considered the most polished of the three for browser-based listening — modern, fast, and actively developed. Funkwhale’s is also solid and adds the radio/podcast browsing Navidrome lacks.\nIs transcoding necessary, or can I just stream FLAC directly? You can stream FLAC directly on your home network without issue. Transcoding matters mainly for remote listening over cellular data, where a lower bitrate saves data — all three handle this via FFmpeg, bundled in their official Docker images.\nNew to self-hosting entirely? Our beginner’s guide to building a home lab covers the full stack this fits into, from hardware to your first month of services.\n",
+  "wordCount" : "1148",
+  "inLanguage": "en",
+  "datePublished": "2026-08-14T00:00:00Z",
+  "dateModified": "2026-08-29T09:24:38+03:00",
+  "author":{
+    "@type": "Person",
+    "name": "Vosik"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/posts/best-self-hosted-music-server-2026/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Run a Home Lab (Alt + H)">
+                <img src="http://localhost:1313/favicon.ico" alt="" aria-label="logo"
+                    height="30">Run a Home Lab</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/privacy/" title="Privacy">
+                    <span>Privacy</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server
+    </h1>
+    <div class="post-description">
+      Navidrome vs Funkwhale vs Airsonic-Advanced in 2026 — plus Navidrome alternatives if you want Plex-like features, podcasts, or multi-user libraries.
+    </div>
+    <div class="post-meta">
+
+<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>1148 words</span>&nbsp;·&nbsp;<span>Vosik</span>
+
+</div>
+  </header> <details class="toc"  open>
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#quick-answer">Quick Answer</a></li>
+    <li><a href="#the-three-options">The Three Options</a>
+      <ul>
+        <li><a href="#navidrome--best-overall-for-most-people">Navidrome — best overall for most people</a></li>
+        <li><a href="#funkwhale--best-if-you-want-federation-or-a-social-layer">Funkwhale — best if you want federation or a social layer</a></li>
+        <li><a href="#airsonic-advanced--the-java-option">Airsonic-Advanced — the Java option</a></li>
+      </ul>
+    </li>
+    <li><a href="#feature-comparison">Feature Comparison</a></li>
+    <li><a href="#how-this-fits-into-your-home-lab">How This Fits Into Your Home Lab</a></li>
+    <li><a href="#navidrome-alternatives">Navidrome alternatives</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
+  <div class="post-content md-content"><p>If you&rsquo;re tired of algorithmic playlists and losing access to music you already paid for, self-hosting your own streaming server solves both problems — you point it at your existing library, and it just works, on your terms. The question is which server to actually run. Here&rsquo;s a straight comparison of the three real contenders.</p>
+<h2 id="quick-answer">Quick Answer<a hidden class="anchor" aria-hidden="true" href="#quick-answer">#</a></h2>
+<p>For most people building their first home lab, <strong>Navidrome</strong> is the right default. It&rsquo;s lightweight, actively maintained, and works with the best mobile apps available. Reach for <strong>Funkwhale</strong> specifically if you want federation/social features. <strong>Airsonic-Advanced</strong> is worth considering mainly if you&rsquo;re already comfortable with the Java ecosystem or have a specific reason to avoid the other two.</p>
+<h2 id="the-three-options">The Three Options<a hidden class="anchor" aria-hidden="true" href="#the-three-options">#</a></h2>
+<h3 id="navidrome--best-overall-for-most-people">Navidrome — best overall for most people<a hidden class="anchor" aria-hidden="true" href="#navidrome--best-overall-for-most-people">#</a></h3>
+<p>Navidrome is written in Go, which means it&rsquo;s genuinely lightweight — it runs comfortably on a Raspberry Pi Zero, no exaggeration. Point it at your existing music folder (it doesn&rsquo;t move or modify your files) and it indexes everything automatically, reading tags to organize by artist/album rather than relying on folder structure.</p>
+<ul>
+<li><strong>Resource usage:</strong> Low enough to run on the smallest hardware in your home lab</li>
+<li><strong>Mobile apps:</strong> No official app, but it speaks the Subsonic API — meaning excellent third-party apps (Symfonium and DSub on Android, play:Sub and Amperfy on iOS) work immediately</li>
+<li><strong>Active development:</strong> Frequent releases; recent updates added Jukebox mode (play audio directly on a device connected to the server, controlled remotely) and smarter multi-disk album handling</li>
+<li><strong>Best for:</strong> Anyone who wants a fast, no-fuss personal music server and is fine using a third-party mobile app</li>
+</ul>
+<h3 id="funkwhale--best-if-you-want-federation-or-a-social-layer">Funkwhale — best if you want federation or a social layer<a hidden class="anchor" aria-hidden="true" href="#funkwhale--best-if-you-want-federation-or-a-social-layer">#</a></h3>
+<p>Funkwhale runs on Django with PostgreSQL and Redis, which makes it noticeably heavier — budget 500MB-1GB of RAM rather than the minimal footprint Navidrome needs. What you get in exchange is real federation support via ActivityPub, meaning your instance can connect with other Funkwhale servers, plus built-in podcast support and radio modes that Navidrome doesn&rsquo;t have.</p>
+<ul>
+<li><strong>Resource usage:</strong> Needs a real server, not just a Pi — 2-4GB RAM is a safer target</li>
+<li><strong>Mobile apps:</strong> Also Subsonic-API compatible, so the same third-party app ecosystem works</li>
+<li><strong>Best for:</strong> People who specifically want the social/federation angle, or want podcasts and radio-style browsing alongside music</li>
+</ul>
+<h3 id="airsonic-advanced--the-java-option">Airsonic-Advanced — the Java option<a hidden class="anchor" aria-hidden="true" href="#airsonic-advanced--the-java-option">#</a></h3>
+<p>A community-maintained fork of the original Airsonic project. It runs on the JVM, which means a higher baseline memory requirement (Airsonic-Advanced&rsquo;s Java heap alone needs a minimum of 512MB) and a setup process that&rsquo;s slightly more involved than the other two, though still Docker-based and manageable.</p>
+<ul>
+<li><strong>Resource usage:</strong> Higher baseline than Navidrome, comparable to or slightly less than Funkwhale</li>
+<li><strong>Mobile apps:</strong> Same Subsonic API compatibility as the other two</li>
+<li><strong>Best for:</strong> People with an existing Airsonic library who want an actively maintained fork, or who specifically prefer the Java/Spring ecosystem for other reasons</li>
+</ul>
+<h2 id="feature-comparison">Feature Comparison<a hidden class="anchor" aria-hidden="true" href="#feature-comparison">#</a></h2>
+<table>
+	<thead>
+			<tr>
+					<th></th>
+					<th>Navidrome</th>
+					<th>Funkwhale</th>
+					<th>Airsonic-Advanced</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Language/Stack</td>
+					<td>Go</td>
+					<td>Django (Python) + PostgreSQL + Redis</td>
+					<td>Java/JVM</td>
+			</tr>
+			<tr>
+					<td>Typical RAM usage</td>
+					<td>Minimal (runs on Pi Zero)</td>
+					<td>500MB–1GB</td>
+					<td>512MB+ (JVM heap alone)</td>
+			</tr>
+			<tr>
+					<td>Subsonic API support</td>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>Yes</td>
+			</tr>
+			<tr>
+					<td>Official mobile app</td>
+					<td>No (third-party via Subsonic)</td>
+					<td>No (third-party via Subsonic)</td>
+					<td>No (third-party via Subsonic)</td>
+			</tr>
+			<tr>
+					<td>Federation (ActivityPub)</td>
+					<td>No</td>
+					<td>Yes</td>
+					<td>No</td>
+			</tr>
+			<tr>
+					<td>Podcast support</td>
+					<td>No</td>
+					<td>Yes</td>
+					<td>No</td>
+			</tr>
+			<tr>
+					<td>Jukebox mode</td>
+					<td>Yes</td>
+					<td>No</td>
+					<td>No</td>
+			</tr>
+			<tr>
+					<td>Best hardware fit</td>
+					<td>Raspberry Pi or any mini PC</td>
+					<td>Dedicated server, 2-4GB+ RAM</td>
+					<td>Mid-range, JVM-comfortable hardware</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="how-this-fits-into-your-home-lab">How This Fits Into Your Home Lab<a hidden class="anchor" aria-hidden="true" href="#how-this-fits-into-your-home-lab">#</a></h2>
+<p>If you&rsquo;re following our <a href="/posts/best-home-lab-for-beginners-2026/">beginner&rsquo;s home lab guide</a> or running the <a href="/posts/example-350-proxmox-homelab-build/">$350 example build</a>, any of these three run comfortably alongside the rest of your service stack (AdGuard, Vaultwarden, Immich, etc.) without needing dedicated hardware. Navidrome in particular is close to &ldquo;free&rdquo; in terms of resource cost on a 16GB mini PC.</p>
+<p>One distinction worth making: this is different from <strong>Jellyfin</strong>, which we already recommend in the beginner guide as a general media server. Jellyfin handles video and TV as well as music, but its music-specific experience and mobile app ecosystem aren&rsquo;t as polished as a dedicated Subsonic-API server. If music is your primary use case, a dedicated server from this list will usually feel better day-to-day than trying to make Jellyfin&rsquo;s music section do the job.</p>
+<h2 id="navidrome-alternatives">Navidrome alternatives<a hidden class="anchor" aria-hidden="true" href="#navidrome-alternatives">#</a></h2>
+<p>If Navidrome is the wrong shape for your library, these are the realistic alternatives — not a 20-item dump of dead projects.</p>
+<table>
+	<thead>
+			<tr>
+					<th>You want</th>
+					<th>Use</th>
+					<th>Why not Navidrome</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Small, fast, Subsonic/OpenSubsonic apps</td>
+					<td><strong>Navidrome</strong></td>
+					<td>—</td>
+			</tr>
+			<tr>
+					<td>Federation / social library</td>
+					<td><strong>Funkwhale</strong></td>
+					<td>Navidrome is a personal server, not a Fediverse app</td>
+			</tr>
+			<tr>
+					<td>Already run a Java stack</td>
+					<td><strong>Airsonic-Advanced</strong></td>
+					<td>Heavier. Makes sense only if Java is already a given</td>
+			</tr>
+			<tr>
+					<td>Movies + TV + music in one app</td>
+					<td><strong>Jellyfin</strong> (music library)</td>
+					<td>You are no longer choosing a music server; you are choosing a media suite</td>
+			</tr>
+			<tr>
+					<td>One vendor app on every phone, playlists synced for a household</td>
+					<td><strong>Plex</strong></td>
+					<td>Not really self-hosted in spirit, and you pay for the good clients</td>
+			</tr>
+			<tr>
+					<td>Podcasts as a first-class library</td>
+					<td><strong>Audiobookshelf</strong></td>
+					<td>Different problem. Point it at podcasts/audiobooks, keep Navidrome for music</td>
+			</tr>
+	</tbody>
+</table>
+<p>For a first homelab box, the alternative that actually replaces Navidrome is almost always <strong>Funkwhale</strong> (if you care about federation) or <strong>Jellyfin</strong> (if you do not want a second service). Airsonic-Advanced is the legacy-shaped option.</p>
+<p>Skip random GitHub clones with one release in 2022. The three in the title plus Jellyfin cover what people mean by &ldquo;navidrome alternatives&rdquo; in 2026.</p>
+<p>If you are comparing pairwise:</p>
+<ul>
+<li><a href="#funkwhale--best-if-you-want-federation-or-a-social-layer">Navidrome vs Funkwhale</a></li>
+<li><a href="#airsonic-advanced--the-java-option">Navidrome vs Airsonic</a></li>
+</ul>
+<h2 id="faq">FAQ<a hidden class="anchor" aria-hidden="true" href="#faq">#</a></h2>
+<p><strong>What are the best Navidrome alternatives?</strong>
+Funkwhale for federation, Jellyfin if you already want movies/TV on the same box, Airsonic-Advanced if you are committed to Java. For a dedicated music server, Navidrome is still the default.</p>
+<p><strong>Can I run more than one of these at the same time to compare them?</strong>
+Yes, and it&rsquo;s a reasonable way to decide — spin each up in its own LXC container or Docker container pointed at a read-only copy of your library, try the mobile apps for a few days, and keep whichever one you actually prefer using.</p>
+<p><strong>Do any of these require re-organizing my music files?</strong>
+No. All three read your existing folder/file structure and metadata tags without moving or modifying anything. Point them at your library as read-only if you want extra peace of mind while testing.</p>
+<p><strong>Which one has the best web player if I mostly listen from a browser?</strong>
+Navidrome&rsquo;s web UI is generally considered the most polished of the three for browser-based listening — modern, fast, and actively developed. Funkwhale&rsquo;s is also solid and adds the radio/podcast browsing Navidrome lacks.</p>
+<p><strong>Is transcoding necessary, or can I just stream FLAC directly?</strong>
+You can stream FLAC directly on your home network without issue. Transcoding matters mainly for remote listening over cellular data, where a lower bitrate saves data — all three handle this via FFmpeg, bundled in their official Docker images.</p>
+<hr>
+<p><em>New to self-hosting entirely? Our <a href="/posts/best-home-lab-for-beginners-2026/">beginner&rsquo;s guide to building a home lab</a> covers the full stack this fits into, from hardware to your first month of services.</em></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/self-hosting/">Self-Hosting</a></li>
+      <li><a href="http://localhost:1313/tags/homelab/">Homelab</a></li>
+      <li><a href="http://localhost:1313/tags/music/">Music</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/example-350-proxmox-homelab-build/">
+    <span class="title">« Prev</span>
+    <span>A $350 Proxmox Home Lab: Example Build Based on Current Pricing (2026)</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/best-home-lab-for-beginners-2026/">
+    <span class="title">Next »</span>
+    <span>Best Home Lab for Beginners 2026</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

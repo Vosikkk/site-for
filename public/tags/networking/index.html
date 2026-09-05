@@ -5,12 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Networking | HomeLab Starter</title>
+<title>Networking | Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
 <meta name="keywords" content="">
-<meta name="description" content="Practical guides for building and running a modern homelab in 2026">
+<meta name="description" content="Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.">
 <meta name="author" content="Vosik">
 <link rel="canonical" href="http://localhost:1313/tags/networking/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7818a8d618bfd77c7c3c61970845e66d9e9bb07ba17e3f781040f210712b209b.css" integrity="sha256-eBio1hi/13x8PGGXCEXmbZ6bsHuhfj94EEDyEHErIJs=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -66,22 +66,24 @@
     }
 
 </script><meta property="og:url" content="http://localhost:1313/tags/networking/">
-  <meta property="og:site_name" content="HomeLab Starter">
+  <meta property="og:site_name" content="Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)">
   <meta property="og:title" content="Networking">
-  <meta property="og:description" content="Practical guides for building and running a modern homelab in 2026">
-  <meta property="og:locale" content="en_us">
+  <meta property="og:description" content="Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.">
+  <meta property="og:locale" content="en_US">
   <meta property="og:type" content="website">
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Networking">
-  <meta name="twitter:description" content="Practical guides for building and running a modern homelab in 2026">
+  <meta name="twitter:description" content="Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.">
 
 </head>
 <body class="list" id="top">
     <header class="header">
     <nav class="header-nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="HomeLab Starter (Alt + H)">HomeLab Starter</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Run a Home Lab (Alt + H)">
+                <img src="http://localhost:1313/favicon.ico" alt="" aria-label="logo"
+                    height="30">Run a Home Lab</a>
             <div class="logo-switches">
                 <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
@@ -152,23 +154,55 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Proxmox Wake-on-LAN Not Working? You&#39;re Probably Solving Two Different Problems
+    <h2 class="entry-hint-parent">Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far
     </h2>
   </header>
   <div class="entry-content">
-    <p>Almost every Proxmox WoL thread is actually two unrelated conversations happening at once, because “wake-on-lan on Proxmox” means one of two very different things depending on what you’re trying to wake up:
-Waking the physical Proxmox host from a full shutdown — this is regular hardware WoL, and it works, with some Proxmox-specific gotchas. Waking a VM that’s powered off — this is a different problem entirely, and traditional magic-packet WoL fundamentally doesn’t work for it, because a VM’s network card isn’t a physical device that can sit in a low-power state. If you’ve been mixing solutions from both categories and nothing works, that’s why. Let’s do them separately.
+    <p>If an Intel I225-V interface on Proxmox VE 9 starts falling into a repeating NETDEV WATCHDOG / Reset adapter loop after moving to a 7.0.x Proxmox kernel, there is now at least one well-documented report showing exactly that pattern.
+The important caveat is scope: this is not yet a broadly confirmed Proxmox-wide bug affecting every I225-V or I226-V system. The strongest current evidence comes from one detailed Proxmox VE 9.2.5 report where the same I225-V hardware was stable on 6.17.13-21-pve and repeatedly failed on two tested 7.0 kernels.
 ...</p>
   </div>
   <footer class="entry-footer">
 
-<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>842 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
-  <a class="entry-link" aria-label="post link to Proxmox Wake-on-LAN Not Working? You&#39;re Probably Solving Two Different Problems" href="http://localhost:1313/posts/proxmox-wake-on-lan-not-working/"></a>
+<span title='2026-08-20 00:00:00 +0000 UTC'>August 20, 2026</span>&nbsp;·&nbsp;<span>7 min</span>&nbsp;·&nbsp;<span>1367 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far" href="http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Proxmox Active Directory Integration for a Home Lab
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>If you’re learning IT support, sysadmin work, or cybersecurity, an Active Directory home lab is one of the highest-value things you can build — it’s the environment most business networks actually run on, and there’s no substitute for hands-on practice with domain controllers, group policy, and DNS/DHCP integration.
+The good news: you can build a fully functional AD lab on the same Proxmox host running the rest of your home lab, using free evaluation editions of Windows Server.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-16 00:00:00 +0000 UTC'>August 16, 2026</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>983 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Proxmox Active Directory Integration for a Home Lab" href="http://localhost:1313/posts/home-lab-active-directory-setup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Proxmox Wake-on-LAN Not Working: Fix Host and VM
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Wake-on-LAN failing on Proxmox? There are two completely separate problems people mean by this:
+Waking the physical Proxmox host from a full shutdown — this is regular hardware WoL. It works, with a few Proxmox-specific gotchas. Waking a VM that is powered off — classic magic-packet WoL does not work here. A virtual NIC is not a physical card sitting in a low-power state. If you mixed solutions from both threads and nothing worked, that is why. Do them separately.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span>4 min</span>&nbsp;·&nbsp;<span>736 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Proxmox Wake-on-LAN Not Working: Fix Host and VM" href="http://localhost:1313/posts/proxmox-wake-on-lan-not-working/"></a>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">HomeLab Starter</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</a></span> · 
 
     
     

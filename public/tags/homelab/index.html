@@ -5,12 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Homelab | HomeLab Starter</title>
+<title>Homelab | Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
 <meta name="keywords" content="">
-<meta name="description" content="Practical guides for building and running a modern homelab in 2026">
+<meta name="description" content="Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.">
 <meta name="author" content="Vosik">
 <link rel="canonical" href="http://localhost:1313/tags/homelab/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7818a8d618bfd77c7c3c61970845e66d9e9bb07ba17e3f781040f210712b209b.css" integrity="sha256-eBio1hi/13x8PGGXCEXmbZ6bsHuhfj94EEDyEHErIJs=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -66,22 +66,24 @@
     }
 
 </script><meta property="og:url" content="http://localhost:1313/tags/homelab/">
-  <meta property="og:site_name" content="HomeLab Starter">
+  <meta property="og:site_name" content="Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)">
   <meta property="og:title" content="Homelab">
-  <meta property="og:description" content="Practical guides for building and running a modern homelab in 2026">
-  <meta property="og:locale" content="en_us">
+  <meta property="og:description" content="Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.">
+  <meta property="og:locale" content="en_US">
   <meta property="og:type" content="website">
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Homelab">
-  <meta name="twitter:description" content="Practical guides for building and running a modern homelab in 2026">
+  <meta name="twitter:description" content="Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.">
 
 </head>
 <body class="list" id="top">
     <header class="header">
     <nav class="header-nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="HomeLab Starter (Alt + H)">HomeLab Starter</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Run a Home Lab (Alt + H)">
+                <img src="http://localhost:1313/favicon.ico" alt="" aria-label="logo"
+                    height="30">Run a Home Lab</a>
             <div class="logo-switches">
                 <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
@@ -152,33 +154,114 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One
+    <h2 class="entry-hint-parent">Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far
     </h2>
   </header>
   <div class="entry-content">
-    <p>This is one of the most confusing Proxmox errors, because it usually shows up after you’ve already done the “obvious” fix — installed the guest agent, confirmed it’s running inside the VM, and it still says not running on the Proxmox side. The reason is that “guest agent not running” can mean five or six genuinely different things, and the error message doesn’t tell you which one you’re dealing with.
+    <p>If an Intel I225-V interface on Proxmox VE 9 starts falling into a repeating NETDEV WATCHDOG / Reset adapter loop after moving to a 7.0.x Proxmox kernel, there is now at least one well-documented report showing exactly that pattern.
+The important caveat is scope: this is not yet a broadly confirmed Proxmox-wide bug affecting every I225-V or I226-V system. The strongest current evidence comes from one detailed Proxmox VE 9.2.5 report where the same I225-V hardware was stable on 6.17.13-21-pve and repeatedly failed on two tested 7.0 kernels.
 ...</p>
   </div>
   <footer class="entry-footer">
 
-<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>732 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
-  <a class="entry-link" aria-label="post link to Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One" href="http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/"></a>
+<span title='2026-08-20 00:00:00 +0000 UTC'>August 20, 2026</span>&nbsp;·&nbsp;<span>7 min</span>&nbsp;·&nbsp;<span>1367 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far" href="http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Proxmox Wake-on-LAN Not Working? You&#39;re Probably Solving Two Different Problems
+    <h2 class="entry-hint-parent">Best Mini PC for Proxmox in 2026 (By Budget and Use)
     </h2>
   </header>
   <div class="entry-content">
-    <p>Almost every Proxmox WoL thread is actually two unrelated conversations happening at once, because “wake-on-lan on Proxmox” means one of two very different things depending on what you’re trying to wake up:
-Waking the physical Proxmox host from a full shutdown — this is regular hardware WoL, and it works, with some Proxmox-specific gotchas. Waking a VM that’s powered off — this is a different problem entirely, and traditional magic-packet WoL fundamentally doesn’t work for it, because a VM’s network card isn’t a physical device that can sit in a low-power state. If you’ve been mixing solutions from both categories and nothing works, that’s why. Let’s do them separately.
+    <p>If you’re building a Proxmox home lab, you don’t necessarily need a large server.
+A modern Mini PC can give you a surprisingly capable Proxmox host in a small, quiet package. The difficult part is choosing one that makes sense for virtualization, rather than simply choosing the Mini PC with the fastest benchmark score.
+For Proxmox, we care about:
+CPU virtualization support RAM capacity and upgradeability NVMe storage Ethernet connectivity PCIe/IOMMU capabilities cooling under sustained workloads power consumption expansion options price In this guide, we’ll focus on the GMKtec K8 Plus and Beelink SER8, two Mini PCs that make particularly interesting Proxmox home-lab hosts.
 ...</p>
   </div>
   <footer class="entry-footer">
 
-<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>842 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
-  <a class="entry-link" aria-label="post link to Proxmox Wake-on-LAN Not Working? You&#39;re Probably Solving Two Different Problems" href="http://localhost:1313/posts/proxmox-wake-on-lan-not-working/"></a>
+<span title='2026-08-17 00:00:00 +0000 UTC'>August 17, 2026</span>&nbsp;·&nbsp;<span>15 min</span>&nbsp;·&nbsp;<span>3157 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Best Mini PC for Proxmox in 2026 (By Budget and Use)" href="http://localhost:1313/posts/best-mini-pcs-for-proxmox/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Our best mini PCs for Proxmox guide covers why the GMKtec K8 Plus is worth considering — dual 2.5GbE, two NVMe slots, OCuLink expansion. This article goes further: an actual setup and verification walkthrough on this specific hardware, covering the things a spec sheet can’t tell you — whether IOMMU actually gives you usable passthrough groups, and what the OCuLink port is realistically good for in a home lab context rather than just gaming.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-17 00:00:00 +0000 UTC'>August 17, 2026</span>&nbsp;·&nbsp;<span>7 min</span>&nbsp;·&nbsp;<span>1450 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For" href="http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Minecraft Server on Proxmox: LXC vs VM, Java vs Bedrock
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Hosting your own Minecraft server on Proxmox gives you something no rented game server can: dedicated resources that aren’t shared with strangers, snapshots you can roll back before a risky mod update, and zero monthly hosting fees beyond the electricity your home lab already uses.
+The two decisions that actually matter before you start: LXC or VM, and Java or Bedrock. Get those right and the rest of the setup is straightforward.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-16 00:00:00 +0000 UTC'>August 16, 2026</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>1158 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Minecraft Server on Proxmox: LXC vs VM, Java vs Bedrock" href="http://localhost:1313/posts/minecraft-server-on-proxmox/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Proxmox Active Directory Integration for a Home Lab
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>If you’re learning IT support, sysadmin work, or cybersecurity, an Active Directory home lab is one of the highest-value things you can build — it’s the environment most business networks actually run on, and there’s no substitute for hands-on practice with domain controllers, group policy, and DNS/DHCP integration.
+The good news: you can build a fully functional AD lab on the same Proxmox host running the rest of your home lab, using free evaluation editions of Windows Server.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-16 00:00:00 +0000 UTC'>August 16, 2026</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>983 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Proxmox Active Directory Integration for a Home Lab" href="http://localhost:1313/posts/home-lab-active-directory-setup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">A $350 Proxmox Home Lab: Example Build Based on Current Pricing (2026)
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> A note on how to read this guide: this is a reference configuration built from current, real pricing and specs — not a log of one specific unit we personally ran for months. Think of it as “here’s exactly what your money buys right now,” which is often more useful than a single person’s anecdotal experience, since hardware pricing shifts fast enough that a build log from six months ago can already be stale.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>8 min</span>&nbsp;·&nbsp;<span>1523 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to A $350 Proxmox Home Lab: Example Build Based on Current Pricing (2026)" href="http://localhost:1313/posts/example-350-proxmox-homelab-build/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>If you’re tired of algorithmic playlists and losing access to music you already paid for, self-hosting your own streaming server solves both problems — you point it at your existing library, and it just works, on your terms. The question is which server to actually run. Here’s a straight comparison of the three real contenders.
+Quick Answer For most people building their first home lab, Navidrome is the right default. It’s lightweight, actively maintained, and works with the best mobile apps available. Reach for Funkwhale specifically if you want federation/social features. Airsonic-Advanced is worth considering mainly if you’re already comfortable with the Java ecosystem or have a specific reason to avoid the other two.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>1148 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server" href="http://localhost:1313/posts/best-self-hosted-music-server-2026/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -193,13 +276,13 @@ This guide is written specifically for beginners. No prior knowledge of Proxmox,
   </div>
   <footer class="entry-footer">
 
-<span title='2026-08-13 10:00:00 +0300 EEST'>August 13, 2026</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>1005 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+<span title='2026-08-13 10:00:00 +0300 EEST'>August 13, 2026</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>1150 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
   <a class="entry-link" aria-label="post link to Best Home Lab for Beginners 2026" href="http://localhost:1313/posts/best-home-lab-for-beginners-2026/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Proxmox &#39;No Valid Subscription&#39;: Why It Happens and How to Fix It (PVE 8 &amp; 9)
+    <h2 class="entry-hint-parent">Proxmox No Valid Subscription: Repo Fix and Nag Remove (PVE 8 &amp; 9)
     </h2>
   </header>
   <div class="entry-content">
@@ -209,13 +292,13 @@ There are actually two separate issues hiding under one confusing message, and m
   </div>
   <footer class="entry-footer">
 
-<span title='2026-08-13 00:00:00 +0000 UTC'>August 13, 2026</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>761 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
-  <a class="entry-link" aria-label="post link to Proxmox &#39;No Valid Subscription&#39;: Why It Happens and How to Fix It (PVE 8 & 9)" href="http://localhost:1313/posts/proxmox-no-valid-subscription-fix/"></a>
+<span title='2026-08-13 00:00:00 +0000 UTC'>August 13, 2026</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>997 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Proxmox No Valid Subscription: Repo Fix and Nag Remove (PVE 8 & 9)" href="http://localhost:1313/posts/proxmox-no-valid-subscription-fix/"></a>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">HomeLab Starter</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</a></span> · 
 
     
     

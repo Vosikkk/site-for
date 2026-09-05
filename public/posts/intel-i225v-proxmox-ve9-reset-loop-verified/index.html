@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far | Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
+<meta name="keywords" content="proxmox, homelab, troubleshooting, networking">
+<meta name="description" content="Intel I225-V dropping into NETDEV WATCHDOG reset loops on Proxmox VE 9 with Linux 7.0 kernels? Here&#39;s what has actually been reported, how to confirm it, and the current rollback workaround.">
+<meta name="author" content="Vosik">
+<link rel="canonical" href="http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7818a8d618bfd77c7c3c61970845e66d9e9bb07ba17e3f781040f210712b209b.css" integrity="sha256-eBio1hi/13x8PGGXCEXmbZ6bsHuhfj94EEDyEHErIJs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/">
+  <meta property="og:site_name" content="Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)">
+  <meta property="og:title" content="Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far">
+  <meta property="og:description" content="Intel I225-V dropping into NETDEV WATCHDOG reset loops on Proxmox VE 9 with Linux 7.0 kernels? Here&#39;s what has actually been reported, how to confirm it, and the current rollback workaround.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-08-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-08-25T12:11:08+03:00">
+    <meta property="article:tag" content="Proxmox">
+    <meta property="article:tag" content="Homelab">
+    <meta property="article:tag" content="Troubleshooting">
+    <meta property="article:tag" content="Networking">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far">
+  <meta name="twitter:description" content="Intel I225-V dropping into NETDEV WATCHDOG reset loops on Proxmox VE 9 with Linux 7.0 kernels? Here&#39;s what has actually been reported, how to confirm it, and the current rollback workaround.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far",
+      "item": "http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far",
+  "name": "Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far",
+  "description": "Intel I225-V dropping into NETDEV WATCHDOG reset loops on Proxmox VE 9 with Linux 7.0 kernels? Here's what has actually been reported, how to confirm it, and the current rollback workaround.",
+  "keywords": [
+    "proxmox", "homelab", "troubleshooting", "networking"
+  ],
+  "articleBody": "If an Intel I225-V interface on Proxmox VE 9 starts falling into a repeating NETDEV WATCHDOG / Reset adapter loop after moving to a 7.0.x Proxmox kernel, there is now at least one well-documented report showing exactly that pattern.\nThe important caveat is scope: this is not yet a broadly confirmed Proxmox-wide bug affecting every I225-V or I226-V system. The strongest current evidence comes from one detailed Proxmox VE 9.2.5 report where the same I225-V hardware was stable on 6.17.13-21-pve and repeatedly failed on two tested 7.0 kernels.\nSo treat this as a reproducible regression report and a troubleshooting path — not proof that every igc-based NIC is broken on Linux 7.0.\nWhat the Reported Failure Looks Like The affected system used an Intel I225-V:\nIntel Corporation Ethernet Controller I225-V [8086:15f3] (rev 03) Kernel driver in use: igc On the affected kernels, the interface repeatedly hit a transmit watchdog timeout, dumped registers, reset the adapter, renegotiated the 2.5GbE link, and then repeated the process.\nThe useful pattern to look for in dmesg or journalctl -k is roughly:\nNETDEV WATCHDOG: transmit queue timed out Register Dump Reset adapter port entered disabled state NIC Link is Up 2500 Mbps Full Duplex port entered forwarding state In the documented case, the cycle repeated approximately every 10 seconds once it started.\nYou can check the kernel log with:\njournalctl -k or:\ndmesg -T If you want to narrow it down:\njournalctl -k | grep -Ei 'igc|NETDEV WATCHDOG|Reset adapter' Check Which NIC You Actually Have Before assuming this article applies to your system, identify the controller:\nlspci -nn | grep -i ethernet For more detail:\nlspci -vv -s And confirm the driver:\nethtool -i The 2026 report this article is based on involved an Intel I225-V rev 03 using the igc driver.\nWhich Kernels Were Actually Tested In the documented Proxmox VE 9.2.5 case:\nKernel Result on that system 6.17.13-21-pve Stable 7.0.2-4-pve Repeating watchdog/reset loop 7.0.14-8-pve Repeating watchdog/reset loop That comparison is useful because the hardware, cable, switch port, bridge configuration, and host were unchanged between boots.\nIt is strong evidence of a kernel-related regression on that system.\nIt is not enough evidence to say that every 7.0.x-pve kernel is broken on every I225-V installation.\nWhy It Looks More Like a Driver Reset Than a Bad Cable The original report included an ethtool -S snapshot where tx_timeout_count had climbed dramatically while counters such as CRC errors and collisions remained at zero.\nExample counters from that report included:\ntx_timeout_count: 278513 rx_crc_errors: 0 tx_carrier_errors: 0 rx_align_errors: 0 collisions: 0 The reported PCIe AER status was also clean, and ASPM was already disabled.\nThat does not prove the exact root cause inside igc, but it makes a simple physical-link explanation — such as a bad cable or switch port — less convincing in that specific case, especially because booting the same machine back into 6.17.13-21-pve restored stability.\nCurrent Workaround: Boot the Known-Good Kernel If your symptoms match and you already have a known-good 6.17 kernel installed, the practical short-term workaround is to boot that kernel instead of the affected 7.0 build.\nFirst, list available kernels:\nproxmox-boot-tool kernel list If 6.17.13-21-pve is installed and you have already confirmed it works on your machine, you can pin it:\nproxmox-boot-tool kernel pin 6.17.13-21-pve Then refresh the boot configuration:\nproxmox-boot-tool refresh Reboot:\nreboot After the system comes back:\nuname -r You should see the kernel you pinned.\nTest a New Kernel Without Permanently Unpinning Proxmox also supports selecting a kernel for the next boot only, which is useful when you want to test whether a newer kernel has fixed the regression:\nproxmox-boot-tool kernel pin --next-boot If the newer kernel works, remove the permanent pin:\nproxmox-boot-tool kernel unpin proxmox-boot-tool refresh Do not leave an old kernel pinned forever without re-testing newer updates. Kernel updates also carry unrelated fixes and security changes.\nWhat About Intel I226-V? This is where the original version of this article was too broad.\nIntel I226-V also uses the igc driver, and there are older Proxmox forum reports of I226-V systems hitting NETDEV WATCHDOG / adapter-reset symptoms on earlier kernel generations.\nBut that does not prove that the specific 2026 regression seen on 7.0.2-4-pve and 7.0.14-8-pve affects I226-V too.\nSo the accurate position right now is:\nI225-V: confirmed in the detailed 2026 report. I226-V: similar igc watchdog issues have existed historically, but this specific 7.0 regression is not independently confirmed from the sources reviewed here. If you have an I226-V and see the same failure pattern after moving from 6.17 to 7.0, compare kernels and collect logs before assuming it is the same bug.\nIs This the Same as the Older 6.8 Regression? Probably not — and it should not be presented as if that has been proven either.\nA reply in the current Proxmox forum thread pointed to Proxmox Bugzilla issue #6273, which concerned a similar-looking problem around an older 6.8 kernel regression.\nThe original reporter responded that their system had previously been stable on 6.8 and was still stable on 6.17, with the failure appearing only after moving to 7.0.\nThat makes a separate regression plausible, but the exact root cause of the 2026 issue has not been publicly isolated in the sources reviewed here.\nIn other words: similar symptom does not automatically mean same bug.\nWhat We Still Don’t Know As of August 25, 2026, the public thread reviewed here does not contain a confirmed root-cause patch or a confirmed fixed kernel for this specific I225-V 7.0 regression.\nWe also do not yet have enough reports to establish:\nwhich I225-V revisions are affected beyond the documented rev 03 card, whether onboard I225-V behaves the same as add-in cards, whether I226-V is affected by this exact regression, whether offload settings or queue configuration change the behavior, which future 7.0 kernel first fixes it. That uncertainty matters. A troubleshooting article should distinguish what was measured from what is still inference.\nPractical Troubleshooting Checklist If your I225-V starts resetting after a Proxmox kernel update:\nConfirm the NIC model with lspci -nn. Confirm the igc driver with ethtool -i. Check journalctl -k for NETDEV WATCHDOG and Reset adapter. Check whether the problem started only after a kernel change. Boot a previously known-good kernel without changing the cable, switch port, or bridge configuration. If the old kernel is stable, pin it temporarily. Keep notes on exact working and failing kernel versions. Re-test newer kernels periodically and remove the pin once the issue is resolved. That kernel A/B comparison is much more useful than randomly changing five network settings at once.\nFAQ Should I downgrade immediately if I have an I225-V?\nNo. If your NIC is working normally, there is no reason to roll back preemptively based on one regression report. This is a troubleshooting path for systems actually showing the watchdog/reset pattern.\nIs pinning an older kernel safe?\nIt is an officially supported Proxmox mechanism for working around hardware incompatibilities with a newer kernel. The tradeoff is that you are deliberately staying on an older kernel, so re-test newer kernels and remove the pin once the issue is fixed.\nShould I disable TSO, GSO, checksum offload, or ASPM?\nNot as the first step if you can reproduce a clean working-kernel / broken-kernel comparison. In the documented report, ASPM was already disabled and the default offload configuration had not yet been changed. Changing several variables at once makes the regression harder to isolate.\nIs this definitely an upstream Linux igc bug?\nThe evidence points toward a kernel/driver regression because the same host changes behavior when only the kernel changes, and igc is an upstream Linux driver. But the exact offending change or patch has not been established in the public sources reviewed here, so calling the root cause “confirmed” would be premature.\nSources Proxmox forum: Intel I225-V igc NETDEV WATCHDOG/reset loop on 7.0 kernels; stable on 6.17 Proxmox VE Administration Guide — kernel pinning Older Proxmox I226-V NETDEV WATCHDOG discussion Older I225-V / I226-V kernel regression discussion Running a GMKtec K8 Plus or another dual-2.5GbE mini PC? Our GMKtec K8 Plus review covers its i226V networking hardware. If you’re chasing a different networking issue, our Wake-on-LAN troubleshooting guide covers another common class of NIC problems.\n",
+  "wordCount" : "1367",
+  "inLanguage": "en",
+  "datePublished": "2026-08-20T00:00:00Z",
+  "dateModified": "2026-08-25T12:11:08+03:00",
+  "author":{
+    "@type": "Person",
+    "name": "Vosik"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Run a Home Lab (Alt + H)">
+                <img src="http://localhost:1313/favicon.ico" alt="" aria-label="logo"
+                    height="30">Run a Home Lab</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/privacy/" title="Privacy">
+                    <span>Privacy</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far
+    </h1>
+    <div class="post-description">
+      Intel I225-V dropping into NETDEV WATCHDOG reset loops on Proxmox VE 9 with Linux 7.0 kernels? Here&#39;s what has actually been reported, how to confirm it, and the current rollback workaround.
+    </div>
+    <div class="post-meta">
+
+<span title='2026-08-20 00:00:00 +0000 UTC'>August 20, 2026</span>&nbsp;·&nbsp;<span>7 min</span>&nbsp;·&nbsp;<span>1367 words</span>&nbsp;·&nbsp;<span>Vosik</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#what-the-reported-failure-looks-like">What the Reported Failure Looks Like</a></li>
+    <li><a href="#check-which-nic-you-actually-have">Check Which NIC You Actually Have</a></li>
+    <li><a href="#which-kernels-were-actually-tested">Which Kernels Were Actually Tested</a></li>
+    <li><a href="#why-it-looks-more-like-a-driver-reset-than-a-bad-cable">Why It Looks More Like a Driver Reset Than a Bad Cable</a></li>
+    <li><a href="#current-workaround-boot-the-known-good-kernel">Current Workaround: Boot the Known-Good Kernel</a>
+      <ul>
+        <li><a href="#test-a-new-kernel-without-permanently-unpinning">Test a New Kernel Without Permanently Unpinning</a></li>
+      </ul>
+    </li>
+    <li><a href="#what-about-intel-i226-v">What About Intel I226-V?</a></li>
+    <li><a href="#is-this-the-same-as-the-older-68-regression">Is This the Same as the Older 6.8 Regression?</a></li>
+    <li><a href="#what-we-still-dont-know">What We Still Don&rsquo;t Know</a></li>
+    <li><a href="#practical-troubleshooting-checklist">Practical Troubleshooting Checklist</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
+  <div class="post-content md-content"><p>If an Intel I225-V interface on Proxmox VE 9 starts falling into a repeating <code>NETDEV WATCHDOG</code> / <code>Reset adapter</code> loop after moving to a 7.0.x Proxmox kernel, there is now at least one well-documented report showing exactly that pattern.</p>
+<p>The important caveat is scope: this is <strong>not yet a broadly confirmed Proxmox-wide bug affecting every I225-V or I226-V system</strong>. The strongest current evidence comes from one detailed Proxmox VE 9.2.5 report where the same I225-V hardware was stable on <code>6.17.13-21-pve</code> and repeatedly failed on two tested 7.0 kernels.</p>
+<p>So treat this as a reproducible regression report and a troubleshooting path — not proof that every <code>igc</code>-based NIC is broken on Linux 7.0.</p>
+<h2 id="what-the-reported-failure-looks-like">What the Reported Failure Looks Like<a hidden class="anchor" aria-hidden="true" href="#what-the-reported-failure-looks-like">#</a></h2>
+<p>The affected system used an Intel I225-V:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Intel Corporation Ethernet Controller I225-V [8086:15f3] (rev 03)
+</span></span><span style="display:flex;"><span>Kernel driver in use: igc
+</span></span></code></pre></div><p>On the affected kernels, the interface repeatedly hit a transmit watchdog timeout, dumped registers, reset the adapter, renegotiated the 2.5GbE link, and then repeated the process.</p>
+<p>The useful pattern to look for in <code>dmesg</code> or <code>journalctl -k</code> is roughly:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>NETDEV WATCHDOG: transmit queue timed out
+</span></span><span style="display:flex;"><span>Register Dump
+</span></span><span style="display:flex;"><span>Reset adapter
+</span></span><span style="display:flex;"><span>&lt;bridge&gt; port entered disabled state
+</span></span><span style="display:flex;"><span>NIC Link is Up 2500 Mbps Full Duplex
+</span></span><span style="display:flex;"><span>&lt;bridge&gt; port entered forwarding state
+</span></span></code></pre></div><p>In the documented case, the cycle repeated approximately every 10 seconds once it started.</p>
+<p>You can check the kernel log with:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>journalctl -k
+</span></span></code></pre></div><p>or:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dmesg -T
+</span></span></code></pre></div><p>If you want to narrow it down:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>journalctl -k | grep -Ei <span style="color:#e6db74">&#39;igc|NETDEV WATCHDOG|Reset adapter&#39;</span>
+</span></span></code></pre></div><h2 id="check-which-nic-you-actually-have">Check Which NIC You Actually Have<a hidden class="anchor" aria-hidden="true" href="#check-which-nic-you-actually-have">#</a></h2>
+<p>Before assuming this article applies to your system, identify the controller:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>lspci -nn | grep -i ethernet
+</span></span></code></pre></div><p>For more detail:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>lspci -vv -s &lt;PCI_ADDRESS&gt;
+</span></span></code></pre></div><p>And confirm the driver:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ethtool -i &lt;interface&gt;
+</span></span></code></pre></div><p>The 2026 report this article is based on involved an <strong>Intel I225-V rev 03 using the <code>igc</code> driver</strong>.</p>
+<h2 id="which-kernels-were-actually-tested">Which Kernels Were Actually Tested<a hidden class="anchor" aria-hidden="true" href="#which-kernels-were-actually-tested">#</a></h2>
+<p>In the documented Proxmox VE 9.2.5 case:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Kernel</th>
+					<th>Result on that system</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>6.17.13-21-pve</code></td>
+					<td>Stable</td>
+			</tr>
+			<tr>
+					<td><code>7.0.2-4-pve</code></td>
+					<td>Repeating watchdog/reset loop</td>
+			</tr>
+			<tr>
+					<td><code>7.0.14-8-pve</code></td>
+					<td>Repeating watchdog/reset loop</td>
+			</tr>
+	</tbody>
+</table>
+<p>That comparison is useful because the hardware, cable, switch port, bridge configuration, and host were unchanged between boots.</p>
+<p>It is strong evidence of a kernel-related regression <strong>on that system</strong>.</p>
+<p>It is not enough evidence to say that every <code>7.0.x-pve</code> kernel is broken on every I225-V installation.</p>
+<h2 id="why-it-looks-more-like-a-driver-reset-than-a-bad-cable">Why It Looks More Like a Driver Reset Than a Bad Cable<a hidden class="anchor" aria-hidden="true" href="#why-it-looks-more-like-a-driver-reset-than-a-bad-cable">#</a></h2>
+<p>The original report included an <code>ethtool -S</code> snapshot where <code>tx_timeout_count</code> had climbed dramatically while counters such as CRC errors and collisions remained at zero.</p>
+<p>Example counters from that report included:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>tx_timeout_count: 278513
+</span></span><span style="display:flex;"><span>rx_crc_errors: 0
+</span></span><span style="display:flex;"><span>tx_carrier_errors: 0
+</span></span><span style="display:flex;"><span>rx_align_errors: 0
+</span></span><span style="display:flex;"><span>collisions: 0
+</span></span></code></pre></div><p>The reported PCIe AER status was also clean, and ASPM was already disabled.</p>
+<p>That does not prove the exact root cause inside <code>igc</code>, but it makes a simple physical-link explanation — such as a bad cable or switch port — less convincing in that specific case, especially because booting the same machine back into <code>6.17.13-21-pve</code> restored stability.</p>
+<h2 id="current-workaround-boot-the-known-good-kernel">Current Workaround: Boot the Known-Good Kernel<a hidden class="anchor" aria-hidden="true" href="#current-workaround-boot-the-known-good-kernel">#</a></h2>
+<p>If your symptoms match and you already have a known-good 6.17 kernel installed, the practical short-term workaround is to boot that kernel instead of the affected 7.0 build.</p>
+<p>First, list available kernels:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>proxmox-boot-tool kernel list
+</span></span></code></pre></div><p>If <code>6.17.13-21-pve</code> is installed and you have already confirmed it works on your machine, you can pin it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>proxmox-boot-tool kernel pin 6.17.13-21-pve
+</span></span></code></pre></div><p>Then refresh the boot configuration:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>proxmox-boot-tool refresh
+</span></span></code></pre></div><p>Reboot:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>reboot
+</span></span></code></pre></div><p>After the system comes back:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>uname -r
+</span></span></code></pre></div><p>You should see the kernel you pinned.</p>
+<h3 id="test-a-new-kernel-without-permanently-unpinning">Test a New Kernel Without Permanently Unpinning<a hidden class="anchor" aria-hidden="true" href="#test-a-new-kernel-without-permanently-unpinning">#</a></h3>
+<p>Proxmox also supports selecting a kernel for the <strong>next boot only</strong>, which is useful when you want to test whether a newer kernel has fixed the regression:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>proxmox-boot-tool kernel pin &lt;new-kernel-version&gt; --next-boot
+</span></span></code></pre></div><p>If the newer kernel works, remove the permanent pin:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>proxmox-boot-tool kernel unpin
+</span></span><span style="display:flex;"><span>proxmox-boot-tool refresh
+</span></span></code></pre></div><p>Do not leave an old kernel pinned forever without re-testing newer updates. Kernel updates also carry unrelated fixes and security changes.</p>
+<h2 id="what-about-intel-i226-v">What About Intel I226-V?<a hidden class="anchor" aria-hidden="true" href="#what-about-intel-i226-v">#</a></h2>
+<p>This is where the original version of this article was too broad.</p>
+<p>Intel I226-V also uses the <code>igc</code> driver, and there are older Proxmox forum reports of I226-V systems hitting <code>NETDEV WATCHDOG</code> / adapter-reset symptoms on earlier kernel generations.</p>
+<p>But that does <strong>not</strong> prove that the specific 2026 regression seen on <code>7.0.2-4-pve</code> and <code>7.0.14-8-pve</code> affects I226-V too.</p>
+<p>So the accurate position right now is:</p>
+<ul>
+<li><strong>I225-V:</strong> confirmed in the detailed 2026 report.</li>
+<li><strong>I226-V:</strong> similar <code>igc</code> watchdog issues have existed historically, but this specific 7.0 regression is not independently confirmed from the sources reviewed here.</li>
+</ul>
+<p>If you have an I226-V and see the same failure pattern after moving from 6.17 to 7.0, compare kernels and collect logs before assuming it is the same bug.</p>
+<h2 id="is-this-the-same-as-the-older-68-regression">Is This the Same as the Older 6.8 Regression?<a hidden class="anchor" aria-hidden="true" href="#is-this-the-same-as-the-older-68-regression">#</a></h2>
+<p>Probably not — and it should not be presented as if that has been proven either.</p>
+<p>A reply in the current Proxmox forum thread pointed to Proxmox Bugzilla issue <code>#6273</code>, which concerned a similar-looking problem around an older 6.8 kernel regression.</p>
+<p>The original reporter responded that their system had previously been stable on 6.8 and was still stable on 6.17, with the failure appearing only after moving to 7.0.</p>
+<p>That makes a separate regression plausible, but the exact root cause of the 2026 issue has not been publicly isolated in the sources reviewed here.</p>
+<p>In other words: <strong>similar symptom does not automatically mean same bug</strong>.</p>
+<h2 id="what-we-still-dont-know">What We Still Don&rsquo;t Know<a hidden class="anchor" aria-hidden="true" href="#what-we-still-dont-know">#</a></h2>
+<p>As of August 25, 2026, the public thread reviewed here does not contain a confirmed root-cause patch or a confirmed fixed kernel for this specific I225-V 7.0 regression.</p>
+<p>We also do not yet have enough reports to establish:</p>
+<ul>
+<li>which I225-V revisions are affected beyond the documented rev 03 card,</li>
+<li>whether onboard I225-V behaves the same as add-in cards,</li>
+<li>whether I226-V is affected by this exact regression,</li>
+<li>whether offload settings or queue configuration change the behavior,</li>
+<li>which future 7.0 kernel first fixes it.</li>
+</ul>
+<p>That uncertainty matters. A troubleshooting article should distinguish what was measured from what is still inference.</p>
+<h2 id="practical-troubleshooting-checklist">Practical Troubleshooting Checklist<a hidden class="anchor" aria-hidden="true" href="#practical-troubleshooting-checklist">#</a></h2>
+<p>If your I225-V starts resetting after a Proxmox kernel update:</p>
+<ol>
+<li>Confirm the NIC model with <code>lspci -nn</code>.</li>
+<li>Confirm the <code>igc</code> driver with <code>ethtool -i</code>.</li>
+<li>Check <code>journalctl -k</code> for <code>NETDEV WATCHDOG</code> and <code>Reset adapter</code>.</li>
+<li>Check whether the problem started only after a kernel change.</li>
+<li>Boot a previously known-good kernel without changing the cable, switch port, or bridge configuration.</li>
+<li>If the old kernel is stable, pin it temporarily.</li>
+<li>Keep notes on exact working and failing kernel versions.</li>
+<li>Re-test newer kernels periodically and remove the pin once the issue is resolved.</li>
+</ol>
+<p>That kernel A/B comparison is much more useful than randomly changing five network settings at once.</p>
+<h2 id="faq">FAQ<a hidden class="anchor" aria-hidden="true" href="#faq">#</a></h2>
+<p><strong>Should I downgrade immediately if I have an I225-V?</strong></p>
+<p>No. If your NIC is working normally, there is no reason to roll back preemptively based on one regression report. This is a troubleshooting path for systems actually showing the watchdog/reset pattern.</p>
+<p><strong>Is pinning an older kernel safe?</strong></p>
+<p>It is an officially supported Proxmox mechanism for working around hardware incompatibilities with a newer kernel. The tradeoff is that you are deliberately staying on an older kernel, so re-test newer kernels and remove the pin once the issue is fixed.</p>
+<p><strong>Should I disable TSO, GSO, checksum offload, or ASPM?</strong></p>
+<p>Not as the first step if you can reproduce a clean working-kernel / broken-kernel comparison. In the documented report, ASPM was already disabled and the default offload configuration had not yet been changed. Changing several variables at once makes the regression harder to isolate.</p>
+<p><strong>Is this definitely an upstream Linux <code>igc</code> bug?</strong></p>
+<p>The evidence points toward a kernel/driver regression because the same host changes behavior when only the kernel changes, and <code>igc</code> is an upstream Linux driver. But the exact offending change or patch has not been established in the public sources reviewed here, so calling the root cause &ldquo;confirmed&rdquo; would be premature.</p>
+<h2 id="sources">Sources<a hidden class="anchor" aria-hidden="true" href="#sources">#</a></h2>
+<ul>
+<li><a href="https://forum.proxmox.com/threads/intel-i225-v-igc-netdev-watchdog-reset-loop-on-7-0-kernels-stable-on-6-17.185410/">Proxmox forum: Intel I225-V igc NETDEV WATCHDOG/reset loop on 7.0 kernels; stable on 6.17</a></li>
+<li><a href="https://pve.proxmox.com/pve-docs/pve-admin-guide.pdf">Proxmox VE Administration Guide — kernel pinning</a></li>
+<li><a href="https://forum.proxmox.com/threads/netdev-watchdog-enp4s0-igc-transmit-queue-0-timed-out-intel-i226-v.135266/">Older Proxmox I226-V NETDEV WATCHDOG discussion</a></li>
+<li><a href="https://forum.proxmox.com/threads/weird-bond-issue-since-8-1-i225-v-bug.137162/">Older I225-V / I226-V kernel regression discussion</a></li>
+</ul>
+<hr>
+<p><em>Running a GMKtec K8 Plus or another dual-2.5GbE mini PC? Our <a href="/posts/gmktec-k8-plus-for-proxmox/">GMKtec K8 Plus review</a> covers its i226V networking hardware. If you&rsquo;re chasing a different networking issue, our <a href="/posts/proxmox-wake-on-lan-not-working/">Wake-on-LAN troubleshooting guide</a> covers another common class of NIC problems.</em></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/proxmox/">Proxmox</a></li>
+      <li><a href="http://localhost:1313/tags/homelab/">Homelab</a></li>
+      <li><a href="http://localhost:1313/tags/troubleshooting/">Troubleshooting</a></li>
+      <li><a href="http://localhost:1313/tags/networking/">Networking</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/crafty-controller-proxmox-lxc/">
+    <span class="title">« Prev</span>
+    <span>Crafty Controller on Proxmox LXC: Minecraft Server Manager</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/best-mini-pcs-for-proxmox/">
+    <span class="title">Next »</span>
+    <span>Best Mini PC for Proxmox in 2026 (By Budget and Use)</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

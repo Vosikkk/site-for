@@ -49,6 +49,14 @@ With a Paper server and the right JVM flags, even a modest 4-core allocation can
 4. Download the server jar (Paper's official downloads page is the standard source if you're using Paper) into the container.
 5. Run the server once to generate the initial files, accept the EULA in `eula.txt`, then start it for real with appropriately sized JVM memory flags matching the RAM you allocated to the container.
 
+## Managing Minecraft on Proxmox with Crafty Controller
+
+A raw Paper or Vanilla server is easy to keep running with SSH and a systemd unit. Once you want a browser UI, multiple worlds, file management, logs, scheduled backups, or start/stop controls for someone who should not have shell access, a management layer becomes useful.
+
+[Crafty Controller on Proxmox LXC](/posts/crafty-controller-proxmox-lxc/) adds that layer without changing the LXC-vs-VM decision above. For a small Java server, you can run Crafty and the Minecraft server in the same LXC as long as you leave memory for the panel and the OS. If you plan to run several worlds or a heavy modpack, size the container for the JVMs rather than the web UI.
+
+If you only run one stable Paper server and are comfortable with SSH, Crafty is optional. It is a convenience and management tool, not a requirement for hosting Minecraft on Proxmox.
+
 ## Common Pitfalls
 
 - **Forgetting to enable the QEMU guest agent** if you went the VM route instead of LXC — without it, Proxmox can't cleanly shut down the VM, and scheduled restarts will hang. (We cover this in detail in our [guest agent troubleshooting guide](/posts/proxmox-guest-agent-not-running-fix/) if you hit that specific error.)

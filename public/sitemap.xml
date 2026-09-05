@@ -2,53 +2,92 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
+    <loc>http://localhost:1313/tags/notifications/</loc>
+    <lastmod>2026-09-02T17:33:37+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/homelab/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/networking/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
+    <loc>http://localhost:1313/tags/pbs/</loc>
+    <lastmod>2026-09-02T17:33:37+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/proxmox/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
+    <lastmod>2026-09-05T14:33:00+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/proxmox/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
+    <lastmod>2026-09-05T14:33:00+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/</loc>
-    <lastmod>2026-08-14T08:24:16+03:00</lastmod>
+    <loc>http://localhost:1313/tags/proxmox-backup/</loc>
+    <lastmod>2026-09-02T17:33:37+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/proxmox-wake-on-lan-not-working/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
+    <loc>http://localhost:1313/posts/proxmox-backup-notifications-telegram/</loc>
+    <lastmod>2026-09-02T17:33:37+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-09-05T14:33:00+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
+    <lastmod>2026-09-05T14:33:00+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/troubleshooting/</loc>
-    <lastmod>2026-08-14T08:32:26+03:00</lastmod>
+    <loc>http://localhost:1313/tags/telegram/</loc>
+    <lastmod>2026-09-02T17:33:37+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/beginners/</loc>
-    <lastmod>2026-08-13T22:53:31+03:00</lastmod>
+    <loc>http://localhost:1313/posts/crafty-controller-proxmox-lxc/</loc>
+    <lastmod>2026-08-29T09:35:24+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/best-home-lab-for-beginners-2026/</loc>
-    <lastmod>2026-08-13T22:53:31+03:00</lastmod>
+    <loc>http://localhost:1313/tags/lxc/</loc>
+    <lastmod>2026-08-29T09:35:24+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/guides/</loc>
-    <lastmod>2026-08-13T22:53:31+03:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/mini-pc/</loc>
-    <lastmod>2026-08-13T22:53:31+03:00</lastmod>
+    <loc>http://localhost:1313/tags/minecraft/</loc>
+    <lastmod>2026-08-29T09:35:24+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/self-hosting/</loc>
-    <lastmod>2026-08-13T22:53:31+03:00</lastmod>
+    <lastmod>2026-08-29T09:35:24+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/homelab/</loc>
+    <lastmod>2026-08-29T09:45:48+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/</loc>
+    <lastmod>2026-08-25T12:11:08+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/networking/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/troubleshooting/</loc>
+    <lastmod>2026-09-05T14:33:00+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/best-mini-pcs-for-proxmox/</loc>
+    <lastmod>2026-08-29T09:45:48+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/hardware/</loc>
+    <lastmod>2026-08-29T09:45:48+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/mini-pc/</loc>
+    <lastmod>2026-08-29T09:45:48+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/minecraft-server-on-proxmox/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/home-lab-active-directory-setup/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/windows/</loc>
+    <lastmod>2026-09-05T14:33:00+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/example-350-proxmox-homelab-build/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/music/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/best-self-hosted-music-server-2026/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/beginners/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/best-home-lab-for-beginners-2026/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/about/</loc>
     <lastmod>2026-08-13T19:38:00+03:00</lastmod>
@@ -57,6 +96,18 @@
     <lastmod>2026-08-13T19:38:00+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/proxmox-no-valid-subscription-fix/</loc>
-    <lastmod>2026-08-14T08:19:01+03:00</lastmod>
+    <lastmod>2026-08-29T09:45:48+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/</loc>
+    <lastmod>2026-09-05T14:33:00+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/proxmox-wake-on-lan-not-working/</loc>
+    <lastmod>2026-08-29T09:24:38+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/qemu/</loc>
+    <lastmod>2026-09-05T14:33:00+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/ubuntu/</loc>
+    <lastmod>2026-09-05T14:33:00+03:00</lastmod>
   </url>
 </urlset>

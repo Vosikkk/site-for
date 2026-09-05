@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Mini Pc on HomeLab Starter</title>
+    <title>Mini Pc on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
     <link>http://localhost:1313/tags/mini-pc/</link>
-    <description>Recent content in Mini Pc on HomeLab Starter</description>
+    <description>Recent content in Mini Pc on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</description>
     <generator>Hugo</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 13 Aug 2026 22:53:31 +0300</lastBuildDate>
+    <language>en-US</language>
+    <lastBuildDate>Sat, 29 Aug 2026 09:45:48 +0300</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/mini-pc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Best Mini PC for Proxmox in 2026 (By Budget and Use)</title>
+      <link>http://localhost:1313/posts/best-mini-pcs-for-proxmox/</link>
+      <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/best-mini-pcs-for-proxmox/</guid>
+      <description>Best mini PC for Proxmox in 2026 — GMKtec K8 Plus, Beelink SER8, N150 budget boxes, 10GbE class machines, and used Dell/Lenovo tinies.</description>
+    </item>
+    <item>
+      <title>GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For</title>
+      <link>http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/</link>
+      <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/</guid>
+      <description>Is the GMKtec K8 Plus a good Proxmox host? Dual 2.5GbE, two NVMe slots, OCuLink, RAM ceiling, and when a SER8 or used Tiny is smarter.</description>
+    </item>
+    <item>
+      <title>A $350 Proxmox Home Lab: Example Build Based on Current Pricing (2026)</title>
+      <link>http://localhost:1313/posts/example-350-proxmox-homelab-build/</link>
+      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/example-350-proxmox-homelab-build/</guid>
+      <description>A concrete example of what a ~$350 Proxmox home lab can look like in 2026 — a practical base system, optional upgrades, what it can run, and realistic power costs.</description>
+    </item>
     <item>
       <title>Best Home Lab for Beginners 2026</title>
       <link>http://localhost:1313/posts/best-home-lab-for-beginners-2026/</link>

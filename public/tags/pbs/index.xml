@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Pbs on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
+    <link>http://localhost:1313/tags/pbs/</link>
+    <description>Recent content in Pbs on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <lastBuildDate>Wed, 02 Sep 2026 17:33:37 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/pbs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proxmox Backup Notifications: Get Failed Backup Alerts in Telegram</title>
+      <link>http://localhost:1313/posts/proxmox-backup-notifications-telegram/</link>
+      <pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/proxmox-backup-notifications-telegram/</guid>
+      <description>Get notified when a Proxmox or PBS backup fails. See how Proxmox backup notifications work and test a simple Telegram alert with no monitoring dashboard.</description>
+    </item>
+  </channel>
+</rss>

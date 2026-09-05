@@ -1,0 +1,81 @@
+.home-guide-section {
+    margin: 28px 0 36px;
+}
+
+.home-guide-intro {
+    margin-bottom: 18px;
+}
+
+.home-guide-intro h2,
+.home-latest-title {
+    font-size: 24px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+}
+
+.home-guide-intro p {
+    margin: 0;
+    color: var(--secondary);
+}
+
+.home-guide-kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 6px !important;
+}
+
+.home-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.home-guide-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    background: var(--entry);
+}
+
+.home-guide-card h3 {
+    font-size: 18px;
+    margin: 0 0 6px;
+}
+
+.home-guide-card p {
+    color: var(--secondary);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0 0 12px;
+}
+
+.home-guide-card ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.home-guide-card li {
+    margin: 6px 0;
+}
+
+.home-guide-card a {
+    box-shadow: none;
+    font-weight: 500;
+}
+
+.home-guide-card a:hover {
+    text-decoration: underline;
+}
+
+.home-latest-title {
+    margin-top: 30px;
+    margin-bottom: 12px;
+}
+
+@media (max-width: 700px) {
+    .home-guide-grid {
+        grid-template-columns: 1fr;
+    }
+}

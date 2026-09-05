@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Crafty Controller on Proxmox LXC: Minecraft Server Manager | Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
+<meta name="keywords" content="proxmox, minecraft, lxc, self-hosting">
+<meta name="description" content="Run Crafty Controller on a Proxmox LXC. Resources, ports, Java vs Bedrock, helper-script install, and when a VM is the better box.">
+<meta name="author" content="Vosik">
+<link rel="canonical" href="http://localhost:1313/posts/crafty-controller-proxmox-lxc/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7818a8d618bfd77c7c3c61970845e66d9e9bb07ba17e3f781040f210712b209b.css" integrity="sha256-eBio1hi/13x8PGGXCEXmbZ6bsHuhfj94EEDyEHErIJs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/crafty-controller-proxmox-lxc/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/posts/crafty-controller-proxmox-lxc/">
+  <meta property="og:site_name" content="Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)">
+  <meta property="og:title" content="Crafty Controller on Proxmox LXC: Minecraft Server Manager">
+  <meta property="og:description" content="Run Crafty Controller on a Proxmox LXC. Resources, ports, Java vs Bedrock, helper-script install, and when a VM is the better box.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-08-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-08-29T09:35:24+03:00">
+    <meta property="article:tag" content="Proxmox">
+    <meta property="article:tag" content="Minecraft">
+    <meta property="article:tag" content="Lxc">
+    <meta property="article:tag" content="Self-Hosting">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Crafty Controller on Proxmox LXC: Minecraft Server Manager">
+  <meta name="twitter:description" content="Run Crafty Controller on a Proxmox LXC. Resources, ports, Java vs Bedrock, helper-script install, and when a VM is the better box.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Crafty Controller on Proxmox LXC: Minecraft Server Manager",
+      "item": "http://localhost:1313/posts/crafty-controller-proxmox-lxc/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Crafty Controller on Proxmox LXC: Minecraft Server Manager",
+  "name": "Crafty Controller on Proxmox LXC: Minecraft Server Manager",
+  "description": "Run Crafty Controller on a Proxmox LXC. Resources, ports, Java vs Bedrock, helper-script install, and when a VM is the better box.",
+  "keywords": [
+    "proxmox", "minecraft", "lxc", "self-hosting"
+  ],
+  "articleBody": "You already can run a raw Paper/Vanilla jar in an LXC. Crafty Controller is the layer on top: a web UI to start/stop servers, edit files, pull backups, and keep more than one Minecraft version without SSH-ing into the box every time.\nIf you have not decided between LXC vs VM or Java vs Bedrock yet, start with the Minecraft Server on Proxmox guide. This article assumes that decision is made and focuses on how to manage those servers once they exist.\nLXC or VM for Crafty Controller? Use an LXC for Java Edition + Crafty. Crafty is a Python web app that launches JVM servers. Neither needs a full virtual BIOS. An unprivileged Debian/Ubuntu LXC is the default: fast boot, low overhead, easy bind-mounts for the world folders.\nUse a VM if:\nyou want Bedrock in a context where the LXC networking/UDP path is fighting you you want a hard isolation boundary around kids’ servers a helper script or panel expects systemd and Docker in ways your unprivileged LXC template does not give you Crafty itself does not require a VM. The Minecraft edition and how picky you are about isolation do.\nWhat to allocate The panel is light. The JVM is not.\nStarting point that matches common helper-script defaults and real small servers:\nRole CPU RAM Disk Crafty + one small Java server (friends, no heavy mods) 2 cores 4 GB 16 GB Crafty + modest Paper / light plugin pack 4 cores 6–8 GB 32 GB Modded pack or several worlds 4+ cores 8–16 GB 64 GB+ and a backup target outside the CT Give the JVM a hard ceiling lower than the container RAM (leave 512 MB–1 GB for Crafty + OS). A 4 GB CT with -Xmx4096M will OOM as soon as the panel and the GC argue.\nPort plan:\nCrafty web UI: 8443/TCP (typical) Java server: 25565/TCP (and whatever you remap per instance) Bedrock: 19132/UDP if you run it Forward those on the host / firewall, not “all ports on the CT.”\nInstall options Two honest paths.\n1. Manual LXC (preferred if you want to understand the box) Create an unprivileged Debian LXC. Enable nesting if the installer or future updates need it. Install a JDK that matches the Minecraft version you will run. Do not assume “latest Java” equals “correct Java.” Install Crafty from the official Linux install docs. Confirm the systemd unit is enabled. Open https://:8443, change the initial password, then create the server from the UI instead of launching server.jar by hand. World data should live on a bind-mounted path or a dedicated virtual disk you snapshot. Do not treat the CT rootfs as the only copy of world/.\n2. Community helper script There is a Proxmox VE Helper-Scripts installer for Crafty Controller. It builds the CT, drops you on https://:8443, and stores initial credentials in the container.\nUse it if you want a working panel in one shot. Read the script before piping it to bash, keep notes of the CTID it creates, and know that panel updates and script updates are not the same thing. A failed scripted update can leave the unit down while /opt/crafty-controller is still intact — at that point systemctl status crafty-controller and the official upgrade path matter more than re-running the installer.\nCrafty Controller + Java vs Bedrock on Proxmox Java in LXC is the path that matches the rest of this site. Paper/Fabric/Vanilla behind Crafty is the common homelab setup. Bedrock is a different binary and a different port. Put it in its own CT/VM if you do not want UDP rules mixed into the Java box. Do not run Java and a heavy Bedrock instance in the same 4 GB helper-script default and then blame Proxmox. Crafty can manage more than one server. Memory cannot. If you add a second world, add RAM or add a second CT.\nBackups and the guest agent LXC snapshots are fast and not a substitute for a Crafty-side world backup plus a copy off the node.\nIf you ever move this to a VM instead of an LXC, install the QEMU guest agent and do a full stop/start after enabling it — same fix as guest agent not running. On an LXC the guest agent is a different story; snapshot consistency then depends on how you freeze the filesystem, not on qemu-ga.\nCommon pitfalls Helper-script defaults are not a modded-pack spec. 2 cores / 4 GB / 16 GB is a small vanilla/Paper box. UI on 8443, game on 25565. Opening only one of them looks like “Crafty is broken.” Updating the panel via a script after a major Crafty bump can fail the systemd unit. Check journalctl -u crafty-controller before you rebuild the CT. Putting worlds only on the CT disk with no off-node copy. A bad pct rollback will teach this once. Running Crafty as the thing that also torrents, arr-stack, and Jellyfin. Give Minecraft its own CT. FAQ Is Crafty Controller better than just a systemd unit for Paper? Only if you want a browser UI, multiple versions, or non-SSH admin. A single stable Paper server does not need it.\nCan I put Crafty in Docker inside the LXC? You can. You now have two layers to debug. For a homelab Minecraft panel, native install or the helper-script CT is less noise.\nDoes this work on PVE 8 and 9? Yes. The constraints are Java version, RAM, and ports — not the PVE major.\nStart with how to host Minecraft on Proxmox if you have not picked LXC vs VM yet. Hardware-side: best mini PC for Proxmox.\n",
+  "wordCount" : "934",
+  "inLanguage": "en",
+  "datePublished": "2026-08-29T00:00:00Z",
+  "dateModified": "2026-08-29T09:35:24+03:00",
+  "author":{
+    "@type": "Person",
+    "name": "Vosik"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/posts/crafty-controller-proxmox-lxc/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Run a Home Lab (Alt + H)">
+                <img src="http://localhost:1313/favicon.ico" alt="" aria-label="logo"
+                    height="30">Run a Home Lab</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/privacy/" title="Privacy">
+                    <span>Privacy</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      Crafty Controller on Proxmox LXC: Minecraft Server Manager
+    </h1>
+    <div class="post-description">
+      Run Crafty Controller on a Proxmox LXC. Resources, ports, Java vs Bedrock, helper-script install, and when a VM is the better box.
+    </div>
+    <div class="post-meta">
+
+<span title='2026-08-29 00:00:00 +0000 UTC'>August 29, 2026</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>934 words</span>&nbsp;·&nbsp;<span>Vosik</span>
+
+</div>
+  </header> <details class="toc"  open>
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#lxc-or-vm-for-crafty-controller">LXC or VM for Crafty Controller?</a></li>
+    <li><a href="#what-to-allocate">What to allocate</a></li>
+    <li><a href="#install-options">Install options</a>
+      <ul>
+        <li><a href="#1-manual-lxc-preferred-if-you-want-to-understand-the-box">1. Manual LXC (preferred if you want to understand the box)</a></li>
+        <li><a href="#2-community-helper-script">2. Community helper script</a></li>
+      </ul>
+    </li>
+    <li><a href="#crafty-controller--java-vs-bedrock-on-proxmox">Crafty Controller + Java vs Bedrock on Proxmox</a></li>
+    <li><a href="#backups-and-the-guest-agent">Backups and the guest agent</a></li>
+    <li><a href="#common-pitfalls">Common pitfalls</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
+  <div class="post-content md-content"><p>You already can run a raw Paper/Vanilla jar in an LXC. Crafty Controller is the layer on top: a web UI to start/stop servers, edit files, pull backups, and keep more than one Minecraft version without SSH-ing into the box every time.</p>
+<p>If you have not decided between <strong>LXC vs VM</strong> or <strong>Java vs Bedrock</strong> yet, start with the <a href="/posts/minecraft-server-on-proxmox/">Minecraft Server on Proxmox guide</a>. This article assumes that decision is made and focuses on how to manage those servers once they exist.</p>
+<h2 id="lxc-or-vm-for-crafty-controller">LXC or VM for Crafty Controller?<a hidden class="anchor" aria-hidden="true" href="#lxc-or-vm-for-crafty-controller">#</a></h2>
+<p><strong>Use an LXC for Java Edition + Crafty.</strong>
+Crafty is a Python web app that launches JVM servers. Neither needs a full virtual BIOS. An unprivileged Debian/Ubuntu LXC is the default: fast boot, low overhead, easy bind-mounts for the world folders.</p>
+<p><strong>Use a VM if:</strong></p>
+<ul>
+<li>you want Bedrock in a context where the LXC networking/UDP path is fighting you</li>
+<li>you want a hard isolation boundary around kids&rsquo; servers</li>
+<li>a helper script or panel expects systemd and Docker in ways your unprivileged LXC template does not give you</li>
+</ul>
+<p>Crafty itself does not require a VM. The Minecraft edition and how picky you are about isolation do.</p>
+<h2 id="what-to-allocate">What to allocate<a hidden class="anchor" aria-hidden="true" href="#what-to-allocate">#</a></h2>
+<p>The panel is light. The JVM is not.</p>
+<p>Starting point that matches common helper-script defaults and real small servers:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Role</th>
+					<th>CPU</th>
+					<th>RAM</th>
+					<th>Disk</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Crafty + one small Java server (friends, no heavy mods)</td>
+					<td>2 cores</td>
+					<td>4 GB</td>
+					<td>16 GB</td>
+			</tr>
+			<tr>
+					<td>Crafty + modest Paper / light plugin pack</td>
+					<td>4 cores</td>
+					<td>6–8 GB</td>
+					<td>32 GB</td>
+			</tr>
+			<tr>
+					<td>Modded pack or several worlds</td>
+					<td>4+ cores</td>
+					<td>8–16 GB</td>
+					<td>64 GB+ and a backup target <em>outside</em> the CT</td>
+			</tr>
+	</tbody>
+</table>
+<p>Give the JVM a hard ceiling lower than the container RAM (leave 512 MB–1 GB for Crafty + OS). A 4 GB CT with <code>-Xmx4096M</code> will OOM as soon as the panel and the GC argue.</p>
+<p>Port plan:</p>
+<ul>
+<li>Crafty web UI: <strong>8443/TCP</strong> (typical)</li>
+<li>Java server: <strong>25565/TCP</strong> (and whatever you remap per instance)</li>
+<li>Bedrock: <strong>19132/UDP</strong> if you run it</li>
+</ul>
+<p>Forward those on the host / firewall, not &ldquo;all ports on the CT.&rdquo;</p>
+<h2 id="install-options">Install options<a hidden class="anchor" aria-hidden="true" href="#install-options">#</a></h2>
+<p>Two honest paths.</p>
+<h3 id="1-manual-lxc-preferred-if-you-want-to-understand-the-box">1. Manual LXC (preferred if you want to understand the box)<a hidden class="anchor" aria-hidden="true" href="#1-manual-lxc-preferred-if-you-want-to-understand-the-box">#</a></h3>
+<ol>
+<li>Create an unprivileged Debian LXC. Enable nesting if the installer or future updates need it.</li>
+<li>Install a JDK that matches the Minecraft version you will run. Do not assume &ldquo;latest Java&rdquo; equals &ldquo;correct Java.&rdquo;</li>
+<li>Install Crafty from the <a href="https://docs.craftycontrol.com/pages/getting-started/installation/linux/">official Linux install docs</a>.</li>
+<li>Confirm the systemd unit is enabled.</li>
+<li>Open <code>https://&lt;ct-ip&gt;:8443</code>, change the initial password, then create the server from the UI instead of launching <code>server.jar</code> by hand.</li>
+</ol>
+<p>World data should live on a bind-mounted path or a dedicated virtual disk you snapshot. Do not treat the CT rootfs as the only copy of <code>world/</code>.</p>
+<h3 id="2-community-helper-script">2. Community helper script<a hidden class="anchor" aria-hidden="true" href="#2-community-helper-script">#</a></h3>
+<p>There is a Proxmox VE Helper-Scripts installer for Crafty Controller. It builds the CT, drops you on <code>https://&lt;ip&gt;:8443</code>, and stores initial credentials in the container.</p>
+<p>Use it if you want a working panel in one shot. Read the script before piping it to bash, keep notes of the CTID it creates, and know that <strong>panel updates and script updates are not the same thing</strong>. A failed scripted update can leave the unit down while <code>/opt/crafty-controller</code> is still intact — at that point <code>systemctl status crafty-controller</code> and the official upgrade path matter more than re-running the installer.</p>
+<h2 id="crafty-controller--java-vs-bedrock-on-proxmox">Crafty Controller + Java vs Bedrock on Proxmox<a hidden class="anchor" aria-hidden="true" href="#crafty-controller--java-vs-bedrock-on-proxmox">#</a></h2>
+<ul>
+<li><strong>Java in LXC</strong> is the path that matches the rest of this site. Paper/Fabric/Vanilla behind Crafty is the common homelab setup.</li>
+<li><strong>Bedrock</strong> is a different binary and a different port. Put it in its own CT/VM if you do not want UDP rules mixed into the Java box.</li>
+<li>Do not run Java and a heavy Bedrock instance in the same 4 GB helper-script default and then blame Proxmox.</li>
+</ul>
+<p>Crafty can manage more than one server. Memory cannot. If you add a second world, add RAM or add a second CT.</p>
+<h2 id="backups-and-the-guest-agent">Backups and the guest agent<a hidden class="anchor" aria-hidden="true" href="#backups-and-the-guest-agent">#</a></h2>
+<p>LXC snapshots are fast and not a substitute for a Crafty-side world backup plus a copy off the node.</p>
+<p>If you ever move this to a <strong>VM</strong> instead of an LXC, install the QEMU guest agent and do a full stop/start after enabling it — same fix as <a href="/posts/proxmox-guest-agent-not-running-fix/">guest agent not running</a>. On an LXC the guest agent is a different story; snapshot consistency then depends on how you freeze the filesystem, not on <code>qemu-ga</code>.</p>
+<h2 id="common-pitfalls">Common pitfalls<a hidden class="anchor" aria-hidden="true" href="#common-pitfalls">#</a></h2>
+<ul>
+<li><strong>Helper-script defaults are not a modded-pack spec.</strong> 2 cores / 4 GB / 16 GB is a small vanilla/Paper box.</li>
+<li><strong>UI on 8443, game on 25565.</strong> Opening only one of them looks like &ldquo;Crafty is broken.&rdquo;</li>
+<li><strong>Updating the panel via a script</strong> after a major Crafty bump can fail the systemd unit. Check <code>journalctl -u crafty-controller</code> before you rebuild the CT.</li>
+<li><strong>Putting worlds only on the CT disk</strong> with no off-node copy. A bad <code>pct rollback</code> will teach this once.</li>
+<li><strong>Running Crafty as the thing that also torrents, arr-stack, and Jellyfin.</strong> Give Minecraft its own CT.</li>
+</ul>
+<h2 id="faq">FAQ<a hidden class="anchor" aria-hidden="true" href="#faq">#</a></h2>
+<p><strong>Is Crafty Controller better than just a systemd unit for Paper?</strong>
+Only if you want a browser UI, multiple versions, or non-SSH admin. A single stable Paper server does not need it.</p>
+<p><strong>Can I put Crafty in Docker inside the LXC?</strong>
+You can. You now have two layers to debug. For a homelab Minecraft panel, native install or the helper-script CT is less noise.</p>
+<p><strong>Does this work on PVE 8 and 9?</strong>
+Yes. The constraints are Java version, RAM, and ports — not the PVE major.</p>
+<hr>
+<p><em>Start with <a href="/posts/minecraft-server-on-proxmox/">how to host Minecraft on Proxmox</a> if you have not picked LXC vs VM yet. Hardware-side: <a href="/posts/best-mini-pcs-for-proxmox/">best mini PC for Proxmox</a>.</em></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/proxmox/">Proxmox</a></li>
+      <li><a href="http://localhost:1313/tags/minecraft/">Minecraft</a></li>
+      <li><a href="http://localhost:1313/tags/lxc/">Lxc</a></li>
+      <li><a href="http://localhost:1313/tags/self-hosting/">Self-Hosting</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/proxmox-backup-notifications-telegram/">
+    <span class="title">« Prev</span>
+    <span>Proxmox Backup Notifications: Get Failed Backup Alerts in Telegram</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/">
+    <span class="title">Next »</span>
+    <span>Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

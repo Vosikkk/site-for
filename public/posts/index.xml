@@ -1,26 +1,75 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Posts on HomeLab Starter</title>
+    <title>Posts on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
     <link>http://localhost:1313/posts/</link>
-    <description>Recent content in Posts on HomeLab Starter</description>
+    <description>Recent content in Posts on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</description>
     <generator>Hugo</generator>
-    <language>en-us</language>
-    <lastBuildDate>Fri, 14 Aug 2026 08:32:26 +0300</lastBuildDate>
+    <language>en-US</language>
+    <lastBuildDate>Sat, 05 Sep 2026 14:33:00 +0300</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One</title>
-      <link>http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/</link>
-      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/</guid>
-      <description>Proxmox showing &amp;#39;QEMU guest agent is not running&amp;#39; even though the agent is clearly installed and started? Here&amp;#39;s every common cause, for both Linux and Windows guests.</description>
+      <title>Proxmox Backup Notifications: Get Failed Backup Alerts in Telegram</title>
+      <link>http://localhost:1313/posts/proxmox-backup-notifications-telegram/</link>
+      <pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/proxmox-backup-notifications-telegram/</guid>
+      <description>Get notified when a Proxmox or PBS backup fails. See how Proxmox backup notifications work and test a simple Telegram alert with no monitoring dashboard.</description>
     </item>
     <item>
-      <title>Proxmox Wake-on-LAN Not Working? You&#39;re Probably Solving Two Different Problems</title>
-      <link>http://localhost:1313/posts/proxmox-wake-on-lan-not-working/</link>
+      <title>Crafty Controller on Proxmox LXC: Minecraft Server Manager</title>
+      <link>http://localhost:1313/posts/crafty-controller-proxmox-lxc/</link>
+      <pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/crafty-controller-proxmox-lxc/</guid>
+      <description>Run Crafty Controller on a Proxmox LXC. Resources, ports, Java vs Bedrock, helper-script install, and when a VM is the better box.</description>
+    </item>
+    <item>
+      <title>Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far</title>
+      <link>http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/</link>
+      <pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/intel-i225v-proxmox-ve9-reset-loop-verified/</guid>
+      <description>Intel I225-V dropping into NETDEV WATCHDOG reset loops on Proxmox VE 9 with Linux 7.0 kernels? Here&amp;#39;s what has actually been reported, how to confirm it, and the current rollback workaround.</description>
+    </item>
+    <item>
+      <title>Best Mini PC for Proxmox in 2026 (By Budget and Use)</title>
+      <link>http://localhost:1313/posts/best-mini-pcs-for-proxmox/</link>
+      <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/best-mini-pcs-for-proxmox/</guid>
+      <description>Best mini PC for Proxmox in 2026 — GMKtec K8 Plus, Beelink SER8, N150 budget boxes, 10GbE class machines, and used Dell/Lenovo tinies.</description>
+    </item>
+    <item>
+      <title>GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For</title>
+      <link>http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/</link>
+      <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/</guid>
+      <description>Is the GMKtec K8 Plus a good Proxmox host? Dual 2.5GbE, two NVMe slots, OCuLink, RAM ceiling, and when a SER8 or used Tiny is smarter.</description>
+    </item>
+    <item>
+      <title>Minecraft Server on Proxmox: LXC vs VM, Java vs Bedrock</title>
+      <link>http://localhost:1313/posts/minecraft-server-on-proxmox/</link>
+      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/minecraft-server-on-proxmox/</guid>
+      <description>Host a Minecraft server on Proxmox. LXC vs VM, Java vs Bedrock, RAM/CPU starting points, and how Crafty Controller fits in.</description>
+    </item>
+    <item>
+      <title>Proxmox Active Directory Integration for a Home Lab</title>
+      <link>http://localhost:1313/posts/home-lab-active-directory-setup/</link>
+      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/home-lab-active-directory-setup/</guid>
+      <description>Set up Active Directory in a home lab on Proxmox — when you need it, VM sizing, and how it ties into Windows guests and the QEMU guest agent. </description>
+    </item>
+    <item>
+      <title>A $350 Proxmox Home Lab: Example Build Based on Current Pricing (2026)</title>
+      <link>http://localhost:1313/posts/example-350-proxmox-homelab-build/</link>
       <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/proxmox-wake-on-lan-not-working/</guid>
-      <description>Wake-on-LAN failing on Proxmox? There are two completely separate WoL problems people mean by this — waking the physical host, and waking a VM. Here&amp;#39;s both.</description>
+      <guid>http://localhost:1313/posts/example-350-proxmox-homelab-build/</guid>
+      <description>A concrete example of what a ~$350 Proxmox home lab can look like in 2026 — a practical base system, optional upgrades, what it can run, and realistic power costs.</description>
+    </item>
+    <item>
+      <title>Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server</title>
+      <link>http://localhost:1313/posts/best-self-hosted-music-server-2026/</link>
+      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/best-self-hosted-music-server-2026/</guid>
+      <description>Navidrome vs Funkwhale vs Airsonic-Advanced in 2026 — plus Navidrome alternatives if you want Plex-like features, podcasts, or multi-user libraries.</description>
     </item>
     <item>
       <title>Best Home Lab for Beginners 2026</title>
@@ -30,11 +79,25 @@
       <description>Complete beginner-friendly guide to building a practical and useful home lab in 2026. Realistic hardware recommendations, software stack, budget tiers, and a clear 14-day launch plan.</description>
     </item>
     <item>
-      <title>Proxmox &#39;No Valid Subscription&#39;: Why It Happens and How to Fix It (PVE 8 &amp; 9)</title>
+      <title>Proxmox No Valid Subscription: Repo Fix and Nag Remove (PVE 8 &amp; 9)</title>
       <link>http://localhost:1313/posts/proxmox-no-valid-subscription-fix/</link>
       <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/proxmox-no-valid-subscription-fix/</guid>
-      <description>Proxmox showing a &amp;#39;No valid subscription&amp;#39; popup or apt update errors? Here&amp;#39;s exactly why it happens and two separate fixes for PVE 8 and PVE 9.</description>
+      <description>Fix Proxmox “no valid subscription” for apt on PVE 8 and 9, then optionally remove the web UI nag. Two separate problems, two fixes.</description>
+    </item>
+    <item>
+      <title>Proxmox Guest Agent Not Running? Fix It on Linux &amp; Windows</title>
+      <link>http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/</guid>
+      <description>Seeing &amp;#39;QEMU guest agent is not running&amp;#39; in Proxmox? Fix it on Ubuntu, Debian or Windows, check virtio-serial, and learn why a reboot may not be enough.</description>
+    </item>
+    <item>
+      <title>Proxmox Wake-on-LAN Not Working: Fix Host and VM</title>
+      <link>http://localhost:1313/posts/proxmox-wake-on-lan-not-working/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/proxmox-wake-on-lan-not-working/</guid>
+      <description>Fix Proxmox Wake-on-LAN for the physical host (BIOS, ethtool, vmbr0) and why a stopped VM cannot use classic magic-packet WoL.</description>
     </item>
   </channel>
 </rss>

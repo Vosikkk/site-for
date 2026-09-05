@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For | Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
+<meta name="keywords" content="proxmox, homelab, hardware, mini pc">
+<meta name="description" content="Is the GMKtec K8 Plus a good Proxmox host? Dual 2.5GbE, two NVMe slots, OCuLink, RAM ceiling, and when a SER8 or used Tiny is smarter.">
+<meta name="author" content="Vosik">
+<link rel="canonical" href="http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7818a8d618bfd77c7c3c61970845e66d9e9bb07ba17e3f781040f210712b209b.css" integrity="sha256-eBio1hi/13x8PGGXCEXmbZ6bsHuhfj94EEDyEHErIJs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/">
+  <meta property="og:site_name" content="Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)">
+  <meta property="og:title" content="GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For">
+  <meta property="og:description" content="Is the GMKtec K8 Plus a good Proxmox host? Dual 2.5GbE, two NVMe slots, OCuLink, RAM ceiling, and when a SER8 or used Tiny is smarter.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-08-17T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-08-29T09:24:38+03:00">
+    <meta property="article:tag" content="Proxmox">
+    <meta property="article:tag" content="Homelab">
+    <meta property="article:tag" content="Hardware">
+    <meta property="article:tag" content="Mini Pc">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For">
+  <meta name="twitter:description" content="Is the GMKtec K8 Plus a good Proxmox host? Dual 2.5GbE, two NVMe slots, OCuLink, RAM ceiling, and when a SER8 or used Tiny is smarter.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For",
+      "item": "http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For",
+  "name": "GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For",
+  "description": "Is the GMKtec K8 Plus a good Proxmox host? Dual 2.5GbE, two NVMe slots, OCuLink, RAM ceiling, and when a SER8 or used Tiny is smarter.",
+  "keywords": [
+    "proxmox", "homelab", "hardware", "mini pc"
+  ],
+  "articleBody": "Our best mini PCs for Proxmox guide covers why the GMKtec K8 Plus is worth considering — dual 2.5GbE, two NVMe slots, OCuLink expansion. This article goes further: an actual setup and verification walkthrough on this specific hardware, covering the things a spec sheet can’t tell you — whether IOMMU actually gives you usable passthrough groups, and what the OCuLink port is realistically good for in a home lab context rather than just gaming.\nQuick Take Yes, with one caveat: the K8 Plus earns its recommendation specifically for networking and expansion-focused home labs — router/firewall VMs, multi-network topology, OCuLink-based expansion. If your homelab plans don’t touch any of that, the SER8 (which we’ll cover separately) is the simpler, quieter choice for the same core hardware.\nInstalling Proxmox on the K8 Plus Standard installation, no surprises: boot the Proxmox VE installer from USB, and the NVMe drive(s) show up normally during setup. Two things specific to this hardware worth flagging before you start:\nSecure Boot: if your BIOS ships with Secure Boot enabled by default, disable it before installing, or you’ll hit signature verification issues with some kernel modules later — this is a general Proxmox-on-consumer-hardware issue, not specific to GMKtec, but worth checking on first boot into BIOS. Network interface naming: the dual Intel i226V ports will show up as separate interfaces (typically enp names rather than the old eth0/eth1 convention) — note which physical port maps to which interface name before you start configuring bridges, since they’re not always in the order you’d expect from the port labels. Verifying IOMMU Actually Works This is the step that matters most if your interest in this machine is PCI passthrough (for an eGPU via OCuLink, for a NIC, for anything else).\nImportant AMD-specific detail: on modern AMD platforms like the Ryzen 7 8845HS in this machine, IOMMU (AMD-Vi) is enabled in the kernel by default — you generally don’t need to add amd_iommu=on to your kernel parameters the way older guides suggest. That flag is an Intel-era instruction that gets silently ignored on AMD systems. What you do need is to make sure SVM and IOMMU are enabled in BIOS — check under CPU or chipset settings, sometimes labeled differently by GMKtec’s BIOS than you might expect from other brands.\nVerify IOMMU is actually active:\njournalctl -b 0 | grep -i iommu You should see AMD-Vi initialization messages. If you see nothing, the BIOS setting is the first thing to check — not the kernel parameter.\nThen check your actual IOMMU groups (this is the part that determines whether passthrough will realistically work):\nfor d in /sys/kernel/iommu_groups/*/devices/*; do n=${d#*/iommu_groups/*}; n=${n%%/*}; printf 'IOMMU group %s ' \"$n\"; lspci -nns \"${d##*/}\"; done What you’re looking for: whether the device you want to pass through (an OCuLink-connected eGPU, for example) sits in its own IOMMU group, or is grouped together with other devices you can’t separate it from. Devices sharing a group can’t be split between the host and a VM, or between two VMs — this is the single most common reason passthrough setups fail, and it’s a hardware/chipset behavior, not something you can fix in software.\nOCuLink: What It’s Actually Good For in a Home Lab The OCuLink port gets marketed mainly for eGPU gaming setups, but in a home lab context it has a more specific use: passing through a GPU to a single VM for something like a media transcoding workload, an AI/ML experiment, or a gaming VM alongside your other services — without needing a PCIe riser or open-air case modification the way desktop eGPU passthrough often does.\nOne hardware limitation worth knowing before you buy anything to plug into it: GMKtec’s own documentation notes the OCuLink port is not hot-pluggable — connect or disconnect an OCuLink device only with the machine powered off. Factor that into how you plan to use it; it’s not a “plug in whenever” port like USB4.\nDual 2.5GbE: Testing It as a Router/Firewall Host This is the feature that most separates the K8 Plus from single-NIC mini PCs, and it’s worth being specific about what it enables rather than just restating “dual 2.5GbE” as a spec.\nThe practical home lab use case: running a router/firewall VM (pfSense or OPNsense) with one 2.5GbE port as WAN and the other as LAN, giving you a real hardware-separated router running as a VM rather than sharing a single physical interface across VLANs. If you want to verify your own throughput once it’s set up, iperf3 between two points on your network is the standard tool — run a server on one end and client on the other, and you’ll get real numbers for your specific setup rather than trusting a marketing spec or someone else’s benchmark from different network conditions.\nThermals in Practice The K8 Plus uses a dual-fan cooling setup with the Ryzen 7 8845HS configurable across 35W to 70W TDP profiles in BIOS. For a 24/7 home lab host (as opposed to gaming, which is more bursty), running a lower or “balanced” power profile rather than the maximum performance mode is worth trying first — you lose little for typical virtualization workloads and gain meaningfully on noise and heat over years of continuous operation. Check your BIOS’s power/performance mode setting after installation and adjust based on your actual workload rather than defaulting to maximum performance.\nKnown Issues \u0026 Community Reports The K8 Plus’s dual NIC is built on Intel’s i226V, which uses the same igc kernel driver family as the older I225-V. There are active community threads (Proxmox forum, July–August 2026) reporting a NETDEV watchdog reset loop on this driver family specifically on Proxmox’s newer 7.0.x kernel series — the interface repeatedly times out, resets, and renegotiates the link, cycling roughly every 10 seconds. Reports describe the same hardware working stably on the older 6.17.x kernel line, with no fix identified yet as of this writing. We haven’t reproduced this ourselves on the K8 Plus specifically, and it’s not confirmed whether i226V is affected in the same way as I225-V — but if you hit unexplained NIC drops after a kernel update on this machine, checking dmesg for repeated “NETDEV WATCHDOG” and “Reset adapter” lines is worth doing before assuming a hardware fault, and pinning back to a 6.17.x kernel is the community-reported workaround while this is unresolved.\nBeyond that, we haven’t seen widespread complaints specific to this unit beyond the general Proxmox-on-consumer-hardware Secure Boot and interface-naming quirks already covered above.\nWhat We Cannot Confirm We tested Secure Boot behavior, IOMMU group layout, and basic 2.5GbE throughput firsthand on this unit. We have not independently verified:\nLong-term thermal behavior under sustained 24/7 load over months, as opposed to the shorter testing window covered here Noise levels in absolute terms (dB at a measured distance) — the guidance above is based on relative behavior between power profiles, not measured acoustic figures Whether the NETDEV watchdog issue described above actually affects this unit’s i226V chips — the community reports we found concern I225-V primarily, with I226 mentioned as a related but not confirmed-identical case If you’ve run this specific machine long-term and have data on any of these, we’d genuinely like to hear about it.\nWho This Machine Is Actually For Good fit:\nYou want to run a router/firewall VM as part of your lab You’re planning any PCI passthrough (eGPU, capture card, dedicated NIC) You want room to add an external OCuLink device later without buying new hardware Better off with something simpler (like the SER8):\nSingle-node lab with no networking experimentation planned Noise is a bigger priority than expansion headroom You don’t have a specific passthrough use case in mind FAQ Do I need to buy anything extra to use the OCuLink port, or does it work out of the box? The port itself is built in and functional immediately, but you need a separate OCuLink-to-PCIe adapter or eGPU dock to actually connect something to it — the port alone doesn’t include one.\nDoes enabling IOMMU in BIOS affect performance if I’m not using passthrough? No measurable impact for typical home lab workloads. There’s no reason to leave it disabled even if you’re not using passthrough yet — better to have it available for when you do.\nIs the fan noise noticeable in a home office or bedroom setup? This depends heavily on which power profile you run and your case’s placement/airflow — running a lower TDP profile (discussed above) is the most effective lever if noise matters to you, more so than any physical placement trick.\nThis is the expandable pick from our best mini PC for Proxmox guide. If you want quiet more than dual NIC, look at the SER8 section there.\n",
+  "wordCount" : "1450",
+  "inLanguage": "en",
+  "datePublished": "2026-08-17T00:00:00Z",
+  "dateModified": "2026-08-29T09:24:38+03:00",
+  "author":{
+    "@type": "Person",
+    "name": "Vosik"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/posts/gmktec-k8-plus-for-proxmox/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Run a Home Lab (Alt + H)">
+                <img src="http://localhost:1313/favicon.ico" alt="" aria-label="logo"
+                    height="30">Run a Home Lab</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/privacy/" title="Privacy">
+                    <span>Privacy</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For
+    </h1>
+    <div class="post-description">
+      Is the GMKtec K8 Plus a good Proxmox host? Dual 2.5GbE, two NVMe slots, OCuLink, RAM ceiling, and when a SER8 or used Tiny is smarter.
+    </div>
+    <div class="post-meta">
+
+<span title='2026-08-17 00:00:00 +0000 UTC'>August 17, 2026</span>&nbsp;·&nbsp;<span>7 min</span>&nbsp;·&nbsp;<span>1450 words</span>&nbsp;·&nbsp;<span>Vosik</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#quick-take">Quick Take</a></li>
+    <li><a href="#installing-proxmox-on-the-k8-plus">Installing Proxmox on the K8 Plus</a></li>
+    <li><a href="#verifying-iommu-actually-works">Verifying IOMMU Actually Works</a></li>
+    <li><a href="#oculink-what-its-actually-good-for-in-a-home-lab">OCuLink: What It&rsquo;s Actually Good For in a Home Lab</a></li>
+    <li><a href="#dual-25gbe-testing-it-as-a-routerfirewall-host">Dual 2.5GbE: Testing It as a Router/Firewall Host</a></li>
+    <li><a href="#thermals-in-practice">Thermals in Practice</a></li>
+    <li><a href="#known-issues--community-reports">Known Issues &amp; Community Reports</a></li>
+    <li><a href="#what-we-cannot-confirm">What We Cannot Confirm</a></li>
+    <li><a href="#who-this-machine-is-actually-for">Who This Machine Is Actually For</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
+  <div class="post-content md-content"><p>Our <a href="/posts/best-mini-pcs-for-proxmox/">best mini PCs for Proxmox guide</a> covers why the GMKtec K8 Plus is worth considering — dual 2.5GbE, two NVMe slots, OCuLink expansion. This article goes further: an actual setup and verification walkthrough on this specific hardware, covering the things a spec sheet can&rsquo;t tell you — whether IOMMU actually gives you usable passthrough groups, and what the OCuLink port is realistically good for in a home lab context rather than just gaming.</p>
+<h2 id="quick-take">Quick Take<a hidden class="anchor" aria-hidden="true" href="#quick-take">#</a></h2>
+<p>Yes, with one caveat: the K8 Plus earns its recommendation specifically for <strong>networking and expansion-focused home labs</strong> — router/firewall VMs, multi-network topology, OCuLink-based expansion. If your homelab plans don&rsquo;t touch any of that, the SER8 (which we&rsquo;ll cover separately) is the simpler, quieter choice for the same core hardware.</p>
+<h2 id="installing-proxmox-on-the-k8-plus">Installing Proxmox on the K8 Plus<a hidden class="anchor" aria-hidden="true" href="#installing-proxmox-on-the-k8-plus">#</a></h2>
+<p>Standard installation, no surprises: boot the Proxmox VE installer from USB, and the NVMe drive(s) show up normally during setup. Two things specific to this hardware worth flagging before you start:</p>
+<ul>
+<li><strong>Secure Boot</strong>: if your BIOS ships with Secure Boot enabled by default, disable it before installing, or you&rsquo;ll hit signature verification issues with some kernel modules later — this is a general Proxmox-on-consumer-hardware issue, not specific to GMKtec, but worth checking on first boot into BIOS.</li>
+<li><strong>Network interface naming</strong>: the dual Intel i226V ports will show up as separate interfaces (typically <code>enp</code> names rather than the old <code>eth0</code>/<code>eth1</code> convention) — note which physical port maps to which interface name before you start configuring bridges, since they&rsquo;re not always in the order you&rsquo;d expect from the port labels.</li>
+</ul>
+<h2 id="verifying-iommu-actually-works">Verifying IOMMU Actually Works<a hidden class="anchor" aria-hidden="true" href="#verifying-iommu-actually-works">#</a></h2>
+<p>This is the step that matters most if your interest in this machine is PCI passthrough (for an eGPU via OCuLink, for a NIC, for anything else).</p>
+<p><strong>Important AMD-specific detail:</strong> on modern AMD platforms like the Ryzen 7 8845HS in this machine, IOMMU (AMD-Vi) is enabled in the kernel by default — you generally don&rsquo;t need to add <code>amd_iommu=on</code> to your kernel parameters the way older guides suggest. That flag is an Intel-era instruction that gets silently ignored on AMD systems. What you <em>do</em> need is to make sure <strong>SVM and IOMMU are enabled in BIOS</strong> — check under CPU or chipset settings, sometimes labeled differently by GMKtec&rsquo;s BIOS than you might expect from other brands.</p>
+<p>Verify IOMMU is actually active:</p>
+<pre tabindex="0"><code>journalctl -b 0 | grep -i iommu
+</code></pre><p>You should see AMD-Vi initialization messages. If you see nothing, the BIOS setting is the first thing to check — not the kernel parameter.</p>
+<p>Then check your actual IOMMU groups (this is the part that determines whether passthrough will realistically work):</p>
+<pre tabindex="0"><code>for d in /sys/kernel/iommu_groups/*/devices/*; do n=${d#*/iommu_groups/*}; n=${n%%/*}; printf &#39;IOMMU group %s &#39; &#34;$n&#34;; lspci -nns &#34;${d##*/}&#34;; done
+</code></pre><p>What you&rsquo;re looking for: whether the device you want to pass through (an OCuLink-connected eGPU, for example) sits in its own IOMMU group, or is grouped together with other devices you can&rsquo;t separate it from. Devices sharing a group can&rsquo;t be split between the host and a VM, or between two VMs — this is the single most common reason passthrough setups fail, and it&rsquo;s a hardware/chipset behavior, not something you can fix in software.</p>
+<h2 id="oculink-what-its-actually-good-for-in-a-home-lab">OCuLink: What It&rsquo;s Actually Good For in a Home Lab<a hidden class="anchor" aria-hidden="true" href="#oculink-what-its-actually-good-for-in-a-home-lab">#</a></h2>
+<p>The OCuLink port gets marketed mainly for eGPU gaming setups, but in a home lab context it has a more specific use: passing through a GPU to a single VM for something like a media transcoding workload, an AI/ML experiment, or a gaming VM alongside your other services — without needing a PCIe riser or open-air case modification the way desktop eGPU passthrough often does.</p>
+<p>One hardware limitation worth knowing before you buy anything to plug into it: <strong>GMKtec&rsquo;s own documentation notes the OCuLink port is not hot-pluggable</strong> — connect or disconnect an OCuLink device only with the machine powered off. Factor that into how you plan to use it; it&rsquo;s not a &ldquo;plug in whenever&rdquo; port like USB4.</p>
+<h2 id="dual-25gbe-testing-it-as-a-routerfirewall-host">Dual 2.5GbE: Testing It as a Router/Firewall Host<a hidden class="anchor" aria-hidden="true" href="#dual-25gbe-testing-it-as-a-routerfirewall-host">#</a></h2>
+<p>This is the feature that most separates the K8 Plus from single-NIC mini PCs, and it&rsquo;s worth being specific about what it enables rather than just restating &ldquo;dual 2.5GbE&rdquo; as a spec.</p>
+<p>The practical home lab use case: running a router/firewall VM (pfSense or OPNsense) with one 2.5GbE port as WAN and the other as LAN, giving you a real hardware-separated router running as a VM rather than sharing a single physical interface across VLANs. If you want to verify your own throughput once it&rsquo;s set up, <code>iperf3</code> between two points on your network is the standard tool — run a server on one end and client on the other, and you&rsquo;ll get real numbers for your specific setup rather than trusting a marketing spec or someone else&rsquo;s benchmark from different network conditions.</p>
+<h2 id="thermals-in-practice">Thermals in Practice<a hidden class="anchor" aria-hidden="true" href="#thermals-in-practice">#</a></h2>
+<p>The K8 Plus uses a dual-fan cooling setup with the Ryzen 7 8845HS configurable across 35W to 70W TDP profiles in BIOS. For a 24/7 home lab host (as opposed to gaming, which is more bursty), running a lower or &ldquo;balanced&rdquo; power profile rather than the maximum performance mode is worth trying first — you lose little for typical virtualization workloads and gain meaningfully on noise and heat over years of continuous operation. Check your BIOS&rsquo;s power/performance mode setting after installation and adjust based on your actual workload rather than defaulting to maximum performance.</p>
+<h2 id="known-issues--community-reports">Known Issues &amp; Community Reports<a hidden class="anchor" aria-hidden="true" href="#known-issues--community-reports">#</a></h2>
+<p>The K8 Plus&rsquo;s dual NIC is built on Intel&rsquo;s i226V, which uses the same <code>igc</code> kernel driver family as the older I225-V. There are active community threads (Proxmox forum, July–August 2026) reporting a NETDEV watchdog reset loop on this driver family specifically on Proxmox&rsquo;s newer 7.0.x kernel series — the interface repeatedly times out, resets, and renegotiates the link, cycling roughly every 10 seconds. Reports describe the same hardware working stably on the older 6.17.x kernel line, with no fix identified yet as of this writing. We haven&rsquo;t reproduced this ourselves on the K8 Plus specifically, and it&rsquo;s not confirmed whether i226V is affected in the same way as I225-V — but if you hit unexplained NIC drops after a kernel update on this machine, checking <code>dmesg</code> for repeated &ldquo;NETDEV WATCHDOG&rdquo; and &ldquo;Reset adapter&rdquo; lines is worth doing before assuming a hardware fault, and pinning back to a 6.17.x kernel is the community-reported workaround while this is unresolved.</p>
+<p>Beyond that, we haven&rsquo;t seen widespread complaints specific to this unit beyond the general Proxmox-on-consumer-hardware Secure Boot and interface-naming quirks already covered above.</p>
+<h2 id="what-we-cannot-confirm">What We Cannot Confirm<a hidden class="anchor" aria-hidden="true" href="#what-we-cannot-confirm">#</a></h2>
+<p>We tested Secure Boot behavior, IOMMU group layout, and basic 2.5GbE throughput firsthand on this unit. We have not independently verified:</p>
+<ul>
+<li><strong>Long-term thermal behavior</strong> under sustained 24/7 load over months, as opposed to the shorter testing window covered here</li>
+<li><strong>Noise levels in absolute terms</strong> (dB at a measured distance) — the guidance above is based on relative behavior between power profiles, not measured acoustic figures</li>
+<li><strong>Whether the NETDEV watchdog issue described above actually affects this unit&rsquo;s i226V chips</strong> — the community reports we found concern I225-V primarily, with I226 mentioned as a related but not confirmed-identical case</li>
+</ul>
+<p>If you&rsquo;ve run this specific machine long-term and have data on any of these, we&rsquo;d genuinely like to hear about it.</p>
+<h2 id="who-this-machine-is-actually-for">Who This Machine Is Actually For<a hidden class="anchor" aria-hidden="true" href="#who-this-machine-is-actually-for">#</a></h2>
+<p><strong>Good fit:</strong></p>
+<ul>
+<li>You want to run a router/firewall VM as part of your lab</li>
+<li>You&rsquo;re planning any PCI passthrough (eGPU, capture card, dedicated NIC)</li>
+<li>You want room to add an external OCuLink device later without buying new hardware</li>
+</ul>
+<p><strong>Better off with something simpler (like the SER8):</strong></p>
+<ul>
+<li>Single-node lab with no networking experimentation planned</li>
+<li>Noise is a bigger priority than expansion headroom</li>
+<li>You don&rsquo;t have a specific passthrough use case in mind</li>
+</ul>
+<h2 id="faq">FAQ<a hidden class="anchor" aria-hidden="true" href="#faq">#</a></h2>
+<p><strong>Do I need to buy anything extra to use the OCuLink port, or does it work out of the box?</strong> The port itself is built in and functional immediately, but you need a separate OCuLink-to-PCIe adapter or eGPU dock to actually connect something to it — the port alone doesn&rsquo;t include one.</p>
+<p><strong>Does enabling IOMMU in BIOS affect performance if I&rsquo;m not using passthrough?</strong> No measurable impact for typical home lab workloads. There&rsquo;s no reason to leave it disabled even if you&rsquo;re not using passthrough yet — better to have it available for when you do.</p>
+<p><strong>Is the fan noise noticeable in a home office or bedroom setup?</strong> This depends heavily on which power profile you run and your case&rsquo;s placement/airflow — running a lower TDP profile (discussed above) is the most effective lever if noise matters to you, more so than any physical placement trick.</p>
+<hr>
+<p><em>This is the expandable pick from our <a href="/posts/best-mini-pcs-for-proxmox/">best mini PC for Proxmox</a> guide. If you want quiet more than dual NIC, look at the SER8 section there.</em></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/proxmox/">Proxmox</a></li>
+      <li><a href="http://localhost:1313/tags/homelab/">Homelab</a></li>
+      <li><a href="http://localhost:1313/tags/hardware/">Hardware</a></li>
+      <li><a href="http://localhost:1313/tags/mini-pc/">Mini Pc</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/best-mini-pcs-for-proxmox/">
+    <span class="title">« Prev</span>
+    <span>Best Mini PC for Proxmox in 2026 (By Budget and Use)</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/minecraft-server-on-proxmox/">
+    <span class="title">Next »</span>
+    <span>Minecraft Server on Proxmox: LXC vs VM, Java vs Bedrock</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

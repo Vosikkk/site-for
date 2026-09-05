@@ -5,12 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One | HomeLab Starter</title>
-<meta name="keywords" content="proxmox, homelab, troubleshooting">
-<meta name="description" content="Proxmox showing &#39;QEMU guest agent is not running&#39; even though the agent is clearly installed and started? Here&#39;s every common cause, for both Linux and Windows guests.">
+<title>Proxmox Guest Agent Not Running? Fix It on Linux &amp; Windows | Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
+<meta name="keywords" content="proxmox, troubleshooting, qemu, windows, ubuntu">
+<meta name="description" content="Seeing &#39;QEMU guest agent is not running&#39; in Proxmox? Fix it on Ubuntu, Debian or Windows, check virtio-serial, and learn why a reboot may not be enough.">
 <meta name="author" content="Vosik">
 <link rel="canonical" href="http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7818a8d618bfd77c7c3c61970845e66d9e9bb07ba17e3f781040f210712b209b.css" integrity="sha256-eBio1hi/13x8PGGXCEXmbZ6bsHuhfj94EEDyEHErIJs=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -65,21 +65,22 @@
     }
 
 </script><meta property="og:url" content="http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/">
-  <meta property="og:site_name" content="HomeLab Starter">
-  <meta property="og:title" content="Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One">
-  <meta property="og:description" content="Proxmox showing &#39;QEMU guest agent is not running&#39; even though the agent is clearly installed and started? Here&#39;s every common cause, for both Linux and Windows guests.">
-  <meta property="og:locale" content="en_us">
+  <meta property="og:site_name" content="Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)">
+  <meta property="og:title" content="Proxmox Guest Agent Not Running? Fix It on Linux & Windows">
+  <meta property="og:description" content="Seeing &#39;QEMU guest agent is not running&#39; in Proxmox? Fix it on Ubuntu, Debian or Windows, check virtio-serial, and learn why a reboot may not be enough.">
+  <meta property="og:locale" content="en_US">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-08-14T00:00:00+00:00">
-    <meta property="article:modified_time" content="2026-08-14T08:24:16+03:00">
+    <meta property="article:modified_time" content="2026-09-05T14:33:00+03:00">
     <meta property="article:tag" content="Proxmox">
-    <meta property="article:tag" content="Homelab">
     <meta property="article:tag" content="Troubleshooting">
+    <meta property="article:tag" content="Qemu">
+    <meta property="article:tag" content="Windows">
+    <meta property="article:tag" content="Ubuntu">
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One">
-  <meta name="twitter:description" content="Proxmox showing &#39;QEMU guest agent is not running&#39; even though the agent is clearly installed and started? Here&#39;s every common cause, for both Linux and Windows guests.">
+  <meta name="twitter:title" content="Proxmox Guest Agent Not Running? Fix It on Linux & Windows">
+  <meta name="twitter:description" content="Seeing &#39;QEMU guest agent is not running&#39; in Proxmox? Fix it on Ubuntu, Debian or Windows, check virtio-serial, and learn why a reboot may not be enough.">
 
 
 <script type="application/ld+json">
@@ -96,7 +97,7 @@
     {
       "@type": "ListItem",
       "position":  2 ,
-      "name": "Proxmox 'Guest Agent Is Not Running': Every Cause and How to Fix Each One",
+      "name": "Proxmox Guest Agent Not Running? Fix It on Linux \u0026 Windows",
       "item": "http://localhost:1313/posts/proxmox-guest-agent-not-running-fix/"
     }
   ]
@@ -106,17 +107,17 @@
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Proxmox 'Guest Agent Is Not Running': Every Cause and How to Fix Each One",
-  "name": "Proxmox \u0027Guest Agent Is Not Running\u0027: Every Cause and How to Fix Each One",
-  "description": "Proxmox showing 'QEMU guest agent is not running' even though the agent is clearly installed and started? Here's every common cause, for both Linux and Windows guests.",
+  "headline": "Proxmox Guest Agent Not Running? Fix It on Linux \u0026 Windows",
+  "name": "Proxmox Guest Agent Not Running? Fix It on Linux \u0026 Windows",
+  "description": "Seeing 'QEMU guest agent is not running' in Proxmox? Fix it on Ubuntu, Debian or Windows, check virtio-serial, and learn why a reboot may not be enough.",
   "keywords": [
-    "proxmox", "homelab", "troubleshooting"
+    "proxmox", "troubleshooting", "qemu", "windows", "ubuntu"
   ],
-  "articleBody": "This is one of the most confusing Proxmox errors, because it usually shows up after you’ve already done the “obvious” fix — installed the guest agent, confirmed it’s running inside the VM, and it still says not running on the Proxmox side. The reason is that “guest agent not running” can mean five or six genuinely different things, and the error message doesn’t tell you which one you’re dealing with.\nLet’s go through them in the order you should actually check them.\nFirst: Confirm the Agent Is Enabled in the VM’s Config This sounds obvious, but it’s the single most common cause — enabling the agent in the Proxmox UI doesn’t apply retroactively to a running VM.\nFrom the Proxmox shell:\nqm config | grep agent If you don’t see agent: 1 (or agent: enabled=1), turn it on:\nqm set --agent enabled=1 Then fully stop and start the VM — not just reboot. The virtio-serial channel the agent talks over is only created at boot time, and a soft reboot from inside the guest OS doesn’t recreate it. This trips people up constantly: they enable the option, click reboot inside the VM, and wonder why nothing changed.\nSecond: Confirm the Agent Is Actually Running Inside the Guest On Linux guests SSH or console into the VM and check:\nsystemctl status qemu-guest-agent If it’s not installed, install it (Debian/Ubuntu):\napt install qemu-guest-agent systemctl enable --now qemu-guest-agent On Windows guests Install the guest agent from the VirtIO driver ISO (guest-agent\\qemu-ga-x86_64.msi), not a standalone download — using the version matched to your VirtIO driver set avoids a chunk of install failures people run into with mismatched versions. After installing, check Get-Service QEMU-GA in PowerShell to confirm it’s actually running, not just installed.\nOne Windows-specific gotcha that trips people up: if you enabled the QEMU Guest Agent option after installing the VirtIO drivers, the virtio-serial device sometimes doesn’t get picked up correctly. If the above doesn’t work, try disabling the agent option, fully stopping the VM, re-enabling it, and starting again — this forces Proxmox to recreate the device fresh.\nThird: Check the Virtio-Serial Device Exists Even with the agent enabled and running inside the guest, the communication channel between host and guest can be missing:\nqm config | grep serial This should be added automatically when you enable the agent option — if it’s missing, something went wrong at VM creation. Removing and re-enabling the agent option (with a full stop/start, not a reboot) usually recreates it.\nFourth: Give It a Minute Proxmox doesn’t poll the agent instantly and continuously — IP and status information updates periodically. If you just started the VM, wait 30-60 seconds before assuming something is actually broken.\nWhy This Matters Beyond the Annoying Popup This isn’t purely cosmetic like the subscription nag — a non-functioning guest agent breaks two things you’ll actually notice:\nClean shutdowns fail. Without the agent, Proxmox can’t send a proper shutdown signal to the guest OS, so scheduled reboots/shutdowns just hang until they time out. Backups aren’t filesystem-consistent. With the agent working, Proxmox asks the guest to freeze its filesystem before a snapshot, guaranteeing a clean backup. Without it, backups still happen, but they’re a “crash-consistent” snapshot rather than a clean one — usually fine, occasionally not, depending on what’s running. If you’re only annoyed by not seeing the VM’s IP on the summary tab, it’s low priority. If your scheduled backups or reboots are failing, it’s worth actually fixing.\nFAQ I reinstalled the agent and it still says “not running.” What now? Reinstalling the agent almost never fixes this on its own, because the underlying issue is usually the virtio-serial channel, not the agent software itself. Go back to the “fully stop and start” step — a soft reboot doesn’t recreate the device, and that’s the fix that resolves this most often.\nDoes this affect Linux VMs and Windows VMs the same way? The underlying cause (missing or misconfigured virtio-serial channel) is identical. Windows guests just have an extra failure point around driver/agent version mismatches that Linux guests don’t.\nIs it safe to just ignore this error? If you don’t rely on scheduled shutdowns or care about filesystem-consistent backups, yes — the VM itself runs completely normally either way.\nJust getting your Proxmox subscription warnings sorted first? Check our guide on fixing the “No valid subscription” popup before tackling guest agent issues.\n",
-  "wordCount" : "732",
+  "articleBody": "If Proxmox says QEMU guest agent is not running, reinstalling the agent is often not the fix.\nFirst check that the agent is enabled in Proxmox, confirm the service is running inside the VM, then fully stop and start the VM from Proxmox. A reboot from inside Linux or Windows may not recreate the virtio-serial channel the guest agent needs.\nQuick fix From the Proxmox host:\nqm config | grep -E 'agent|serial' qm agent ping You want to see the guest agent enabled:\nagent: 1 or:\nagent: enabled=1 If it is not enabled:\nqm set --agent enabled=1 Then:\nFully stop the VM in Proxmox. Start it again. Wait 30–60 seconds. Run: qm agent ping A working agent normally returns without an error.\nIf you still get:\nQEMU guest agent is not running continue through the checks below.\nWhy Proxmox says “QEMU guest agent is not running” The message does not necessarily mean the qemu-guest-agent package is missing.\nProxmox needs several things to work at the same time:\nQEMU Guest Agent enabled in the VM configuration the guest agent installed inside Linux or Windows the guest agent service running a working virtio-serial channel between host and guest That last one causes a lot of confusion.\nThe service inside the VM can show as Running, while Proxmox still cannot communicate with it.\nMake sure QEMU Guest Agent is enabled in Proxmox Check the VM configuration:\nqm config | grep agent If you do not see agent: 1 or agent: enabled=1:\nqm set --agent enabled=1 You can also enable it in the UI:\nVM → Options → QEMU Guest Agent → Enabled\nNow fully stop and start the VM.\nDo not just reboot from inside the guest OS.\nThe virtio-serial channel used by the agent is created when the VM powers on. If you enable QEMU Guest Agent while the VM is already running, a normal guest reboot may leave you with the same error.\n“No guest agent configured” / “Requires guest agent installed” If Proxmox or another management tool reports no guest agent configured, start by checking whether Proxmox itself can reach QEMU Guest Agent:\nqm agent ping If that fails, fix the Proxmox-to-guest communication first.\nThere is not a separate generic “Proxmox guest agent” you need to install on top of QEMU Guest Agent.\nFor Linux, the package is normally:\nqemu-guest-agent For Windows, QEMU Guest Agent is available through the VirtIO driver ISO.\nProxmox Guest Agent not running on Ubuntu / Debian Inside an Ubuntu or Debian VM:\nsystemctl status qemu-guest-agent If it is not installed:\napt update apt install -y qemu-guest-agent systemctl enable --now qemu-guest-agent Check it again:\nsystemctl status qemu-guest-agent --no-pager If the service is masked or failed:\nsystemctl unmask qemu-guest-agent systemctl reset-failed qemu-guest-agent systemctl enable --now qemu-guest-agent journalctl -u qemu-guest-agent -b --no-pager Then return to the Proxmox host:\nqm set --agent enabled=1 Fully stop the VM, start it again, and test:\nqm agent ping Ubuntu-specific trap A common sequence is:\nInstall qemu-guest-agent in Ubuntu. Enable QEMU Guest Agent in Proxmox. Reboot Ubuntu. Proxmox still says the guest agent is not running. The package may be completely fine.\nFully stop and start the VM from Proxmox instead of rebooting it from Ubuntu.\nProxmox Guest Agent not running on RHEL / Rocky / AlmaLinux Install and enable the service:\ndnf install -y qemu-guest-agent systemctl enable --now qemu-guest-agent Then verify:\nsystemctl status qemu-guest-agent If you see a dependency failure, check the virtio-serial channel and make sure the agent is enabled in the Proxmox VM configuration.\nProxmox Guest Agent not running on Windows For Windows guests, install QEMU Guest Agent from the VirtIO driver ISO.\nThe installer is normally:\nguest-agent\\qemu-ga-x86_64.msi Use the VirtIO ISO version that matches the rest of the VirtIO drivers installed in the VM.\nAfter installation, open PowerShell:\nGet-Service QEMU-GA The service should be Running and configured to start automatically.\nIf it is stopped:\nStart-Service QEMU-GA Set-Service QEMU-GA -StartupType Automatic Then test from the Proxmox host:\nqm agent ping qm agent network-get-interfaces If Get-Service QEMU-GA says Running but qm agent ping still fails, reinstalling the MSI is probably not the next thing to try.\nThe problem is likely the communication channel between Proxmox and the VM.\nWindows Guest Agent installed but still not running This is especially common if QEMU Guest Agent was enabled in Proxmox after Windows and the VirtIO drivers were already installed.\nTry:\nDisable QEMU Guest Agent in the VM options. Fully stop the Windows VM. Enable QEMU Guest Agent again. Start the VM. Wait 30–60 seconds. Test: qm agent ping This forces Proxmox to recreate the device.\nCheck the virtio-serial device Even with the guest agent installed and running, communication can fail if the host/guest channel is missing.\nFrom the Proxmox host:\nqm config | grep serial Enabling QEMU Guest Agent is supposed to configure the required channel automatically.\nIf the agent is enabled and running but Proxmox still cannot reach it:\nGo to VM → Options → QEMU Guest Agent. Disable it. Fully stop the VM. Enable QEMU Guest Agent again. Start the VM. Run: qm agent ping Do not soft-reboot between those steps.\nGive Proxmox a minute Proxmox does not update every guest-agent field in the UI instantly.\nAfter starting the VM, wait roughly 30–60 seconds before deciding that it is still broken.\nIf:\nqm agent ping works but the Summary page still does not show the guest IP, refresh the UI after a minute.\nIf qm agent works, communication between the host and guest agent is working.\nInstall qemu-ga-x86_64.msi on Windows For a Windows VM:\nGet the current stable VirtIO driver ISO. Attach the ISO as a CD/DVD drive to the VM. Open the ISO inside Windows. Run: guest-agent\\qemu-ga-x86_64.msi Verify the service: Get-Service QEMU-GA Make sure QEMU Guest Agent is enabled in Proxmox. Fully stop and start the VM once. Test from the host: qm agent ping Avoid standalone MSI files from random mirrors. Keeping the guest agent and the rest of the VirtIO stack on matching versions removes another possible source of problems.\nWhy QEMU Guest Agent matters A missing guest agent is not always critical.\nYour VM can run normally without it.\nBut QEMU Guest Agent gives Proxmox additional communication with the guest, including information and operations used for VM management.\nTwo places where you may notice the difference are shutdowns and backups.\nClean shutdowns Without working guest communication, scheduled shutdown or reboot operations can fail or take longer than expected.\nBackup consistency With a working guest agent, Proxmox can coordinate filesystem freeze/thaw operations during supported snapshot workflows.\nWithout it, a VM backup can still run, but it may only represent the filesystem as it existed at the instant of the snapshot rather than after guest-assisted quiescing.\nIf the only symptom is a missing IP address on the Summary page, fixing the agent may not be urgent.\nIf backups or scheduled VM operations are affected, it is worth fixing.\nFAQ Why does Proxmox say “QEMU guest agent is not running” when it is installed? Because installing the package is only one part of the setup.\nProxmox must also have QEMU Guest Agent enabled for that VM and be able to communicate with the service through the guest channel.\nCheck:\nqm config | grep agent qm agent ping I reinstalled qemu-guest-agent and it still says not running. What now? Check the VM configuration and virtio-serial communication before reinstalling it again.\nIf the service is running, make sure the agent is enabled in Proxmox and fully stop/start the VM.\nDoes a normal reboot fix QEMU Guest Agent? Not always.\nIf you just enabled QEMU Guest Agent in the Proxmox configuration, fully stopping and starting the VM is safer because the required virtual device is created at power-on.\nHow do I fix Proxmox Guest Agent on Ubuntu? Install and enable it:\napt install -y qemu-guest-agent systemctl enable --now qemu-guest-agent Then enable QEMU Guest Agent in Proxmox, fully stop/start the VM and test:\nqm agent ping How do I fix Proxmox Guest Agent on Windows? Install:\nguest-agent\\qemu-ga-x86_64.msi from the VirtIO ISO.\nCheck:\nGet-Service QEMU-GA Then enable QEMU Guest Agent in Proxmox and fully stop/start the VM.\nqm agent ping works but the Proxmox UI still says the agent is not running Wait 30–60 seconds and refresh the page.\nIf qm agent ping succeeds, the host can communicate with the guest agent.\nIs it safe to ignore “Guest Agent Not Running”? Usually, yes, if the VM itself is otherwise healthy and you do not need guest-assisted operations.\nBut it is worth fixing if you rely on Proxmox for automated shutdowns, guest information or filesystem-consistent snapshots.\nAlso seeing the subscription warning on a fresh node? Read Proxmox no valid subscription. Setting up a Windows lab VM next to this? Guest agent is also why Minecraft on Proxmox mentions it in the pitfalls list.\n",
+  "wordCount" : "1489",
   "inLanguage": "en",
-  "datePublished": "2026-08-14T00:00:00Z",
-  "dateModified": "2026-08-14T08:24:16+03:00",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "2026-09-05T14:33:00+03:00",
   "author":{
     "@type": "Person",
     "name": "Vosik"
@@ -127,7 +128,7 @@
   },
   "publisher": {
     "@type": "Organization",
-    "name": "HomeLab Starter",
+    "name": "Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)",
     "logo": {
       "@type": "ImageObject",
       "url": "http://localhost:1313/favicon.ico"
@@ -140,7 +141,9 @@
     <header class="header">
     <nav class="header-nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="HomeLab Starter (Alt + H)">HomeLab Starter</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Run a Home Lab (Alt + H)">
+                <img src="http://localhost:1313/favicon.ico" alt="" aria-label="logo"
+                    height="30">Run a Home Lab</a>
             <div class="logo-switches">
                 <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
@@ -200,80 +203,266 @@
     </svg>
 </nav>
     <h1 class="post-title entry-hint-parent">
-      Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One
+      Proxmox Guest Agent Not Running? Fix It on Linux &amp; Windows
     </h1>
     <div class="post-description">
-      Proxmox showing &#39;QEMU guest agent is not running&#39; even though the agent is clearly installed and started? Here&#39;s every common cause, for both Linux and Windows guests.
+      Seeing &#39;QEMU guest agent is not running&#39; in Proxmox? Fix it on Ubuntu, Debian or Windows, check virtio-serial, and learn why a reboot may not be enough.
     </div>
     <div class="post-meta">
 
-<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>732 words</span>&nbsp;·&nbsp;<span>Vosik</span>
+<span>7 min</span>&nbsp;·&nbsp;<span>1489 words</span>&nbsp;·&nbsp;<span>Vosik</span>
 
 </div>
-  </header> <details class="toc"  open>
+  </header> <details class="toc" >
     <summary accesskey="c" title="(Alt + C)">
         <span class="title">Table of Contents</span>
     </summary>
 
     <div class="inner"><nav id="TableOfContents">
   <ul>
-    <li><a href="#first-confirm-the-agent-is-enabled-in-the-vms-config">First: Confirm the Agent Is Enabled in the VM&rsquo;s Config</a></li>
-    <li><a href="#second-confirm-the-agent-is-actually-running-inside-the-guest">Second: Confirm the Agent Is Actually Running Inside the Guest</a>
+    <li><a href="#quick-fix">Quick fix</a></li>
+    <li><a href="#why-proxmox-says-qemu-guest-agent-is-not-running">Why Proxmox says “QEMU guest agent is not running”</a></li>
+    <li><a href="#make-sure-qemu-guest-agent-is-enabled-in-proxmox">Make sure QEMU Guest Agent is enabled in Proxmox</a></li>
+    <li><a href="#no-guest-agent-configured--requires-guest-agent-installed">“No guest agent configured” / “Requires guest agent installed”</a></li>
+    <li><a href="#proxmox-guest-agent-not-running-on-ubuntu--debian">Proxmox Guest Agent not running on Ubuntu / Debian</a>
       <ul>
-        <li><a href="#on-linux-guests">On Linux guests</a></li>
-        <li><a href="#on-windows-guests">On Windows guests</a></li>
+        <li><a href="#ubuntu-specific-trap">Ubuntu-specific trap</a></li>
       </ul>
     </li>
-    <li><a href="#third-check-the-virtio-serial-device-exists">Third: Check the Virtio-Serial Device Exists</a></li>
-    <li><a href="#fourth-give-it-a-minute">Fourth: Give It a Minute</a></li>
-    <li><a href="#why-this-matters-beyond-the-annoying-popup">Why This Matters Beyond the Annoying Popup</a></li>
-    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#proxmox-guest-agent-not-running-on-rhel--rocky--almalinux">Proxmox Guest Agent not running on RHEL / Rocky / AlmaLinux</a></li>
+    <li><a href="#proxmox-guest-agent-not-running-on-windows">Proxmox Guest Agent not running on Windows</a></li>
+    <li><a href="#windows-guest-agent-installed-but-still-not-running">Windows Guest Agent installed but still not running</a></li>
+    <li><a href="#check-the-virtio-serial-device">Check the virtio-serial device</a></li>
+    <li><a href="#give-proxmox-a-minute">Give Proxmox a minute</a></li>
+    <li><a href="#install-qemu-ga-x86_64msi-on-windows">Install qemu-ga-x86_64.msi on Windows</a></li>
+    <li><a href="#why-qemu-guest-agent-matters">Why QEMU Guest Agent matters</a>
+      <ul>
+        <li><a href="#clean-shutdowns">Clean shutdowns</a></li>
+        <li><a href="#backup-consistency">Backup consistency</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#why-does-proxmox-say-qemu-guest-agent-is-not-running-when-it-is-installed">Why does Proxmox say “QEMU guest agent is not running” when it is installed?</a></li>
+        <li><a href="#i-reinstalled-qemu-guest-agent-and-it-still-says-not-running-what-now">I reinstalled qemu-guest-agent and it still says not running. What now?</a></li>
+        <li><a href="#does-a-normal-reboot-fix-qemu-guest-agent">Does a normal reboot fix QEMU Guest Agent?</a></li>
+        <li><a href="#how-do-i-fix-proxmox-guest-agent-on-ubuntu">How do I fix Proxmox Guest Agent on Ubuntu?</a></li>
+        <li><a href="#how-do-i-fix-proxmox-guest-agent-on-windows">How do I fix Proxmox Guest Agent on Windows?</a></li>
+        <li><a href="#qm-agent-vmid-ping-works-but-the-proxmox-ui-still-says-the-agent-is-not-running"><code>qm agent &lt;vmid&gt; ping</code> works but the Proxmox UI still says the agent is not running</a></li>
+        <li><a href="#is-it-safe-to-ignore-guest-agent-not-running">Is it safe to ignore “Guest Agent Not Running”?</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
     </div>
 </details>
 
-  <div class="post-content md-content"><p>This is one of the most confusing Proxmox errors, because it usually shows up <em>after</em> you&rsquo;ve already done the &ldquo;obvious&rdquo; fix — installed the guest agent, confirmed it&rsquo;s running inside the VM, and it still says not running on the Proxmox side. The reason is that &ldquo;guest agent not running&rdquo; can mean five or six genuinely different things, and the error message doesn&rsquo;t tell you which one you&rsquo;re dealing with.</p>
-<p>Let&rsquo;s go through them in the order you should actually check them.</p>
-<h2 id="first-confirm-the-agent-is-enabled-in-the-vms-config">First: Confirm the Agent Is Enabled in the VM&rsquo;s Config<a hidden class="anchor" aria-hidden="true" href="#first-confirm-the-agent-is-enabled-in-the-vms-config">#</a></h2>
-<p>This sounds obvious, but it&rsquo;s the single most common cause — enabling the agent in the Proxmox UI doesn&rsquo;t apply retroactively to a running VM.</p>
-<p>From the Proxmox shell:</p>
-<pre tabindex="0"><code>qm config &lt;vmid&gt; | grep agent
-</code></pre><p>If you don&rsquo;t see <code>agent: 1</code> (or <code>agent: enabled=1</code>), turn it on:</p>
-<pre tabindex="0"><code>qm set &lt;vmid&gt; --agent enabled=1
-</code></pre><p>Then <strong>fully stop and start the VM</strong> — not just reboot. The virtio-serial channel the agent talks over is only created at boot time, and a soft reboot from inside the guest OS doesn&rsquo;t recreate it. This trips people up constantly: they enable the option, click reboot inside the VM, and wonder why nothing changed.</p>
-<h2 id="second-confirm-the-agent-is-actually-running-inside-the-guest">Second: Confirm the Agent Is Actually Running Inside the Guest<a hidden class="anchor" aria-hidden="true" href="#second-confirm-the-agent-is-actually-running-inside-the-guest">#</a></h2>
-<h3 id="on-linux-guests">On Linux guests<a hidden class="anchor" aria-hidden="true" href="#on-linux-guests">#</a></h3>
-<p>SSH or console into the VM and check:</p>
-<pre tabindex="0"><code>systemctl status qemu-guest-agent
-</code></pre><p>If it&rsquo;s not installed, install it (Debian/Ubuntu):</p>
-<pre tabindex="0"><code>apt install qemu-guest-agent
-systemctl enable --now qemu-guest-agent
-</code></pre><h3 id="on-windows-guests">On Windows guests<a hidden class="anchor" aria-hidden="true" href="#on-windows-guests">#</a></h3>
-<p>Install the guest agent from the VirtIO driver ISO (<code>guest-agent\qemu-ga-x86_64.msi</code>), not a standalone download — using the version matched to your VirtIO driver set avoids a chunk of install failures people run into with mismatched versions. After installing, check <code>Get-Service QEMU-GA</code> in PowerShell to confirm it&rsquo;s actually running, not just installed.</p>
-<p>One Windows-specific gotcha that trips people up: if you enabled the QEMU Guest Agent option <em>after</em> installing the VirtIO drivers, the virtio-serial device sometimes doesn&rsquo;t get picked up correctly. If the above doesn&rsquo;t work, try disabling the agent option, fully stopping the VM, re-enabling it, and starting again — this forces Proxmox to recreate the device fresh.</p>
-<h2 id="third-check-the-virtio-serial-device-exists">Third: Check the Virtio-Serial Device Exists<a hidden class="anchor" aria-hidden="true" href="#third-check-the-virtio-serial-device-exists">#</a></h2>
-<p>Even with the agent enabled and running inside the guest, the communication channel between host and guest can be missing:</p>
-<pre tabindex="0"><code>qm config &lt;vmid&gt; | grep serial
-</code></pre><p>This should be added automatically when you enable the agent option — if it&rsquo;s missing, something went wrong at VM creation. Removing and re-enabling the agent option (with a full stop/start, not a reboot) usually recreates it.</p>
-<h2 id="fourth-give-it-a-minute">Fourth: Give It a Minute<a hidden class="anchor" aria-hidden="true" href="#fourth-give-it-a-minute">#</a></h2>
-<p>Proxmox doesn&rsquo;t poll the agent instantly and continuously — IP and status information updates periodically. If you just started the VM, wait 30-60 seconds before assuming something is actually broken.</p>
-<h2 id="why-this-matters-beyond-the-annoying-popup">Why This Matters Beyond the Annoying Popup<a hidden class="anchor" aria-hidden="true" href="#why-this-matters-beyond-the-annoying-popup">#</a></h2>
-<p>This isn&rsquo;t purely cosmetic like the subscription nag — a non-functioning guest agent breaks two things you&rsquo;ll actually notice:</p>
+  <div class="post-content md-content"><p>If Proxmox says <strong>QEMU guest agent is not running</strong>, reinstalling the agent is often not the fix.</p>
+<p>First check that the agent is enabled in Proxmox, confirm the service is running inside the VM, then <strong>fully stop and start the VM from Proxmox</strong>. A reboot from inside Linux or Windows may not recreate the virtio-serial channel the guest agent needs.</p>
+<h2 id="quick-fix">Quick fix<a hidden class="anchor" aria-hidden="true" href="#quick-fix">#</a></h2>
+<p>From the Proxmox host:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm config &lt;vmid&gt; | grep -E <span style="color:#e6db74">&#39;agent|serial&#39;</span>
+</span></span><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><p>You want to see the guest agent enabled:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>agent: 1
+</span></span></code></pre></div><p>or:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>agent: enabled=1
+</span></span></code></pre></div><p>If it is not enabled:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm set &lt;vmid&gt; --agent enabled<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>Then:</p>
+<ol>
+<li>Fully <strong>stop</strong> the VM in Proxmox.</li>
+<li>Start it again.</li>
+<li>Wait 30–60 seconds.</li>
+<li>Run:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><p>A working agent normally returns without an error.</p>
+<p>If you still get:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>QEMU guest agent is not running
+</span></span></code></pre></div><p>continue through the checks below.</p>
+<h2 id="why-proxmox-says-qemu-guest-agent-is-not-running">Why Proxmox says “QEMU guest agent is not running”<a hidden class="anchor" aria-hidden="true" href="#why-proxmox-says-qemu-guest-agent-is-not-running">#</a></h2>
+<p>The message does not necessarily mean the <code>qemu-guest-agent</code> package is missing.</p>
+<p>Proxmox needs several things to work at the same time:</p>
 <ul>
-<li><strong>Clean shutdowns fail.</strong> Without the agent, Proxmox can&rsquo;t send a proper shutdown signal to the guest OS, so scheduled reboots/shutdowns just hang until they time out.</li>
-<li><strong>Backups aren&rsquo;t filesystem-consistent.</strong> With the agent working, Proxmox asks the guest to freeze its filesystem before a snapshot, guaranteeing a clean backup. Without it, backups still happen, but they&rsquo;re a &ldquo;crash-consistent&rdquo; snapshot rather than a clean one — usually fine, occasionally not, depending on what&rsquo;s running.</li>
+<li>QEMU Guest Agent enabled in the VM configuration</li>
+<li>the guest agent installed inside Linux or Windows</li>
+<li>the guest agent service running</li>
+<li>a working virtio-serial channel between host and guest</li>
 </ul>
-<p>If you&rsquo;re only annoyed by not seeing the VM&rsquo;s IP on the summary tab, it&rsquo;s low priority. If your scheduled backups or reboots are failing, it&rsquo;s worth actually fixing.</p>
+<p>That last one causes a lot of confusion.</p>
+<p>The service inside the VM can show as <strong>Running</strong>, while Proxmox still cannot communicate with it.</p>
+<h2 id="make-sure-qemu-guest-agent-is-enabled-in-proxmox">Make sure QEMU Guest Agent is enabled in Proxmox<a hidden class="anchor" aria-hidden="true" href="#make-sure-qemu-guest-agent-is-enabled-in-proxmox">#</a></h2>
+<p>Check the VM configuration:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm config &lt;vmid&gt; | grep agent
+</span></span></code></pre></div><p>If you do not see <code>agent: 1</code> or <code>agent: enabled=1</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm set &lt;vmid&gt; --agent enabled<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>You can also enable it in the UI:</p>
+<p><strong>VM → Options → QEMU Guest Agent → Enabled</strong></p>
+<p>Now fully stop and start the VM.</p>
+<p>Do not just reboot from inside the guest OS.</p>
+<p>The virtio-serial channel used by the agent is created when the VM powers on. If you enable QEMU Guest Agent while the VM is already running, a normal guest reboot may leave you with the same error.</p>
+<h2 id="no-guest-agent-configured--requires-guest-agent-installed">“No guest agent configured” / “Requires guest agent installed”<a hidden class="anchor" aria-hidden="true" href="#no-guest-agent-configured--requires-guest-agent-installed">#</a></h2>
+<p>If Proxmox or another management tool reports <strong>no guest agent configured</strong>, start by checking whether Proxmox itself can reach QEMU Guest Agent:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><p>If that fails, fix the Proxmox-to-guest communication first.</p>
+<p>There is not a separate generic “Proxmox guest agent” you need to install on top of QEMU Guest Agent.</p>
+<p>For Linux, the package is normally:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>qemu-guest-agent
+</span></span></code></pre></div><p>For Windows, QEMU Guest Agent is available through the VirtIO driver ISO.</p>
+<h2 id="proxmox-guest-agent-not-running-on-ubuntu--debian">Proxmox Guest Agent not running on Ubuntu / Debian<a hidden class="anchor" aria-hidden="true" href="#proxmox-guest-agent-not-running-on-ubuntu--debian">#</a></h2>
+<p>Inside an Ubuntu or Debian VM:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>systemctl status qemu-guest-agent
+</span></span></code></pre></div><p>If it is not installed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt update
+</span></span><span style="display:flex;"><span>apt install -y qemu-guest-agent
+</span></span><span style="display:flex;"><span>systemctl enable --now qemu-guest-agent
+</span></span></code></pre></div><p>Check it again:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>systemctl status qemu-guest-agent --no-pager
+</span></span></code></pre></div><p>If the service is masked or failed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>systemctl unmask qemu-guest-agent
+</span></span><span style="display:flex;"><span>systemctl reset-failed qemu-guest-agent
+</span></span><span style="display:flex;"><span>systemctl enable --now qemu-guest-agent
+</span></span><span style="display:flex;"><span>journalctl -u qemu-guest-agent -b --no-pager
+</span></span></code></pre></div><p>Then return to the Proxmox host:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm set &lt;vmid&gt; --agent enabled<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>Fully stop the VM, start it again, and test:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><h3 id="ubuntu-specific-trap">Ubuntu-specific trap<a hidden class="anchor" aria-hidden="true" href="#ubuntu-specific-trap">#</a></h3>
+<p>A common sequence is:</p>
+<ol>
+<li>Install <code>qemu-guest-agent</code> in Ubuntu.</li>
+<li>Enable QEMU Guest Agent in Proxmox.</li>
+<li>Reboot Ubuntu.</li>
+<li>Proxmox still says the guest agent is not running.</li>
+</ol>
+<p>The package may be completely fine.</p>
+<p>Fully <strong>stop and start the VM from Proxmox</strong> instead of rebooting it from Ubuntu.</p>
+<h2 id="proxmox-guest-agent-not-running-on-rhel--rocky--almalinux">Proxmox Guest Agent not running on RHEL / Rocky / AlmaLinux<a hidden class="anchor" aria-hidden="true" href="#proxmox-guest-agent-not-running-on-rhel--rocky--almalinux">#</a></h2>
+<p>Install and enable the service:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dnf install -y qemu-guest-agent
+</span></span><span style="display:flex;"><span>systemctl enable --now qemu-guest-agent
+</span></span></code></pre></div><p>Then verify:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>systemctl status qemu-guest-agent
+</span></span></code></pre></div><p>If you see a dependency failure, check the virtio-serial channel and make sure the agent is enabled in the Proxmox VM configuration.</p>
+<h2 id="proxmox-guest-agent-not-running-on-windows">Proxmox Guest Agent not running on Windows<a hidden class="anchor" aria-hidden="true" href="#proxmox-guest-agent-not-running-on-windows">#</a></h2>
+<p>For Windows guests, install QEMU Guest Agent from the <strong>VirtIO driver ISO</strong>.</p>
+<p>The installer is normally:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>guest-agent\qemu-ga-x86_64.msi
+</span></span></code></pre></div><p>Use the VirtIO ISO version that matches the rest of the VirtIO drivers installed in the VM.</p>
+<p>After installation, open PowerShell:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-Service QEMU-GA
+</span></span></code></pre></div><p>The service should be <strong>Running</strong> and configured to start automatically.</p>
+<p>If it is stopped:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Start-Service QEMU-GA
+</span></span><span style="display:flex;"><span>Set-Service QEMU-GA -StartupType Automatic
+</span></span></code></pre></div><p>Then test from the Proxmox host:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span><span style="display:flex;"><span>qm agent &lt;vmid&gt; network-get-interfaces
+</span></span></code></pre></div><p>If <code>Get-Service QEMU-GA</code> says <strong>Running</strong> but <code>qm agent &lt;vmid&gt; ping</code> still fails, reinstalling the MSI is probably not the next thing to try.</p>
+<p>The problem is likely the communication channel between Proxmox and the VM.</p>
+<h2 id="windows-guest-agent-installed-but-still-not-running">Windows Guest Agent installed but still not running<a hidden class="anchor" aria-hidden="true" href="#windows-guest-agent-installed-but-still-not-running">#</a></h2>
+<p>This is especially common if QEMU Guest Agent was enabled in Proxmox after Windows and the VirtIO drivers were already installed.</p>
+<p>Try:</p>
+<ol>
+<li>Disable <strong>QEMU Guest Agent</strong> in the VM options.</li>
+<li>Fully stop the Windows VM.</li>
+<li>Enable <strong>QEMU Guest Agent</strong> again.</li>
+<li>Start the VM.</li>
+<li>Wait 30–60 seconds.</li>
+<li>Test:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><p>This forces Proxmox to recreate the device.</p>
+<h2 id="check-the-virtio-serial-device">Check the virtio-serial device<a hidden class="anchor" aria-hidden="true" href="#check-the-virtio-serial-device">#</a></h2>
+<p>Even with the guest agent installed and running, communication can fail if the host/guest channel is missing.</p>
+<p>From the Proxmox host:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm config &lt;vmid&gt; | grep serial
+</span></span></code></pre></div><p>Enabling QEMU Guest Agent is supposed to configure the required channel automatically.</p>
+<p>If the agent is enabled and running but Proxmox still cannot reach it:</p>
+<ol>
+<li>Go to <strong>VM → Options → QEMU Guest Agent</strong>.</li>
+<li>Disable it.</li>
+<li>Fully stop the VM.</li>
+<li>Enable QEMU Guest Agent again.</li>
+<li>Start the VM.</li>
+<li>Run:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><p>Do not soft-reboot between those steps.</p>
+<h2 id="give-proxmox-a-minute">Give Proxmox a minute<a hidden class="anchor" aria-hidden="true" href="#give-proxmox-a-minute">#</a></h2>
+<p>Proxmox does not update every guest-agent field in the UI instantly.</p>
+<p>After starting the VM, wait roughly 30–60 seconds before deciding that it is still broken.</p>
+<p>If:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><p>works but the Summary page still does not show the guest IP, refresh the UI after a minute.</p>
+<p>If <code>qm agent</code> works, communication between the host and guest agent is working.</p>
+<h2 id="install-qemu-ga-x86_64msi-on-windows">Install qemu-ga-x86_64.msi on Windows<a hidden class="anchor" aria-hidden="true" href="#install-qemu-ga-x86_64msi-on-windows">#</a></h2>
+<p>For a Windows VM:</p>
+<ol>
+<li>Get the current stable VirtIO driver ISO.</li>
+<li>Attach the ISO as a CD/DVD drive to the VM.</li>
+<li>Open the ISO inside Windows.</li>
+<li>Run:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>guest-agent\qemu-ga-x86_64.msi
+</span></span></code></pre></div><ol start="5">
+<li>Verify the service:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-Service QEMU-GA
+</span></span></code></pre></div><ol start="6">
+<li>Make sure <strong>QEMU Guest Agent</strong> is enabled in Proxmox.</li>
+<li>Fully stop and start the VM once.</li>
+<li>Test from the host:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><p>Avoid standalone MSI files from random mirrors. Keeping the guest agent and the rest of the VirtIO stack on matching versions removes another possible source of problems.</p>
+<h2 id="why-qemu-guest-agent-matters">Why QEMU Guest Agent matters<a hidden class="anchor" aria-hidden="true" href="#why-qemu-guest-agent-matters">#</a></h2>
+<p>A missing guest agent is not always critical.</p>
+<p>Your VM can run normally without it.</p>
+<p>But QEMU Guest Agent gives Proxmox additional communication with the guest, including information and operations used for VM management.</p>
+<p>Two places where you may notice the difference are shutdowns and backups.</p>
+<h3 id="clean-shutdowns">Clean shutdowns<a hidden class="anchor" aria-hidden="true" href="#clean-shutdowns">#</a></h3>
+<p>Without working guest communication, scheduled shutdown or reboot operations can fail or take longer than expected.</p>
+<h3 id="backup-consistency">Backup consistency<a hidden class="anchor" aria-hidden="true" href="#backup-consistency">#</a></h3>
+<p>With a working guest agent, Proxmox can coordinate filesystem freeze/thaw operations during supported snapshot workflows.</p>
+<p>Without it, a VM backup can still run, but it may only represent the filesystem as it existed at the instant of the snapshot rather than after guest-assisted quiescing.</p>
+<p>If the only symptom is a missing IP address on the Summary page, fixing the agent may not be urgent.</p>
+<p>If backups or scheduled VM operations are affected, it is worth fixing.</p>
 <h2 id="faq">FAQ<a hidden class="anchor" aria-hidden="true" href="#faq">#</a></h2>
-<p><strong>I reinstalled the agent and it still says &ldquo;not running.&rdquo; What now?</strong>
-Reinstalling the agent almost never fixes this on its own, because the underlying issue is usually the virtio-serial channel, not the agent software itself. Go back to the &ldquo;fully stop and start&rdquo; step — a soft reboot doesn&rsquo;t recreate the device, and that&rsquo;s the fix that resolves this most often.</p>
-<p><strong>Does this affect Linux VMs and Windows VMs the same way?</strong>
-The underlying cause (missing or misconfigured virtio-serial channel) is identical. Windows guests just have an extra failure point around driver/agent version mismatches that Linux guests don&rsquo;t.</p>
-<p><strong>Is it safe to just ignore this error?</strong>
-If you don&rsquo;t rely on scheduled shutdowns or care about filesystem-consistent backups, yes — the VM itself runs completely normally either way.</p>
+<h3 id="why-does-proxmox-say-qemu-guest-agent-is-not-running-when-it-is-installed">Why does Proxmox say “QEMU guest agent is not running” when it is installed?<a hidden class="anchor" aria-hidden="true" href="#why-does-proxmox-say-qemu-guest-agent-is-not-running-when-it-is-installed">#</a></h3>
+<p>Because installing the package is only one part of the setup.</p>
+<p>Proxmox must also have QEMU Guest Agent enabled for that VM and be able to communicate with the service through the guest channel.</p>
+<p>Check:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm config &lt;vmid&gt; | grep agent
+</span></span><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><h3 id="i-reinstalled-qemu-guest-agent-and-it-still-says-not-running-what-now">I reinstalled qemu-guest-agent and it still says not running. What now?<a hidden class="anchor" aria-hidden="true" href="#i-reinstalled-qemu-guest-agent-and-it-still-says-not-running-what-now">#</a></h3>
+<p>Check the VM configuration and virtio-serial communication before reinstalling it again.</p>
+<p>If the service is running, make sure the agent is enabled in Proxmox and fully stop/start the VM.</p>
+<h3 id="does-a-normal-reboot-fix-qemu-guest-agent">Does a normal reboot fix QEMU Guest Agent?<a hidden class="anchor" aria-hidden="true" href="#does-a-normal-reboot-fix-qemu-guest-agent">#</a></h3>
+<p>Not always.</p>
+<p>If you just enabled QEMU Guest Agent in the Proxmox configuration, fully stopping and starting the VM is safer because the required virtual device is created at power-on.</p>
+<h3 id="how-do-i-fix-proxmox-guest-agent-on-ubuntu">How do I fix Proxmox Guest Agent on Ubuntu?<a hidden class="anchor" aria-hidden="true" href="#how-do-i-fix-proxmox-guest-agent-on-ubuntu">#</a></h3>
+<p>Install and enable it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt install -y qemu-guest-agent
+</span></span><span style="display:flex;"><span>systemctl enable --now qemu-guest-agent
+</span></span></code></pre></div><p>Then enable QEMU Guest Agent in Proxmox, fully stop/start the VM and test:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>qm agent &lt;vmid&gt; ping
+</span></span></code></pre></div><h3 id="how-do-i-fix-proxmox-guest-agent-on-windows">How do I fix Proxmox Guest Agent on Windows?<a hidden class="anchor" aria-hidden="true" href="#how-do-i-fix-proxmox-guest-agent-on-windows">#</a></h3>
+<p>Install:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>guest-agent\qemu-ga-x86_64.msi
+</span></span></code></pre></div><p>from the VirtIO ISO.</p>
+<p>Check:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-Service QEMU-GA
+</span></span></code></pre></div><p>Then enable QEMU Guest Agent in Proxmox and fully stop/start the VM.</p>
+<h3 id="qm-agent-vmid-ping-works-but-the-proxmox-ui-still-says-the-agent-is-not-running"><code>qm agent &lt;vmid&gt; ping</code> works but the Proxmox UI still says the agent is not running<a hidden class="anchor" aria-hidden="true" href="#qm-agent-vmid-ping-works-but-the-proxmox-ui-still-says-the-agent-is-not-running">#</a></h3>
+<p>Wait 30–60 seconds and refresh the page.</p>
+<p>If <code>qm agent &lt;vmid&gt; ping</code> succeeds, the host can communicate with the guest agent.</p>
+<h3 id="is-it-safe-to-ignore-guest-agent-not-running">Is it safe to ignore “Guest Agent Not Running”?<a hidden class="anchor" aria-hidden="true" href="#is-it-safe-to-ignore-guest-agent-not-running">#</a></h3>
+<p>Usually, yes, if the VM itself is otherwise healthy and you do not need guest-assisted operations.</p>
+<p>But it is worth fixing if you rely on Proxmox for automated shutdowns, guest information or filesystem-consistent snapshots.</p>
 <hr>
-<p><em>Just getting your Proxmox subscription warnings sorted first? Check our guide on <a href="/posts/proxmox-no-valid-subscription-fix/">fixing the &ldquo;No valid subscription&rdquo; popup</a> before tackling guest agent issues.</em></p>
+<p><em>Also seeing the subscription warning on a fresh node? Read <a href="/posts/proxmox-no-valid-subscription-fix/">Proxmox no valid subscription</a>. Setting up a Windows lab VM next to this? Guest agent is also why <a href="/posts/minecraft-server-on-proxmox/">Minecraft on Proxmox</a> mentions it in the pitfalls list.</em></p>
 
 
   </div>
@@ -281,90 +470,28 @@ If you don&rsquo;t rely on scheduled shutdowns or care about filesystem-consiste
   <footer class="post-footer">
     <ul class="post-tags">
       <li><a href="http://localhost:1313/tags/proxmox/">Proxmox</a></li>
-      <li><a href="http://localhost:1313/tags/homelab/">Homelab</a></li>
       <li><a href="http://localhost:1313/tags/troubleshooting/">Troubleshooting</a></li>
+      <li><a href="http://localhost:1313/tags/qemu/">Qemu</a></li>
+      <li><a href="http://localhost:1313/tags/windows/">Windows</a></li>
+      <li><a href="http://localhost:1313/tags/ubuntu/">Ubuntu</a></li>
     </ul>
 <nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/proxmox-no-valid-subscription-fix/">
+    <span class="title">« Prev</span>
+    <span>Proxmox No Valid Subscription: Repo Fix and Nag Remove (PVE 8 &amp; 9)</span>
+  </a>
   <a class="next" href="http://localhost:1313/posts/proxmox-wake-on-lan-not-working/">
     <span class="title">Next »</span>
-    <span>Proxmox Wake-on-LAN Not Working? You&#39;re Probably Solving Two Different Problems</span>
+    <span>Proxmox Wake-on-LAN Not Working: Fix Host and VM</span>
   </a>
 </nav>
-
-
-<ul class="share-buttons">
-    <li>
-        <a target="_blank" rel="noopener noreferrer" aria-label="share Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One on x"
-            href="https://x.com/intent/tweet/?text=Proxmox%20%27Guest%20Agent%20Is%20Not%20Running%27%3a%20Every%20Cause%20and%20How%20to%20Fix%20Each%20One&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fproxmox-guest-agent-not-running-fix%2f&amp;hashtags=proxmox%2chomelab%2ctroubleshooting">
-            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-                <path
-                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
-            </svg>
-        </a>
-    </li>
-    <li>
-        <a target="_blank" rel="noopener noreferrer" aria-label="share Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One on linkedin"
-            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fproxmox-guest-agent-not-running-fix%2f&amp;title=Proxmox%20%27Guest%20Agent%20Is%20Not%20Running%27%3a%20Every%20Cause%20and%20How%20to%20Fix%20Each%20One&amp;summary=Proxmox%20%27Guest%20Agent%20Is%20Not%20Running%27%3a%20Every%20Cause%20and%20How%20to%20Fix%20Each%20One&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fproxmox-guest-agent-not-running-fix%2f">
-            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-                <path
-                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
-            </svg>
-        </a>
-    </li>
-    <li>
-        <a target="_blank" rel="noopener noreferrer" aria-label="share Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One on reddit"
-            href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fproxmox-guest-agent-not-running-fix%2f&title=Proxmox%20%27Guest%20Agent%20Is%20Not%20Running%27%3a%20Every%20Cause%20and%20How%20to%20Fix%20Each%20One">
-            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-                <path
-                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
-            </svg>
-        </a>
-    </li>
-    <li>
-        <a target="_blank" rel="noopener noreferrer" aria-label="share Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One on facebook"
-            href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fproxmox-guest-agent-not-running-fix%2f">
-            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-                <path
-                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
-            </svg>
-        </a>
-    </li>
-    <li>
-        <a target="_blank" rel="noopener noreferrer" aria-label="share Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One on whatsapp"
-            href="https://api.whatsapp.com/send?text=Proxmox%20%27Guest%20Agent%20Is%20Not%20Running%27%3a%20Every%20Cause%20and%20How%20to%20Fix%20Each%20One%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2fproxmox-guest-agent-not-running-fix%2f">
-            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-                <path
-                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
-            </svg>
-        </a>
-    </li>
-    <li>
-        <a target="_blank" rel="noopener noreferrer" aria-label="share Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One on telegram"
-            href="https://telegram.me/share/url?text=Proxmox%20%27Guest%20Agent%20Is%20Not%20Running%27%3a%20Every%20Cause%20and%20How%20to%20Fix%20Each%20One&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fproxmox-guest-agent-not-running-fix%2f">
-            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
-                <path
-                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
-            </svg>
-        </a>
-    </li>
-    <li>
-        <a target="_blank" rel="noopener noreferrer" aria-label="share Proxmox &#39;Guest Agent Is Not Running&#39;: Every Cause and How to Fix Each One on ycombinator"
-            href="https://news.ycombinator.com/submitlink?t=Proxmox%20%27Guest%20Agent%20Is%20Not%20Running%27%3a%20Every%20Cause%20and%20How%20to%20Fix%20Each%20One&u=http%3a%2f%2flocalhost%3a1313%2fposts%2fproxmox-guest-agent-not-running-fix%2f">
-            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
-                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
-                <path
-                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
-            </svg>
-        </a>
-    </li>
-</ul>
 
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">HomeLab Starter</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</a></span> · 
 
     
     

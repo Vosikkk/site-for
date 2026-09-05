@@ -1,0 +1,67 @@
+{{- with site.Params.homeInfoParams }}
+<article class="first-entry home-info">
+    <header class="entry-header">
+        <h1>{{ .Title | markdownify }}</h1>
+    </header>
+    <div class="entry-content md-content">
+        {{ $opts := dict "display" "block" }}
+        {{ .Content | $.Page.RenderString $opts }}
+    </div>
+    <footer class="entry-footer">
+        {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+    </footer>
+</article>
+{{- end }}
+
+<section class="home-guide-section" aria-labelledby="home-guide-title">
+    <div class="home-guide-intro">
+        <p class="home-guide-kicker">Start here</p>
+        <h2 id="home-guide-title">Find the part of your homelab you need</h2>
+        <p>Fix Proxmox first, choose hardware around your workloads, then add the services you actually want to run.</p>
+    </div>
+
+    <div class="home-guide-grid">
+        <section class="home-guide-card">
+            <h3>Proxmox Fixes</h3>
+            <p>Guest tools, networking, repositories, and the annoying failures that stop a node from behaving normally.</p>
+            <ul>
+                <li><a href="/posts/proxmox-guest-agent-not-running-fix/">Guest Agent Not Running</a></li>
+                <li><a href="/posts/proxmox-no-valid-subscription-fix/">No Valid Subscription</a></li>
+                <li><a href="/posts/proxmox-wake-on-lan-not-working/">Wake-on-LAN Not Working</a></li>
+                <li><a href="/posts/intel-i225v-proxmox-ve9-reset-loop-verified/">Intel I225-V / I226 NIC Reset Loop</a></li>
+            </ul>
+        </section>
+
+        <section class="home-guide-card">
+            <h3>Mini PCs &amp; Hardware</h3>
+            <p>Hardware choices based on virtualization, RAM, storage, networking, and the workloads you plan to keep running.</p>
+            <ul>
+                <li><a href="/posts/best-mini-pcs-for-proxmox/">Best Mini PC for Proxmox</a></li>
+                <li><a href="/posts/gmktec-k8-plus-for-proxmox/">GMKtec K8 Plus for Proxmox</a></li>
+                <li><a href="/posts/example-350-proxmox-homelab-build/">$350 Proxmox Home Lab</a></li>
+                <li><a href="/posts/best-home-lab-for-beginners-2026/">Beginner Home Lab Guide</a></li>
+            </ul>
+        </section>
+
+        <section class="home-guide-card">
+            <h3>Things to Run</h3>
+            <p>Turn the host into something useful: game servers, Windows labs, and backup workflows.</p>
+            <ul>
+                <li><a href="/posts/minecraft-server-on-proxmox/">Minecraft Server on Proxmox</a></li>
+                <li><a href="/posts/crafty-controller-proxmox-lxc/">Crafty Controller on Proxmox</a></li>
+                <li><a href="/posts/home-lab-active-directory-setup/">Active Directory Home Lab</a></li>
+                <li><a href="/posts/proxmox-backup-notifications-telegram/">Backup Failure Alerts in Telegram</a></li>
+            </ul>
+        </section>
+
+        <section class="home-guide-card">
+            <h3>Self-Hosting</h3>
+            <p>Practical services you can keep under your own control without turning the lab into another full-time job.</p>
+            <ul>
+                <li><a href="/posts/best-self-hosted-music-server-2026/">Navidrome vs Funkwhale vs Airsonic</a></li>
+            </ul>
+        </section>
+    </div>
+
+    <h2 class="home-latest-title">Latest Guides</h2>
+</section>

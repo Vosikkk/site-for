@@ -6,6 +6,7 @@ description: "Navidrome vs Funkwhale vs Airsonic-Advanced in 2026 — plus Navid
 tags: ["self-hosting", "homelab", "music"]
 ShowToc: true
 TocOpen: true
+aliases: ["/posts/navidrome-vs-funkwhale/"]
 ---
 
 If you're tired of algorithmic playlists and losing access to music you already paid for, self-hosting your own streaming server solves both problems — you point it at your existing library, and it just works, on your terms. The question is which server to actually run. Here's a straight comparison of the three real contenders.

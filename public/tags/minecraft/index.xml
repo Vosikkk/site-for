@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Minecraft on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
+    <link>http://localhost:1313/tags/minecraft/</link>
+    <description>Recent content in Minecraft on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <lastBuildDate>Sat, 29 Aug 2026 09:35:24 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/minecraft/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Crafty Controller on Proxmox LXC: Minecraft Server Manager</title>
+      <link>http://localhost:1313/posts/crafty-controller-proxmox-lxc/</link>
+      <pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/crafty-controller-proxmox-lxc/</guid>
+      <description>Run Crafty Controller on a Proxmox LXC. Resources, ports, Java vs Bedrock, helper-script install, and when a VM is the better box.</description>
+    </item>
+    <item>
+      <title>Minecraft Server on Proxmox: LXC vs VM, Java vs Bedrock</title>
+      <link>http://localhost:1313/posts/minecraft-server-on-proxmox/</link>
+      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/minecraft-server-on-proxmox/</guid>
+      <description>Host a Minecraft server on Proxmox. LXC vs VM, Java vs Bedrock, RAM/CPU starting points, and how Crafty Controller fits in.</description>
+    </item>
+  </channel>
+</rss>

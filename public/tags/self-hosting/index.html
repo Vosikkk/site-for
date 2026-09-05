@@ -5,12 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Self-Hosting | HomeLab Starter</title>
+<title>Self-Hosting | Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
 <meta name="keywords" content="">
-<meta name="description" content="Practical guides for building and running a modern homelab in 2026">
+<meta name="description" content="Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.">
 <meta name="author" content="Vosik">
 <link rel="canonical" href="http://localhost:1313/tags/self-hosting/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.7818a8d618bfd77c7c3c61970845e66d9e9bb07ba17e3f781040f210712b209b.css" integrity="sha256-eBio1hi/13x8PGGXCEXmbZ6bsHuhfj94EEDyEHErIJs=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -66,22 +66,24 @@
     }
 
 </script><meta property="og:url" content="http://localhost:1313/tags/self-hosting/">
-  <meta property="og:site_name" content="HomeLab Starter">
+  <meta property="og:site_name" content="Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)">
   <meta property="og:title" content="Self-Hosting">
-  <meta property="og:description" content="Practical guides for building and running a modern homelab in 2026">
-  <meta property="og:locale" content="en_us">
+  <meta property="og:description" content="Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.">
+  <meta property="og:locale" content="en_US">
   <meta property="og:type" content="website">
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Self-Hosting">
-  <meta name="twitter:description" content="Practical guides for building and running a modern homelab in 2026">
+  <meta name="twitter:description" content="Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.">
 
 </head>
 <body class="list" id="top">
     <header class="header">
     <nav class="header-nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="HomeLab Starter (Alt + H)">HomeLab Starter</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Run a Home Lab (Alt + H)">
+                <img src="http://localhost:1313/favicon.ico" alt="" aria-label="logo"
+                    height="30">Run a Home Lab</a>
             <div class="logo-switches">
                 <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
@@ -152,6 +154,54 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Crafty Controller on Proxmox LXC: Minecraft Server Manager
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>You already can run a raw Paper/Vanilla jar in an LXC. Crafty Controller is the layer on top: a web UI to start/stop servers, edit files, pull backups, and keep more than one Minecraft version without SSH-ing into the box every time.
+If you have not decided between LXC vs VM or Java vs Bedrock yet, start with the Minecraft Server on Proxmox guide. This article assumes that decision is made and focuses on how to manage those servers once they exist.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-29 00:00:00 +0000 UTC'>August 29, 2026</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>934 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Crafty Controller on Proxmox LXC: Minecraft Server Manager" href="http://localhost:1313/posts/crafty-controller-proxmox-lxc/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Minecraft Server on Proxmox: LXC vs VM, Java vs Bedrock
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Hosting your own Minecraft server on Proxmox gives you something no rented game server can: dedicated resources that aren’t shared with strangers, snapshots you can roll back before a risky mod update, and zero monthly hosting fees beyond the electricity your home lab already uses.
+The two decisions that actually matter before you start: LXC or VM, and Java or Bedrock. Get those right and the rest of the setup is straightforward.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-16 00:00:00 +0000 UTC'>August 16, 2026</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>1158 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Minecraft Server on Proxmox: LXC vs VM, Java vs Bedrock" href="http://localhost:1313/posts/minecraft-server-on-proxmox/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>If you’re tired of algorithmic playlists and losing access to music you already paid for, self-hosting your own streaming server solves both problems — you point it at your existing library, and it just works, on your terms. The question is which server to actually run. Here’s a straight comparison of the three real contenders.
+Quick Answer For most people building their first home lab, Navidrome is the right default. It’s lightweight, actively maintained, and works with the best mobile apps available. Reach for Funkwhale specifically if you want federation/social features. Airsonic-Advanced is worth considering mainly if you’re already comfortable with the Java ecosystem or have a specific reason to avoid the other two.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-14 00:00:00 +0000 UTC'>August 14, 2026</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>1148 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+  <a class="entry-link" aria-label="post link to Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server" href="http://localhost:1313/posts/best-self-hosted-music-server-2026/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Best Home Lab for Beginners 2026
     </h2>
   </header>
@@ -162,13 +212,13 @@ This guide is written specifically for beginners. No prior knowledge of Proxmox,
   </div>
   <footer class="entry-footer">
 
-<span title='2026-08-13 10:00:00 +0300 EEST'>August 13, 2026</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>1005 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
+<span title='2026-08-13 10:00:00 +0300 EEST'>August 13, 2026</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>1150 words</span>&nbsp;·&nbsp;<span>Vosik</span></footer>
   <a class="entry-link" aria-label="post link to Best Home Lab for Beginners 2026" href="http://localhost:1313/posts/best-home-lab-for-beginners-2026/"></a>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">HomeLab Starter</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</a></span> · 
 
     
     

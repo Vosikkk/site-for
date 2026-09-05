@@ -1,39 +1,116 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Tags on HomeLab Starter</title>
+    <title>Tags on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</title>
     <link>http://localhost:1313/tags/</link>
-    <description>Recent content in Tags on HomeLab Starter</description>
+    <description>Recent content in Tags on Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)</description>
     <generator>Hugo</generator>
-    <language>en-us</language>
-    <lastBuildDate>Fri, 14 Aug 2026 08:32:26 +0300</lastBuildDate>
+    <language>en-US</language>
+    <lastBuildDate>Sat, 05 Sep 2026 14:33:00 +0300</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Notifications</title>
+      <link>http://localhost:1313/tags/notifications/</link>
+      <pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/notifications/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pbs</title>
+      <link>http://localhost:1313/tags/pbs/</link>
+      <pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/pbs/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Proxmox</title>
+      <link>http://localhost:1313/tags/proxmox/</link>
+      <pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/proxmox/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Proxmox Backup</title>
+      <link>http://localhost:1313/tags/proxmox-backup/</link>
+      <pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/proxmox-backup/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Telegram</title>
+      <link>http://localhost:1313/tags/telegram/</link>
+      <pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/telegram/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Lxc</title>
+      <link>http://localhost:1313/tags/lxc/</link>
+      <pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/lxc/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Minecraft</title>
+      <link>http://localhost:1313/tags/minecraft/</link>
+      <pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/minecraft/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Self-Hosting</title>
+      <link>http://localhost:1313/tags/self-hosting/</link>
+      <pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/self-hosting/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Homelab</title>
       <link>http://localhost:1313/tags/homelab/</link>
-      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/homelab/</guid>
       <description></description>
     </item>
     <item>
       <title>Networking</title>
       <link>http://localhost:1313/tags/networking/</link>
-      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/networking/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Proxmox</title>
-      <link>http://localhost:1313/tags/proxmox/</link>
-      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/proxmox/</guid>
       <description></description>
     </item>
     <item>
       <title>Troubleshooting</title>
       <link>http://localhost:1313/tags/troubleshooting/</link>
-      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/troubleshooting/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hardware</title>
+      <link>http://localhost:1313/tags/hardware/</link>
+      <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/hardware/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Mini Pc</title>
+      <link>http://localhost:1313/tags/mini-pc/</link>
+      <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/mini-pc/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Windows</title>
+      <link>http://localhost:1313/tags/windows/</link>
+      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/windows/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Music</title>
+      <link>http://localhost:1313/tags/music/</link>
+      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/music/</guid>
       <description></description>
     </item>
     <item>
@@ -44,17 +121,17 @@
       <description></description>
     </item>
     <item>
-      <title>Mini Pc</title>
-      <link>http://localhost:1313/tags/mini-pc/</link>
-      <pubDate>Thu, 13 Aug 2026 10:00:00 +0300</pubDate>
-      <guid>http://localhost:1313/tags/mini-pc/</guid>
+      <title>Qemu</title>
+      <link>http://localhost:1313/tags/qemu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/qemu/</guid>
       <description></description>
     </item>
     <item>
-      <title>Self-Hosting</title>
-      <link>http://localhost:1313/tags/self-hosting/</link>
-      <pubDate>Thu, 13 Aug 2026 10:00:00 +0300</pubDate>
-      <guid>http://localhost:1313/tags/self-hosting/</guid>
+      <title>Ubuntu</title>
+      <link>http://localhost:1313/tags/ubuntu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/ubuntu/</guid>
       <description></description>
     </item>
   </channel>
