@@ -4,6 +4,9 @@ title = 'Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)'
 theme = 'PaperMod'
 enableRobotsTXT = true
 enableGitInfo = true
+[services]
+  [services.googleAnalytics]
+    id = 'G-DCJQ8L1ZRN'
 [pagination]
   pagerSize = 10
 [params]
