@@ -1,12 +1,14 @@
 ---
-title: "Proxmox Guest Agent Not Running? Fix It on Linux & Windows"
-description: "Seeing 'QEMU guest agent is not running' in Proxmox? Fix it on Ubuntu, Debian or Windows, check virtio-serial, and learn why a reboot may not be enough."
+title: "Proxmox QEMU Guest Agent Not Running: Linux & Windows Fix"
+description: "Fix 'QEMU guest agent is not running' and 'A dependency job for qemu-guest-agent.service failed' on Ubuntu, Debian, RHEL or Windows."
 tags: ["proxmox", "troubleshooting", "qemu", "windows", "ubuntu"]
 ---
 
 If Proxmox says **QEMU guest agent is not running**, reinstalling the agent is often not the fix.
 
 First check that the agent is enabled in Proxmox, confirm the service is running inside the VM, then **fully stop and start the VM from Proxmox**. A reboot from inside Linux or Windows may not recreate the virtio-serial channel the guest agent needs.
+
+If Linux reports **A dependency job for qemu-guest-agent.service failed**, check whether `/dev/virtio-ports/org.qemu.guest_agent.0` exists. When that device is missing, enabling the agent in Proxmox and cold-starting the VM is the important fix; reinstalling the package cannot create the virtual device.
 
 ## Quick fix
 
@@ -115,6 +117,59 @@ qemu-guest-agent
 
 For Windows, QEMU Guest Agent is available through the VirtIO driver ISO.
 
+## Fix “A dependency job for qemu-guest-agent.service failed”
+
+On Ubuntu, Debian and some other Linux guests, the complete error can look like this:
+
+```text
+A dependency job for qemu-guest-agent.service failed.
+See 'journalctl -xe' for details.
+```
+
+The service depends on the QEMU guest-agent virtio-serial device. Check for it inside the VM:
+
+```bash
+systemctl status qemu-guest-agent --no-pager
+ls -l /dev/virtio-ports/
+journalctl -b -u qemu-guest-agent --no-pager
+```
+
+The expected channel is:
+
+```text
+/dev/virtio-ports/org.qemu.guest_agent.0
+```
+
+Use the result to choose the next step:
+
+| What you find | Most likely cause | What to do |
+|---|---|---|
+| The channel is missing | QEMU Guest Agent is disabled in Proxmox, or the VM has not cold-started since it was enabled | Enable it, fully stop the VM, then start it again |
+| The channel exists but the service failed | The device is available, but the service needs another start or has a separate error | Reset the failed state, restart it and read the journal |
+| `qm agent <vmid> ping` works | Host-to-guest communication is working | Wait 30–60 seconds and refresh the Proxmox UI |
+
+If the channel is missing, run this on the Proxmox host:
+
+```bash
+qm set <vmid> --agent enabled=1
+```
+
+Then fully stop the VM, start it from Proxmox and check again inside the guest:
+
+```bash
+ls -l /dev/virtio-ports/org.qemu.guest_agent.0
+systemctl restart qemu-guest-agent
+systemctl status qemu-guest-agent --no-pager
+```
+
+Finally, test from the Proxmox host:
+
+```bash
+qm agent <vmid> ping
+```
+
+Do not create `/dev/virtio-ports/org.qemu.guest_agent.0` manually. QEMU exposes that virtual device when the VM configuration and startup state are correct. This device-backed service behavior is documented in the [QEMU guest-agent systemd unit](https://gitlab.com/qemu-project/qemu/-/blob/master/contrib/systemd/qemu-guest-agent.service) and the [QEMU Guest Agent documentation](https://www.qemu.org/docs/master/interop/qemu-ga.html).
+
 ## Proxmox Guest Agent not running on Ubuntu / Debian
 
 Inside an Ubuntu or Debian VM:
@@ -128,7 +183,6 @@ If it is not installed:
 ```bash
 apt update
 apt install -y qemu-guest-agent
-systemctl enable --now qemu-guest-agent
 ```
 
 Check it again:
@@ -137,12 +191,19 @@ Check it again:
 systemctl status qemu-guest-agent --no-pager
 ```
 
+On many Debian and Ubuntu releases, this is a static, device-activated service. If `systemctl enable qemu-guest-agent` says the unit has no installation configuration, that message alone does not mean the package is broken. Make sure the channel exists, then restart the service:
+
+```bash
+ls -l /dev/virtio-ports/org.qemu.guest_agent.0
+systemctl restart qemu-guest-agent
+```
+
 If the service is masked or failed:
 
 ```bash
 systemctl unmask qemu-guest-agent
 systemctl reset-failed qemu-guest-agent
-systemctl enable --now qemu-guest-agent
+systemctl restart qemu-guest-agent
 journalctl -u qemu-guest-agent -b --no-pager
 ```
 
@@ -356,6 +417,22 @@ qm config <vmid> | grep agent
 qm agent <vmid> ping
 ```
 
+### How do I fix “A dependency job for qemu-guest-agent.service failed”?
+
+Check whether the guest-agent channel exists:
+
+```bash
+ls -l /dev/virtio-ports/org.qemu.guest_agent.0
+```
+
+If it is missing, enable QEMU Guest Agent for the VM in Proxmox, fully stop the VM and start it again. If it exists, reset and restart the service, then inspect its boot journal:
+
+```bash
+systemctl reset-failed qemu-guest-agent
+systemctl restart qemu-guest-agent
+journalctl -b -u qemu-guest-agent --no-pager
+```
+
 ### I reinstalled qemu-guest-agent and it still says not running. What now?
 
 Check the VM configuration and virtio-serial communication before reinstalling it again.
@@ -370,14 +447,20 @@ If you just enabled QEMU Guest Agent in the Proxmox configuration, fully stoppin
 
 ### How do I fix Proxmox Guest Agent on Ubuntu?
 
-Install and enable it:
+Install it:
 
 ```bash
 apt install -y qemu-guest-agent
-systemctl enable --now qemu-guest-agent
 ```
 
-Then enable QEMU Guest Agent in Proxmox, fully stop/start the VM and test:
+Then enable QEMU Guest Agent in Proxmox and fully stop/start the VM. Inside the guest, verify the service:
+
+```bash
+systemctl restart qemu-guest-agent
+systemctl status qemu-guest-agent --no-pager
+```
+
+From the Proxmox host, test the connection:
 
 ```bash
 qm agent <vmid> ping
