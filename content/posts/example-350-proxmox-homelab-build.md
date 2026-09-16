@@ -1,162 +1,248 @@
 ---
-title: "A $350 Proxmox Home Lab: Example Build Based on Current Pricing (2026)"
+title: "What Can a $350 Proxmox Home Lab Actually Run? (2026)"
 date: 2026-08-14
-description: "A concrete example of what a ~$350 Proxmox home lab can look like in 2026 — a practical base system, optional upgrades, what it can run, and realistic power costs."
+lastmod: 2026-09-16
+description: "Is 16GB enough for Proxmox? See what a $350 N150 home lab can run, its real bottlenecks, and when a used business PC is the better buy."
 tags: ["homelab", "proxmox", "mini pc", "hardware"]
 ShowToc: true
 TocOpen: false
 ---
 
-> **A note on how to read this guide:** this is a reference configuration built from current, real pricing and specs — not a log of one specific unit we personally ran for months. Think of it as "here's exactly what your money buys right now," which is often more useful than a single person's anecdotal experience, since hardware pricing shifts fast enough that a build log from six months ago can already be stale.
+> **How this guide was built:** this is a reference configuration based on current specifications, pricing, and reports from people running similar systems. It is not presented as a long-term benchmark of a machine we personally tested. After publishing the first version, we [asked the r/homelab community](https://www.reddit.com/r/homelab/comments/1wg2grg/what_can_a_350_proxmox_homelab_realistically_run/) what this build could realistically handle and where it would fail first. This update incorporates the useful patterns from that discussion while keeping individual reports clearly labeled as anecdotal.
 
 > **Affiliate Disclosure:** This site is a participant in the Amazon Services LLC Associates Program. Some links below are affiliate links — if you buy through them, we may earn a small commission at no extra cost to you. This doesn't affect which products are recommended.
 
-If you read our [beginner's homelab guide](/posts/best-home-lab-for-beginners-2026/), you know the $300–400 range is a useful target for a first serious home lab. Here's what that can look like as a practical single-node configuration.
+## The Short Answer
 
-If you want to compare this with other hardware first, see our [best mini PCs for Proxmox](/posts/best-mini-pcs-for-proxmox/).
+**A 16GB Intel N150 mini PC can run a useful Proxmox home lab.** It is a realistic starting point for lightweight LXC containers, a small number of VMs, and services such as AdGuard Home, Vaultwarden, Uptime Kuma, Home Assistant, Jellyfin, and Immich.
 
-## The Build
+But that does not automatically make every N150 mini PC a good **$350 purchase**.
+
+The community feedback exposed a more important buying question:
+
+> Are you paying for a compact, quiet, low-power new machine — or do you want the most performance and expansion for the money?
+
+At the same budget, a used Dell OptiPlex, HP EliteDesk/ProDesk, or Lenovo ThinkCentre can often offer a faster CPU, more memory capacity, and more storage options. The tradeoff is a larger chassis, potentially higher power use, used hardware, and more variation between listings.
+
+So the honest verdict is:
+
+- **16GB is enough to start.**
+- **500GB may become the first limit if you store photos or media locally.**
+- **Immich imports, Jellyfin transcoding, and multiple full VMs are the workloads most likely to expose the CPU or memory limit.**
+- **At close to $350, compare the N150 mini PC with a used business PC before buying.**
+
+## The Reference Build
 
 | Component | Pick | Approx. Price |
 |---|---|---|
-| Mini PC | [Beelink MINI S13 (Intel N150, 16GB RAM, 500GB SSD)](https://www.amazon.com/Beelink-U59-PRO-Processor-Ethernet/dp/B0B99VKSPQ?dib=eyJ2IjoiMSJ9.nbcYIiAlTXIPh-SkvpIEwy_YKhTlCn_5kwStn1LGDoFMpgEqwZGKb0zjB4iTMVkqQv2UVPXx6lU9jbD6dmh6cEoL1UfnhoX6yDycaEfjZUJRXxu4PiQr2R33hec6iFsUioLB0rCT0KLyM3YNFZ9kRQKf7xbKFyc4wDxSPHThkYaAVWKznRFf-F30iP2hjCjPu7iZcEXigzNGoMwlcvYjGNJZrNFhrNp1N-1NUqQ_fwc.UNNDyhgUG9kLmgRc5ObF8LX_HdOE00wM5bn_gMRO4fM&dib_tag=se&keywords=Beelink%2BMINI%2BS13%2BN150%2B16GB%2B500GB&qid=1787645288&sr=8-1&th=1&linkCode=ll2&tag=runahomelab-20&linkId=566c4238f3a2950a1b388e0abebccf89&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) | $279–399 (check current price) |
+| Mini PC | [Beelink MINI S13 (Intel N150, 16GB RAM, 500GB SSD)](https://www.amazon.com/s?k=Beelink+MINI+S13+N150+16GB+500GB&tag=runahomelab-20) | Check the current listing; compare alternatives near $350 |
 | Backup storage | External USB drive for Proxmox backups (optional) | Buy based on current $/TB |
 | Network switch | [TP-Link TL-SG105 5-Port Gigabit Switch](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=runahomelab-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) | ~$12–25 |
 | UPS | [CyberPower ST425 (425VA / 260W)](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=runahomelab-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) (optional) | Check current price |
 
-**Budget note:** treat ~$350 as the target for the base Proxmox host, not the fully accessorized setup. Backup storage, the network switch, and the UPS are optional upgrades and are not included in the headline budget. Mini-PC pricing and bundles change frequently, so check the current listing before ordering.
+Treat ~$350 as the target for the **base Proxmox host**, not the host plus every accessory. The switch, backup drive, and UPS are optional additions.
 
-The mini PC alone gets you a fully working single-node Proxmox host. Add the switch only if your network setup needs it, external backup storage once you have data worth protecting, and a UPS when clean shutdowns during power loss matter to you.
+Mini-PC prices change frequently. The N150 configuration becomes much easier to recommend when it is discounted; near the top of the range, used business hardware deserves a serious comparison.
 
-### Why This Specific Mini PC?
+## What Can It Realistically Run?
 
-The Intel N150 is a low-power processor, and the 16GB RAM / 500GB SSD configuration gives you enough headroom for the services below without paying for hardware you may not use.
+This is a sensible starting stack:
 
-The MINI S13 isn't a performance monster, and that's not the point. A first home lab needs enough CPU and memory for several always-on services while keeping power consumption, noise, and upfront cost low.
-
-The included 500GB storage is enough to get started with Proxmox, a handful of containers, and a lightweight VM or two. As the lab becomes something you actually depend on, that's when separate backup storage starts making sense.
-
-It won't win benchmarks, but a home lab's job isn't to win benchmarks — it's to run useful services reliably at low power, 24/7.
-
-**One thing to check before buying:** mini PC prices and bundled RAM/storage configurations move around frequently. Check the current price and exact configuration before ordering rather than treating any price in an article — including this one — as fixed.
-
-## What This Configuration Can Actually Run
-
-Mapping directly to the "essential services" list from the beginner guide:
-
-| Service | Purpose | Typical RAM Use |
+| Service | Likely fit on 16GB? | What changes the load? |
 |---|---|---|
-| Homepage or Homarr | Dashboard | ~256MB |
-| AdGuard Home | DNS-level ad blocking | ~128MB |
-| Vaultwarden | Password manager | ~128MB |
-| Immich | Photo management | 1–2GB (more during active photo processing) |
-| Jellyfin | Media server | 512MB idle, more during transcoding |
-| Uptime Kuma | Monitoring | ~128MB |
+| AdGuard Home or Pi-hole | Easy | Query volume and logging |
+| Vaultwarden | Easy | Number of users and attachments |
+| Homepage or Homarr | Easy | Number of integrations |
+| Uptime Kuma | Easy | Number and frequency of checks |
+| Home Assistant | Usually comfortable | Add-ons, history, and integrations |
+| Jellyfin | Comfortable at idle | Transcoding and concurrent streams |
+| Immich | Comfortable after setup | Initial import, thumbnail generation, and machine-learning jobs |
+| Small Linux VM | Yes | Assigned RAM and background services |
+| Several full VMs | Possible, but this is where 16GB gets tight | Guest OS overhead and simultaneous activity |
 
-Running all six still leaves room within the 16GB for additional LXC containers or a lightweight VM.
+The distinction between **LXC containers and full VMs** matters. Lightweight containers share the host kernel and normally require fewer resources. Multiple VMs each need their own reserved memory and operating system, so the same 16GB disappears much faster.
 
-That doesn't mean every workload will fit forever. Immich processing, Jellyfin transcoding, larger databases, and additional VMs can all increase resource use. But for a first Proxmox node focused on self-hosted services, 16GB gives you enough room to learn what you actually need before spending more money.
+### What Similar Systems Are Running
 
-That's important for a budget build: **upgrade because you've found a real limitation, not because a spec sheet says 32GB looks better than 16GB.**
+The Reddit discussion included several useful real-world reports:
+
+- One person with a nearly identical N150/16GB/512GB system reported running AdGuard in LXC, Home Assistant in a VM, and an Ubuntu VM hosting Jellyfin, Paperless-ngx, an \*arr stack, backups, and a reverse proxy. Their system was using about 15GB of RAM.
+- Another person reported running multiple services including Immich, Jellyfin, Forgejo, n8n, UniFi, Audiobookshelf, and Uptime Kuma with roughly 5GB in use on one node.
+- An older 8GB Mac mini reportedly handled around ten lightweight LXC containers.
+- An N150 system with 32GB reportedly used about 18GB while running the listed services plus Plex, Home Assistant, backup and sync tools.
+
+These are **individual configurations, not controlled benchmarks**. They show that the proposed stack is plausible, but they also show how much deployment choices, workload, storage, and VM allocation affect the result.
+
+## What Will You Outgrow First?
+
+There is no single answer for every home lab, but the comments revealed four recurring limits.
+
+### 1. Storage Capacity
+
+For Jellyfin or Immich, the included 500GB SSD may fill before the CPU or RAM becomes unusable.
+
+A few TV seasons, a photo library, VM disks, snapshots, and local backups can consume hundreds of gigabytes quickly. If media and photos are part of the plan, assume that you will eventually need a NAS, external storage, or a host with room for additional drives.
+
+Do not keep the only backup on the same SSD as the original data.
+
+### 2. Short Bursts of CPU and RAM Use
+
+Idle dashboards and DNS services are not the challenge. The peaks are:
+
+- importing a large Immich library;
+- generating thumbnails and running Immich machine-learning jobs;
+- transcoding media in Jellyfin;
+- starting several VMs simultaneously;
+- running databases, game servers, or build jobs alongside the basic stack.
+
+The Intel N150 has four cores and four threads. Intel lists a 3.6GHz maximum turbo frequency and an official 16GB maximum memory size in its [N-series comparison](https://www.intel.com/content/www/us/en/support/articles/000100305/processors.html). Some owners report using 32GB successfully on N100/N150 systems, but that depends on the specific mini PC and is not the same as an official platform guarantee.
+
+### 3. Full VMs Instead of LXC Containers
+
+If the goal is primarily self-hosted Linux services, LXC lets 16GB go a long way.
+
+If the goal is a Windows lab, Active Directory environment, Kubernetes cluster made from VMs, or several isolated operating systems, prioritize a platform with more memory capacity. In that case, 32GB is not an unnecessary luxury; it is part of the workload requirement.
+
+### 4. Upgradeability
+
+Many N-series mini PCs have one memory slot and limited internal storage expansion. A used small-form-factor business PC may provide two or four RAM slots, multiple NVMe or SATA options, and a replaceable CPU depending on the model.
+
+That difference may not matter on day one. It matters when the cheapest upgrade is otherwise buying another computer.
+
+## New N150 Mini PC vs Used Business PC
+
+| Priority | New N150 mini PC | Used Dell/HP/Lenovo business PC |
+|---|---|---|
+| Size and noise | Usually better | Larger; varies by model |
+| Idle power | Usually lower | Often higher, but model-dependent |
+| Warranty and predictable condition | Better | Depends on seller and age |
+| CPU performance per dollar | Limited near $350 | Often better |
+| RAM expansion | Often limited | Usually better |
+| Internal storage expansion | Often limited | Usually better |
+| Hardware consistency | Easy to buy the same configuration | Listings and configurations vary |
+| Best use | Quiet, compact, always-on services | VMs, experimentation, expansion, value |
+
+### Choose the N150 Mini PC If
+
+- you want a compact and quiet machine;
+- low idle power matters because it will run 24/7;
+- your planned workload is mostly LXC containers and one or two small VMs;
+- media lives on separate storage;
+- the mini PC is available at a price that makes sense against used alternatives.
+
+### Choose a Used Business PC If
+
+- you want the most CPU performance for the budget;
+- you expect to add RAM or storage;
+- you plan to run several full VMs;
+- you are comfortable checking the exact CPU, memory slots, drive bays, NIC, power adapter, and seller condition;
+- size and a modest increase in idle power are acceptable.
+
+The comparison should be against a **used office PC**, not necessarily an old rack server. A rack server may be cheap to buy but expensive to power, loud, large, and unnecessary for a first node.
+
+## Is 16GB Enough, or Should You Buy 32GB?
+
+Start with 16GB when your plan is mainly:
+
+- DNS and network utilities;
+- dashboards and monitoring;
+- Vaultwarden;
+- Home Assistant;
+- a modest Jellyfin or Immich deployment;
+- several lightweight Linux containers;
+- one or two small VMs.
+
+Prefer 32GB or an upgradeable platform when your plan includes:
+
+- several full VMs;
+- Windows Server or an Active Directory lab;
+- Kubernetes nodes as separate VMs;
+- large Immich imports alongside other active services;
+- databases, game servers, or CI workloads;
+- ZFS and storage-heavy experimentation;
+- no clear idea what you will add next, but you know you want room to experiment.
+
+The right rule is still: **upgrade because the workload requires it, not because a larger number looks safer.** But if the machine cannot be upgraded later, that limitation should be part of the buying decision now.
 
 ## Do You Need the Optional Hardware?
 
-Not immediately.
-
 ### Network Switch
 
-If your router already has enough free Ethernet ports, you don't need another switch just to start a home lab.
+If your router has a free Ethernet port, you do not need another switch just to start.
 
-Once you begin adding more wired devices, another mini PC, a NAS, or other lab hardware, a simple unmanaged switch becomes useful. The [TP-Link TL-SG105 5-Port Gigabit Switch](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=runahomelab-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is enough for that job without turning networking into another project.
+Once you add a NAS, another node, or more wired devices, a basic unmanaged switch such as the [TP-Link TL-SG105](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=runahomelab-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is enough for a simple gigabit network.
 
 ### Backup Storage
 
-Don't buy an expensive SSD just because it's listed as part of somebody else's "ideal" home lab.
+Start with the included storage for learning, but add a separate backup target once the host contains configuration or data you would mind losing.
 
-Start with the included storage. Once you have VMs, containers, configuration, or data you'd actually mind losing, add an external USB drive and use it as a backup target.
-
-For backup storage, capacity and reliability matter more than buying the fastest portable SSD available. Prices also move enough that it makes more sense to compare current cost per terabyte when you're ready to buy.
-
-And remember: adding another drive is only useful as a backup if you actually configure and test your backups.
+Capacity and reliability matter more than buying the fastest portable SSD. More importantly, configure the backup job and test a restore. An unused backup drive is not a backup strategy.
 
 ### UPS
 
-A UPS is another upgrade that becomes more valuable once the machine is doing something you care about.
+A UPS becomes valuable when the machine runs something you depend on. The [CyberPower ST425](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=runahomelab-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is a 425VA/260W standby unit suitable for a small low-power setup.
 
-The [CyberPower ST425](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=runahomelab-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is a 425VA / 260W standby UPS, which gives a low-power mini-PC setup plenty of capacity without jumping to a much larger 1000–1500VA unit.
-
-The goal here isn't to run your home lab for hours during an outage. It's to handle short interruptions and give important systems a chance to shut down cleanly.
+The goal is not hours of runtime. It is surviving short interruptions and giving important systems time to shut down cleanly.
 
 ## Realistic Power Cost
 
-Here's the math so you can redo it with your own electricity rate rather than trusting a flat number:
+Use this formula with your own measured wattage and electricity rate:
 
-```
+```text
 Watts × 24 hours × 30 days ÷ 1000 = kWh per month
-kWh per month × your rate ($/kWh) = monthly cost
+kWh per month × electricity rate = monthly cost
 ```
 
-At a steady 15W average:
+At a **15W measured average**, the example is:
 
-```
+```text
 15W × 24 × 30 ÷ 1000 = 10.8 kWh/month
 ```
 
-At $0.15/kWh:
+That costs approximately:
 
-```
-10.8 × $0.15 = $1.62/month
-```
+- $1.62/month at $0.15/kWh;
+- $2.70/month at $0.25/kWh;
+- $3.24/month at $0.30/kWh.
 
-So you're looking at roughly **$1.60/month** at that assumed load and electricity rate.
+The 15W figure is an example, not a promise for every N150 system. Drives, USB devices, memory, networking, BIOS settings, and workload all change consumption. Measure the complete system at the wall if operating cost is part of your purchase decision.
 
-At $0.25/kWh, the same 15W average works out to about **$2.70/month**. At $0.30/kWh, it's about **$3.24/month**.
+## Final Verdict
 
-Actual consumption depends on workload, connected storage, peripherals, and power-management behavior, so treat 15W as a working example rather than a guarantee for every MINI S13 setup.
+A 16GB N150 mini PC can absolutely be a useful first Proxmox server. The proposed services are realistic, especially when lightweight applications run in LXC containers and media is stored elsewhere.
 
-Either way, the operating cost of a low-power mini PC is one of the strongest arguments for using this class of hardware instead of an old enterprise server for a first home lab.
+But **“can it run the stack?” and “is it the best use of $350?” are different questions.**
 
-## When to Upgrade Beyond This
+Buy the N150 system for its compact size, low power use, quiet operation, and simplicity. Buy a used business PC when performance per dollar, memory capacity, storage expansion, and running more VMs matter more.
 
-This build is genuinely sufficient for the services listed above. Consider stepping up when you have a specific reason:
+The Reddit discussion did not invalidate the build. It revealed the condition under which it makes sense:
 
-- **A second node for high availability** — at that point, two smaller units may make more sense than replacing the first machine with one much larger system.
-- **10GbE networking** for fast storage between nodes — this is where something like the Minisforum MS-01 becomes worth considering, but only if you actually have a use for that bandwidth.
-- **More VMs or memory-heavy services** — if 16GB becomes a measured limitation rather than a theoretical one, move to hardware with more RAM capacity.
-- **Local AI workloads** — running LLMs locally changes the hardware priorities substantially. GPU/NPU capability and memory bandwidth start to matter much more, so it's better treated as a different build rather than stretching this one.
-
-For simply running a stable, useful home lab — the kind covered in our beginner guide — this ~$350-class base configuration isn't just a compromise made to hit a low price.
-
-For a lot of people, it's enough.
+> The N150 is a good small server when you value efficiency and buy it at the right price. It is not automatically the best-value Proxmox host just because it fits the budget.
 
 ## FAQ
 
-**Is 16GB RAM really enough, or will I regret not getting 32GB?**
+### Can 16GB run Proxmox, Jellyfin, and Immich together?
 
-For the service list above, 16GB gives you useful headroom. If you already know you want to run Immich with a large photo library alongside several other memory-heavy services and VMs, more RAM can make sense.
+Yes, especially when the rest of the stack uses lightweight containers. The difficult moments are large Immich imports and Jellyfin transcoding, not simply having both services installed. Storage capacity and the number of simultaneous users also matter.
 
-But don't pay for 32GB "just in case" when your actual planned services fit comfortably inside 16GB. Start with the workload, not the number on the spec sheet.
+### Will 500GB be enough?
 
-**Do I need backup storage and a UPS on day one?**
+It is enough for Proxmox, containers, and a few small VMs. It is not much space for a growing photo or media library. Plan separate storage if Immich or Jellyfin is a central part of the lab.
 
-No. Start with the mini PC and get comfortable with Proxmox first.
+### Is a used OptiPlex or EliteDesk better than an N150 mini PC?
 
-Add an external USB drive for backups once you have VMs, containers, configuration, or data you'd actually mind losing. Add the [CyberPower ST425](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=runahomelab-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) when clean shutdowns during power loss become important.
+It can be better value, particularly near a $350 budget, because it may offer a stronger CPU and more upgrade options. The N150 system usually wins on size, simplicity, and power efficiency. Compare exact models rather than buying by category alone.
 
-**Does the network switch count toward the $350 build?**
+### Do I need 32GB immediately?
 
-No. The headline budget refers to the base Proxmox host. The switch, backup storage, and UPS are optional additions.
+Not for the lightweight starter stack. Choose 32GB when you already plan several VMs, memory-heavy services, or a lab designed for experimentation. Also check whether the specific mini PC officially supports the upgrade.
 
-If your router already has a free Ethernet port, you can install Proxmox and start using the lab without buying a switch at all.
+### Does the switch, backup drive, or UPS count toward the $350?
 
-**Why not recommend a specific used enterprise server instead, since they're often cheaper per core?**
-
-Power draw, noise, size, and complexity.
-
-Used enterprise hardware can offer excellent compute value, but that doesn't automatically make it a better first home lab. A small, low-power machine is easier to leave running continuously, easier to place in a home, and lets you learn Proxmox and self-hosting before deciding whether you actually need enterprise-class hardware.
+No. The headline budget refers to the base Proxmox host. If your router has a free Ethernet port, you can start without a separate switch. Add backup storage and a UPS as the system becomes valuable to you.
 
 ---
 
-*New here? Start with the [complete beginner's guide to building a home lab](/posts/best-home-lab-for-beginners-2026/) for the full software stack and 14-day launch plan this hardware is built to run.*
+*New here? Start with the [complete beginner's guide to building a home lab](/posts/best-home-lab-for-beginners-2026/) for the full software stack and 14-day launch plan.*
 
-*Hardware context for this build lives in [best mini PC for Proxmox](/posts/best-mini-pcs-for-proxmox/). If the node is already up and throwing warnings, start with [no valid subscription](/posts/proxmox-no-valid-subscription-fix/) and [guest agent](/posts/proxmox-guest-agent-not-running-fix/).*
+*Compare more hardware in [best mini PCs for Proxmox](/posts/best-mini-pcs-for-proxmox/). If your node is already running, continue with the [no valid subscription fix](/posts/proxmox-no-valid-subscription-fix/) and [Proxmox guest agent guide](/posts/proxmox-guest-agent-not-running-fix/).*
