@@ -62,6 +62,8 @@ This is a sensible starting stack:
 
 The distinction between **LXC containers and full VMs** matters. Lightweight containers share the host kernel and normally require fewer resources. Multiple VMs each need their own reserved memory and operating system, so the same 16GB disappears much faster.
 
+{{< homelab-checker >}}
+
 ### What Similar Systems Are Running
 
 The Reddit discussion included several useful real-world reports:

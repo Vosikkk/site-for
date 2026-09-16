@@ -1,0 +1,95 @@
+{{- $id := printf "homelab-checker-%d" .Ordinal -}}
+<section class="homelab-checker" data-homelab-checker aria-labelledby="{{ $id }}-title">
+  <div class="homelab-checker__header">
+    <p class="homelab-checker__eyebrow">Workload checker</p>
+    <h2 id="{{ $id }}-title">Will an N150 Handle Your Homelab?</h2>
+    <p>Select what you want to run. We'll show where an N150 + 16GB setup is likely to become limiting.</p>
+  </div>
+
+  <form class="homelab-checker__form">
+    <fieldset class="homelab-checker__workloads">
+      <legend>Select your workloads</legend>
+
+      <div class="homelab-checker__option-group">
+        <label class="homelab-checker__option">
+          <input type="checkbox" name="workload" value="jellyfin" data-workload>
+          <span>Jellyfin</span>
+        </label>
+        <fieldset class="homelab-checker__suboptions" data-suboptions="jellyfin" hidden>
+          <legend>Jellyfin usage</legend>
+          <label>
+            <input type="radio" name="{{ $id }}-jellyfin-mode" value="direct" checked>
+            <span>Direct play / light use</span>
+          </label>
+          <label>
+            <input type="radio" name="{{ $id }}-jellyfin-mode" value="4k">
+            <span>4K transcoding</span>
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="homelab-checker__option-group">
+        <label class="homelab-checker__option">
+          <input type="checkbox" name="workload" value="immich" data-workload>
+          <span>Immich</span>
+        </label>
+      </div>
+
+      <div class="homelab-checker__option-group">
+        <label class="homelab-checker__option">
+          <input type="checkbox" name="workload" value="home_assistant" data-workload>
+          <span>Home Assistant</span>
+        </label>
+      </div>
+
+      <div class="homelab-checker__option-group">
+        <label class="homelab-checker__option">
+          <input type="checkbox" name="workload" value="minecraft" data-workload>
+          <span>Minecraft Server</span>
+        </label>
+      </div>
+
+      <div class="homelab-checker__option-group">
+        <label class="homelab-checker__option">
+          <input type="checkbox" name="workload" value="windows_vm" data-workload>
+          <span>Windows VM</span>
+        </label>
+      </div>
+
+      <div class="homelab-checker__option-group">
+        <label class="homelab-checker__option">
+          <input type="checkbox" name="workload" value="other_vms" data-workload>
+          <span>Other VMs</span>
+        </label>
+        <fieldset class="homelab-checker__suboptions" data-suboptions="other_vms" hidden>
+          <legend>Other VM count</legend>
+          <label>
+            <input type="radio" name="{{ $id }}-other-vms-mode" value="1_2" checked>
+            <span>1–2 lightweight VMs</span>
+          </label>
+          <label>
+            <input type="radio" name="{{ $id }}-other-vms-mode" value="3_plus">
+            <span>3+ VMs</span>
+          </label>
+        </fieldset>
+      </div>
+    </fieldset>
+
+    <button class="homelab-checker__button" type="button" data-check-workload>Check My Workload</button>
+    <p class="homelab-checker__validation" data-checker-validation role="alert" hidden>Select at least one workload.</p>
+  </form>
+
+  <div class="homelab-checker__result" data-checker-result aria-live="polite" tabindex="-1" hidden>
+    <p class="homelab-checker__result-label">Workload estimate</p>
+    <h3 data-result-heading></h3>
+    <p data-result-copy></p>
+  </div>
+
+  <p class="homelab-checker__note">This is a workload-oriented estimate, not a benchmark. Actual performance depends on configuration, concurrent usage, storage, media formats, VM allocation, and the specific mini PC.</p>
+</section>
+
+{{- if not (.Page.Store.Get "homelabCheckerScript") -}}
+  {{- .Page.Store.Set "homelabCheckerScript" true -}}
+  {{- $script := resources.Get "js/homelab-checker.js" | minify | fingerprint -}}
+  <script defer src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}"></script>
+{{- end -}}
