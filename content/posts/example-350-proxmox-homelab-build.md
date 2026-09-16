@@ -35,10 +35,10 @@ So the honest verdict is:
 
 | Component | Pick | Approx. Price |
 |---|---|---|
-| Mini PC | [Beelink MINI S13 (Intel N150, 16GB RAM, 500GB SSD)](https://www.amazon.com/s?k=Beelink+MINI+S13+N150+16GB+500GB&tag=runahomelab-20) | Check the current listing; compare alternatives near $350 |
+| Mini PC | [Beelink MINI S13 (Intel N150, 16GB RAM, 500GB SSD)](https://www.amazon.com/s?k=Beelink+MINI+S13+N150+16GB+500GB&tag=build350-n150-20) | Check the current listing; compare alternatives near $350 |
 | Backup storage | External USB drive for Proxmox backups (optional) | Buy based on current $/TB |
-| Network switch | [TP-Link TL-SG105 5-Port Gigabit Switch](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=runahomelab-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) | ~$12–25 |
-| UPS | [CyberPower ST425 (425VA / 260W)](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=runahomelab-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) (optional) | Check current price |
+| Network switch | [TP-Link TL-SG105 5-Port Gigabit Switch](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=build350-switch-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) | ~$12–25 |
+| UPS | [CyberPower ST425 (425VA / 260W)](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=build350-ups-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) (optional) | Check current price |
 
 Treat ~$350 as the target for the **base Proxmox host**, not the host plus every accessory. The switch, backup drive, and UPS are optional additions.
 
@@ -170,7 +170,7 @@ The right rule is still: **upgrade because the workload requires it, not because
 
 If your router has a free Ethernet port, you do not need another switch just to start.
 
-Once you add a NAS, another node, or more wired devices, a basic unmanaged switch such as the [TP-Link TL-SG105](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=runahomelab-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is enough for a simple gigabit network.
+Once you add a NAS, another node, or more wired devices, a basic unmanaged switch such as the [TP-Link TL-SG105](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=build350-switch-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is enough for a simple gigabit network.
 
 ### Backup Storage
 
@@ -180,7 +180,7 @@ Capacity and reliability matter more than buying the fastest portable SSD. More 
 
 ### UPS
 
-A UPS becomes valuable when the machine runs something you depend on. The [CyberPower ST425](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=runahomelab-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is a 425VA/260W standby unit suitable for a small low-power setup.
+A UPS becomes valuable when the machine runs something you depend on. The [CyberPower ST425](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=build350-ups-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is a 425VA/260W standby unit suitable for a small low-power setup.
 
 The goal is not hours of runtime. It is surviving short interruptions and giving important systems time to shut down cleanly.
 

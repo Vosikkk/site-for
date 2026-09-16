@@ -47,8 +47,8 @@ There is no single winner. There is a winner for the lab you are actually buildi
 
 ### Best mini PC for Proxmox if you want one link
 
-- Expandable homelab: **[GMKtec K8 Plus](/posts/gmktec-k8-plus-for-proxmox/)** — [Amazon](https://www.amazon.com/dp/B0DHNTW3H6?tag=runahomelab-20)
-- Quiet single node: **Beelink SER8** — [Amazon](https://www.amazon.com/dp/B0GVY9FDFC?tag=runahomelab-20)
+- Expandable homelab: **[GMKtec K8 Plus](/posts/gmktec-k8-plus-for-proxmox/)** — [Amazon](https://www.amazon.com/dp/B0DHNTW3H6?tag=minipc-k8-20)
+- Quiet single node: **Beelink SER8** — [Amazon](https://www.amazon.com/dp/B0GVY9FDFC?tag=minipc-ser8-20)
 
 Prices move weekly. Check the live listing before you buy.
 
@@ -198,7 +198,7 @@ Consider:
 
 For a home lab, these tradeoffs are often acceptable.
 
-[**Check the current GMKtec K8 Plus price on Amazon →**](https://www.amazon.com/dp/B0DHNTW3H6?tag=runahomelab-20)
+[**Check the current GMKtec K8 Plus price on Amazon →**](https://www.amazon.com/dp/B0DHNTW3H6?tag=minipc-k8-20)
 
 ---
 
@@ -261,7 +261,7 @@ If your goal is simply:
 
 the SER8 is easier to recommend.
 
-[**Check the current Beelink SER8 price on Amazon →**](https://www.amazon.com/dp/B0GVY9FDFC?tag=runahomelab-20)
+[**Check the current Beelink SER8 price on Amazon →**](https://www.amazon.com/dp/B0GVY9FDFC?tag=minipc-ser8-20)
 
 ---
 
@@ -587,13 +587,13 @@ If you want to build a Proxmox home lab without buying a large server, a modern 
 
 The K8 Plus gets our recommendation because the **dual 2.5GbE ports, two NVMe slots and OCuLink expansion** give a homelab builder more room to experiment.
 
-[**Check the current K8 Plus price on Amazon →**](https://www.amazon.com/dp/B0DHNTW3H6?tag=runahomelab-20)
+[**Check the current K8 Plus price on Amazon →**](https://www.amazon.com/dp/B0DHNTW3H6?tag=minipc-k8-20)
 
 ### Best for a simple and quiet Proxmox host: Beelink SER8
 
 The SER8 makes more sense if you don't need dual Ethernet and want a compact machine with strong CPU performance, two NVMe slots and a cooling design aimed at quiet operation.
 
-[**Check the current SER8 price on Amazon →**](https://www.amazon.com/dp/B0GVY9FDFC?tag=runahomelab-20)
+[**Check the current SER8 price on Amazon →**](https://www.amazon.com/dp/B0GVY9FDFC?tag=minipc-ser8-20)
 
 **Best low-power node:** an N150-class mini PC, as long as you treat it as an appliance host rather than a VM farm.
 
