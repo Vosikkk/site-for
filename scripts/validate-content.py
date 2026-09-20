@@ -63,12 +63,32 @@ for path in markdown_files:
         "we tested this hardware": "undocumented first-hand testing claim",
         "runahomelab-tested": "undocumented first-hand testing claim",
         "tag=runahomelab-20": "legacy catch-all Amazon tracking ID",
-        "runahomelab-backup-alert-validation-production.up.railway.app": "undocumented external validation service",
     }
     lowered = text.lower()
     for phrase, reason in forbidden_claims.items():
         if phrase.lower() in lowered:
             fail(path.relative_to(ROOT), f"{reason}: {phrase!r}")
+
+    if path.name == "proxmox-backup-notifications-telegram.md":
+        normalized_test_text = re.sub(
+            r"\s+",
+            " ",
+            lowered.replace("\n> ", " "),
+        )
+        required_test_disclosures = {
+            "runahomelab-backup-alert-validation-production.up.railway.app/": "validation test URL",
+            "runahomelab-backup-alert-validation-production.up.railway.app/privacy": "test-specific privacy URL",
+            "random session token": "stored test data",
+            "up to 30 days": "test retention period",
+            "does not store that id": "Telegram chat ID handling",
+            "does not accept proxmox payloads": "validation-only scope",
+        }
+        for phrase, description in required_test_disclosures.items():
+            if phrase not in normalized_test_text:
+                fail(
+                    path.relative_to(ROOT),
+                    f"missing {description}: {phrase!r}",
+                )
 
     for match in re.finditer(r"\]\((/[^)#?]*)(?:[?#][^)]*)?\)", text):
         route = match.group(1)

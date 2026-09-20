@@ -13,7 +13,7 @@ tags:
 title: "Proxmox Backup Notifications: Get Failed Backup Alerts in
   Telegram"
 TocOpen: false
-lastmod: 2026-09-19
+lastmod: 2026-09-20
 ---
 
 A Proxmox backup can fail at 2 AM while everything else keeps running
@@ -151,10 +151,15 @@ node pve1 · 02:14
 After receiving the test alert, you can tell me whether you'd actually
 connect something like this to your Proxmox or PBS server.
 
-> **Test paused:** the external Telegram validation link has been disabled
-> while its data handling, retention, and deletion process are documented.
-> Do not send Proxmox credentials, backup logs, webhook secrets, or Telegram
-> tokens to an unverified test service.
+> **Live validation test:** [send yourself the simulated Telegram
+> alert](https://runahomelab-backup-alert-validation-production.up.railway.app/).
+> The test stores a random session token and event timestamps for up to 30
+> days. It uses your Telegram chat ID in memory to deliver the message but does
+> not store that ID in its application database. It does not accept Proxmox
+> payloads. Read the complete [privacy and data-flow
+> note](https://runahomelab-backup-alert-validation-production.up.railway.app/privacy)
+> before participating. Do not send the bot credentials, backup logs, webhook
+> secrets, or Telegram tokens.
 
 ## What I'd Build If People Actually Want It
 
@@ -207,7 +212,12 @@ place?**
 If you run Proxmox VE or Proxmox Backup Server and you'd want to know
 immediately when a backup fails:
 
-The validation test will return only after a public privacy note and a
-reviewable description of the data flow are available. Demand for the idea
-can still be evaluated from article engagement without asking readers to
-send identifiers to an undocumented service.
+**[Send me a test backup
+alert](https://runahomelab-backup-alert-validation-production.up.railway.app/)**
+
+This is a demand-validation experiment, not a production monitoring service.
+It sends one simulated failure message and lets you anonymously indicate
+whether you'd use the product. The implementation is
+[public](https://github.com/Vosikkk/runahomelab-backup-alert-validation),
+and the test includes a button to delete its anonymous session record
+immediately.
