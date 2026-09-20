@@ -58,9 +58,6 @@ for path in markdown_files:
             elif tag != expected:
                 fail(path.relative_to(ROOT), f"ASIN {asin} must use tag={expected}, found tag={tag}")
 
-        if parsed.path.startswith("/s") and "Beelink+MINI+S13" in parsed.query and tag != "build350-n150-20":
-            fail(path.relative_to(ROOT), "Beelink MINI S13 search link must use tag=build350-n150-20")
-
     forbidden_claims = {
         "based on hands-on experience": "undocumented first-hand testing claim",
         "we tested this hardware": "undocumented first-hand testing claim",

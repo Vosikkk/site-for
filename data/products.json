@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-09-19",
+  "reviewed": "2026-09-20",
   "products": [
     {
       "key": "gmktec-k8-plus",
@@ -23,12 +23,12 @@
     },
     {
       "key": "beelink-mini-s13-class",
-      "name": "Beelink MINI S13 / Intel N150 class",
-      "recommendation": "compare-only",
-      "condition": "The article links to Amazon search results rather than a pinned SKU. Verify the exact RAM, storage, Ethernet, seller, warranty, and upgradeability before purchase.",
-      "amazon_asin": null,
+      "name": "Beelink MINI S13 (Intel N150, 16GB DDR4, 500GB SSD)",
+      "recommendation": "conditional",
+      "condition": "Pinned to Amazon ASIN B09LC9JWVQ. The US listing was reviewed as an N150, 16GB DDR4, 500GB SSD configuration; verify the selected variation, seller, warranty, and current price before purchase because Amazon catalog details can change.",
+      "amazon_asin": "B09LC9JWVQ",
       "tracking_id": "build350-n150-20",
-      "last_verified": "2026-09-19"
+      "last_verified": "2026-09-20"
     },
     {
       "key": "tp-link-tl-sg105",

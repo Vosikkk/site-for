@@ -1,7 +1,7 @@
 ---
 title: "What Can a $350 Proxmox Home Lab Actually Run? (2026)"
 date: 2026-08-14
-lastmod: 2026-09-19
+lastmod: 2026-09-20
 description: "Is 16GB enough for Proxmox? See what a $350 N150 home lab can run, its real bottlenecks, and when a used business PC is the better buy."
 tags: ["homelab", "proxmox", "mini pc", "hardware"]
 ShowToc: true
@@ -35,7 +35,7 @@ So the honest verdict is:
 
 | Component | Pick | Approx. Price |
 |---|---|---|
-| Mini PC | Beelink MINI S13 class: Intel N150, 16GB RAM, roughly 500GB SSD. [Compare current N150 listings on Amazon](https://www.amazon.com/s?k=Beelink+MINI+S13+N150+16GB+500GB&tag=build350-n150-20), then verify the exact RAM, storage, Ethernet, seller, and warranty. This is a search link, not a pinned SKU. | Check the exact listing; compare used alternatives near $350 |
+| Mini PC | [Beelink MINI S13: Intel N150, 16GB DDR4 RAM, 500GB SSD](https://www.amazon.com/dp/B09LC9JWVQ?tag=build350-n150-20). This link is pinned to ASIN `B09LC9JWVQ`, reviewed September 20, 2026. Verify the selected configuration, seller, warranty, and current price before ordering. | Check the exact listing; compare used alternatives near $350 |
 | Backup storage | External USB drive for Proxmox backups (optional) | Buy based on current $/TB |
 | Network switch | [TP-Link TL-SG105 5-Port Gigabit Switch](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=build350-switch-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) | Check current price |
 | UPS | [CyberPower ST425 (425VA / 260W)](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=build350-ups-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) (optional) | Check current price |
