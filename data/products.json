@@ -1,0 +1,54 @@
+{
+  "reviewed": "2026-09-19",
+  "products": [
+    {
+      "key": "gmktec-k8-plus",
+      "name": "GMKtec K8 Plus",
+      "recommendation": "conditional",
+      "condition": "Useful when dual 2.5GbE, two NVMe slots, or OCuLink solve a defined requirement; passthrough, thermals, and acoustics are not guaranteed by the specification.",
+      "official_url": "https://www.gmktec.com/products/gmktec-nucbox-k8-plus-mini-pc-amd-ryzen%E2%84%A2-7-8845hs",
+      "amazon_asin": "B0DHNTW3H6",
+      "tracking_id": "minipc-k8-20",
+      "last_verified": "2026-09-19"
+    },
+    {
+      "key": "beelink-ser8",
+      "name": "Beelink SER8",
+      "recommendation": "conditional",
+      "condition": "A compact single-node option when one 2.5GbE port is sufficient; advertised acoustics remain a manufacturer claim unless independently measured.",
+      "official_url": "https://www.bee-link.com/products/beelink-ser8-8845hs",
+      "amazon_asin": "B0GVY9FDFC",
+      "tracking_id": "minipc-ser8-20",
+      "last_verified": "2026-09-19"
+    },
+    {
+      "key": "beelink-mini-s13-class",
+      "name": "Beelink MINI S13 / Intel N150 class",
+      "recommendation": "compare-only",
+      "condition": "The article links to Amazon search results rather than a pinned SKU. Verify the exact RAM, storage, Ethernet, seller, warranty, and upgradeability before purchase.",
+      "amazon_asin": null,
+      "tracking_id": "build350-n150-20",
+      "last_verified": "2026-09-19"
+    },
+    {
+      "key": "tp-link-tl-sg105",
+      "name": "TP-Link TL-SG105",
+      "recommendation": "fit-dependent",
+      "condition": "A five-port unmanaged gigabit switch; buy only if the lab needs additional wired ports and gigabit throughput is sufficient.",
+      "official_url": "https://www.tp-link.com/us/home-networking/5-port-switch/tl-sg105/",
+      "amazon_asin": "B00A128S24",
+      "tracking_id": "build350-switch-20",
+      "last_verified": "2026-09-19"
+    },
+    {
+      "key": "cyberpower-st425",
+      "name": "CyberPower ST425",
+      "recommendation": "conditional",
+      "condition": "Basic 425VA/260W standby backup. Product documentation does not list host communication for automated shutdown; choose another verified model when that feature is required.",
+      "official_url": "https://www.cyberpowersystems.com/product/ups/standby/st425/",
+      "amazon_asin": "B07GZR981Y",
+      "tracking_id": "build350-ups-20",
+      "last_verified": "2026-09-19"
+    }
+  ]
+}

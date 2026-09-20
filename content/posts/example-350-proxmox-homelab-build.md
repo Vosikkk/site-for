@@ -1,7 +1,7 @@
 ---
 title: "What Can a $350 Proxmox Home Lab Actually Run? (2026)"
 date: 2026-08-14
-lastmod: 2026-09-16
+lastmod: 2026-09-19
 description: "Is 16GB enough for Proxmox? See what a $350 N150 home lab can run, its real bottlenecks, and when a used business PC is the better buy."
 tags: ["homelab", "proxmox", "mini pc", "hardware"]
 ShowToc: true
@@ -10,7 +10,7 @@ TocOpen: false
 
 > **How this guide was built:** this is a reference configuration based on current specifications, pricing, and reports from people running similar systems. It is not presented as a long-term benchmark of a machine we personally tested. After publishing the first version, we [asked the r/homelab community](https://www.reddit.com/r/homelab/comments/1wg2grg/what_can_a_350_proxmox_homelab_realistically_run/) what this build could realistically handle and where it would fail first. This update incorporates the useful patterns from that discussion while keeping individual reports clearly labeled as anecdotal.
 
-> **Affiliate Disclosure:** This site is a participant in the Amazon Services LLC Associates Program. Some links below are affiliate links — if you buy through them, we may earn a small commission at no extra cost to you. This doesn't affect which products are recommended.
+{{< affiliate-disclosure >}}
 
 ## The Short Answer
 
@@ -35,9 +35,9 @@ So the honest verdict is:
 
 | Component | Pick | Approx. Price |
 |---|---|---|
-| Mini PC | [Beelink MINI S13 (Intel N150, 16GB RAM, 500GB SSD)](https://www.amazon.com/s?k=Beelink+MINI+S13+N150+16GB+500GB&tag=build350-n150-20) | Check the current listing; compare alternatives near $350 |
+| Mini PC | Beelink MINI S13 class: Intel N150, 16GB RAM, roughly 500GB SSD. [Compare current N150 listings on Amazon](https://www.amazon.com/s?k=Beelink+MINI+S13+N150+16GB+500GB&tag=build350-n150-20), then verify the exact RAM, storage, Ethernet, seller, and warranty. This is a search link, not a pinned SKU. | Check the exact listing; compare used alternatives near $350 |
 | Backup storage | External USB drive for Proxmox backups (optional) | Buy based on current $/TB |
-| Network switch | [TP-Link TL-SG105 5-Port Gigabit Switch](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=build350-switch-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) | ~$12–25 |
+| Network switch | [TP-Link TL-SG105 5-Port Gigabit Switch](https://www.amazon.com/Ethernet-Splitter-Optimization-Unmanaged-TL-SG105/dp/B00A128S24?dib=eyJ2IjoiMSJ9.QcPtR5PeeEuoDdmz77m7orAvJqm-ff_ioJZyt8ezplnUhh4T6BpAGOHSN42hg3qI83Az2kRak1VBSl-98qv_HcYEaJzruB2l9JWwQ3fneGoeYvcziOltszyY5dbqBuy2m4NUZ3HdH5Nsi_lepHX_1ioD2wAmG6RT4h1eohOl6DHOEf1GyVu1IgwDYvtTX_BLtKPwRiV3PWP5hzPyKBzBi93Mw1ezB2zF7atPHg-r8bM.yh_0x7V0WDQAKQ-Fwe03632qkzIVtzOvO6cNxeiHVTU&dib_tag=se&keywords=TP-Link%2BTL-SG105&qid=1787645384&sr=8-1&th=1&linkCode=ll2&tag=build350-switch-20&linkId=dd57a324328014d0f9b54c693eb58d16&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) | Check current price |
 | UPS | [CyberPower ST425 (425VA / 260W)](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=build350-ups-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) (optional) | Check current price |
 
 Treat ~$350 as the target for the **base Proxmox host**, not the host plus every accessory. The switch, backup drive, and UPS are optional additions.
@@ -182,9 +182,9 @@ Capacity and reliability matter more than buying the fastest portable SSD. More 
 
 ### UPS
 
-A UPS becomes valuable when the machine runs something you depend on. The [CyberPower ST425](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=build350-ups-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is a 425VA/260W standby unit suitable for a small low-power setup.
+A UPS becomes valuable when the machine runs something you depend on. The [CyberPower ST425](https://www.amazon.com/CyberPower-ST425-Standby-Outlets-Compact/dp/B07GZR981Y?th=1&linkCode=ll2&tag=build350-ups-20&linkId=55280254b5a41f8e560103662179500e&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl) is a 425VA/260W standby unit intended for basic battery backup and surge protection on a small low-power setup.
 
-The goal is not hours of runtime. It is surviving short interruptions and giving important systems time to shut down cleanly.
+The goal is not hours of runtime. It is short ride-through during brief interruptions. The ST425 product documentation does not list the host communication interface needed to coordinate an automatic Proxmox shutdown; if that is a requirement, choose an exact UPS model with supported USB or network communication and verify compatibility before buying.
 
 ## Realistic Power Cost
 

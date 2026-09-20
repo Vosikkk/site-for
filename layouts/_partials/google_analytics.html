@@ -1,0 +1,33 @@
+{{- with site.Config.Services.GoogleAnalytics.ID }}
+<script>
+(() => {
+  const storageKey = "runahomelab_analytics_consent";
+  const measurementId = {{ . | jsonify }};
+
+  window.runahomelabLoadAnalytics = function () {
+    if (window.runahomelabAnalyticsLoaded) return;
+    window.runahomelabAnalyticsLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag("js", new Date());
+    window.gtag("config", measurementId, { anonymize_ip: true });
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(measurementId);
+    document.head.appendChild(script);
+  };
+
+  let storedChoice = null;
+  try {
+    storedChoice = localStorage.getItem(storageKey);
+  } catch (_) {
+    // The site must still render when browser storage is unavailable.
+  }
+
+  if (storedChoice === "granted") {
+    window.runahomelabLoadAnalytics();
+  }
+})();
+</script>
+{{- end }}

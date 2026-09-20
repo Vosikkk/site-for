@@ -4,6 +4,7 @@ date: 2026-08-29
 draft: false
 description: "Run Crafty Controller on a Proxmox LXC. Resources, ports, Java vs Bedrock, helper-script install, and when a VM is the better box."
 tags: ["proxmox", "minecraft", "lxc", "self-hosting"]
+lastmod: 2026-09-19
 ShowToc: true
 TocOpen: true
 ---
@@ -14,8 +15,8 @@ If you have not decided between **LXC vs VM** or **Java vs Bedrock** yet, start 
 
 ## LXC or VM for Crafty Controller?
 
-**Use an LXC for Java Edition + Crafty.**
-Crafty is a Python web app that launches JVM servers. Neither needs a full virtual BIOS. An unprivileged Debian/Ubuntu LXC is the default: fast boot, low overhead, easy bind-mounts for the world folders.
+**An unprivileged LXC is often a practical option for Java Edition + Crafty.**
+Crafty is a Python application that launches Minecraft servers, so it does not inherently require a VM. LXC has lower overhead, but it shares the host kernel and needs careful mount, permission, and isolation choices.
 
 **Use a VM if:**
 
@@ -29,7 +30,7 @@ Crafty itself does not require a VM. The Minecraft edition and how picky you are
 
 The panel is light. The JVM is not.
 
-Starting point that matches common helper-script defaults and real small servers:
+Conservative planning examples—not measured guarantees:
 
 | Role | CPU | RAM | Disk |
 |---|---|---|---|
@@ -37,7 +38,7 @@ Starting point that matches common helper-script defaults and real small servers
 | Crafty + modest Paper / light plugin pack | 4 cores | 6–8 GB | 32 GB |
 | Modded pack or several worlds | 4+ cores | 8–16 GB | 64 GB+ and a backup target *outside* the CT |
 
-Give the JVM a hard ceiling lower than the container RAM (leave 512 MB–1 GB for Crafty + OS). A 4 GB CT with `-Xmx4096M` will OOM as soon as the panel and the GC argue.
+Give the JVM a ceiling below the container limit so the OS, Crafty, filesystem cache, and JVM overhead have headroom. The required margin depends on the Java version, server software, plugins, and workload; do not set `-Xmx` equal to the container's full RAM allocation.
 
 Port plan:
 
@@ -63,9 +64,9 @@ World data should live on a bind-mounted path or a dedicated virtual disk you sn
 
 ### 2. Community helper script
 
-There is a Proxmox VE Helper-Scripts installer for Crafty Controller. It builds the CT, drops you on `https://<ip>:8443`, and stores initial credentials in the container.
+Community automation for Crafty on Proxmox may be available, but it is not part of the official Crafty or Proxmox documentation. Confirm the script's current maintainer, source, supported releases, and exact actions before running it.
 
-Use it if you want a working panel in one shot. Read the script before piping it to bash, keep notes of the CTID it creates, and know that **panel updates and script updates are not the same thing**. A failed scripted update can leave the unit down while `/opt/crafty-controller` is still intact — at that point `systemctl status crafty-controller` and the official upgrade path matter more than re-running the installer.
+If you use one, read the script before piping it to a shell, keep notes of the CTID and paths it creates, and remember that **panel updates and script updates are not the same thing**. Follow the [official Crafty installation and update documentation](https://docs.craftycontrol.com/pages/getting-started/installation/linux/) for the application itself.
 
 ## Crafty Controller + Java vs Bedrock on Proxmox
 
@@ -79,7 +80,7 @@ Crafty can manage more than one server. Memory cannot. If you add a second world
 
 LXC snapshots are fast and not a substitute for a Crafty-side world backup plus a copy off the node.
 
-If you ever move this to a **VM** instead of an LXC, install the QEMU guest agent and do a full stop/start after enabling it — same fix as [guest agent not running](/posts/proxmox-guest-agent-not-running-fix/). On an LXC the guest agent is a different story; snapshot consistency then depends on how you freeze the filesystem, not on `qemu-ga`.
+If you move this to a **VM**, the QEMU guest agent can support management features when it is enabled on both sides and its virtual channel is present; it is not required merely to run Crafty. See the [guest-agent troubleshooting guide](/posts/proxmox-guest-agent-not-running-fix/). An LXC does not use `qemu-ga`; backup consistency depends on the backup mode and whether the application data is in a consistent state.
 
 ## Common pitfalls
 
@@ -98,7 +99,9 @@ Only if you want a browser UI, multiple versions, or non-SSH admin. A single sta
 You can. You now have two layers to debug. For a homelab Minecraft panel, native install or the helper-script CT is less noise.
 
 **Does this work on PVE 8 and 9?**
-Yes. The constraints are Java version, RAM, and ports — not the PVE major.
+The architecture is not tied to one Proxmox major release, but templates, community installers, AppArmor behavior, and package versions can differ. Verify the exact path on the release you run.
+
+> **Evidence note (reviewed September 19, 2026):** the allocations above are starting estimates, not a RunAHomeLab benchmark. Crafty's official Linux documentation currently requires Python 3.9+ and says Java must be installed before starting Minecraft servers; actual game-server resources depend on version, world, plugins, mods, players, and view distance.
 
 ---
 

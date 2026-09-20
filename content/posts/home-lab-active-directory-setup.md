@@ -1,74 +1,119 @@
 ---
-title: "Proxmox Active Directory Integration for a Home Lab"
+title: "Active Directory Home Lab on Proxmox: A Safe Setup Plan"
 date: 2026-08-16
+lastmod: 2026-09-19
 draft: false
-description: "Set up Active Directory in a home lab on Proxmox — when you need it, VM sizing, and how it ties into Windows guests and the QEMU guest agent.
-"
-tags: ["proxmox", "homelab", "networking", "windows"]
+description: "Build an isolated Active Directory learning lab on Proxmox with Windows Server, Windows clients, correct DNS naming, VirtIO guidance, and safe rollback."
+tags: ["active directory", "proxmox", "windows server", "homelab"]
 ShowToc: true
-TocOpen: true
+TocOpen: false
 ---
 
-If you're learning IT support, sysadmin work, or cybersecurity, an Active Directory home lab is one of the highest-value things you can build — it's the environment most business networks actually run on, and there's no substitute for hands-on practice with domain controllers, group policy, and DNS/DHCP integration.
+An Active Directory lab is useful for learning domain controllers, DNS, Group Policy, identity administration, and Windows client management. This guide is a **learning-lab plan**, not a production Active Directory design or security baseline.
 
-The good news: you can build a fully functional AD lab on the same Proxmox host running the rest of your home lab, using free evaluation editions of Windows Server.
+> **Evidence note:** The Windows and AD DS guidance below follows current Microsoft documentation; Proxmox-specific guest guidance points to Proxmox documentation. Resource values are conservative starting allocations, not measured performance guarantees. See the [research methodology](/methodology/).
 
-## What You'll Need
+## What You Need
 
-- **Windows Server 2022 Evaluation ISO** — free, fully functional, with a 180-day evaluation period (extendable via `slmgr` rearm commands if you need longer)
-- **Windows 10 or 11 Enterprise Evaluation ISO** — for client machines that join the domain
-- **VirtIO drivers ISO** — required for Windows VMs to get proper performance and compatibility under Proxmox; without this, disk and network performance suffer noticeably
+- a Proxmox host with enough spare CPU, memory, and storage for the guests you choose;
+- a current Windows Server evaluation ISO from the [Microsoft Evaluation Center](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2022);
+- one or more Windows client ISOs that you are licensed to use;
+- the [Windows VirtIO drivers](https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers) when the VM uses VirtIO storage, network, ballooning, or serial devices;
+- an isolated lab network if you plan to test DHCP, DNS failures, offensive-security tools, or intentionally unsafe configurations.
 
-Budget at least 8GB RAM and 2 vCPUs for the domain controller alone, plus additional resources for each client VM you add. This is one area where the extra RAM in a 32GB mini PC build genuinely pays off over a 16GB one.
+Whether a Windows VM needs a specific VirtIO driver depends on the virtual hardware selected. It does not depend on whether the VM is a server or client, or how “important” the guest is.
 
-## Step 1: Create an Isolated Network Bridge
+## Build the Lab Network First
 
-Before touching Windows at all, create a dedicated Linux bridge in Proxmox (**System → Network → Create → Linux Bridge**) for your AD lab traffic. Keeping it on its own bridge, separate from your main home network, means lab experiments — including deliberately misconfigured group policies or, if you're using this for security practice, actual attack simulations — can't spill over into the rest of your network.
+Create a dedicated Linux bridge for the lab. For a host-only network, do not attach a physical port to the bridge and do not add a default gateway. Also verify that the Proxmox host, router, firewall rules, and any forwarding/NAT configuration do not route that bridge into the household or management network.
 
-## Step 2: Build the Domain Controller VM
+A separate bridge is **not an automatic security boundary**. Its isolation depends on the complete network configuration. If the lab will contain intentionally hostile traffic, use explicit firewall rules and verify the path from a client before assuming containment.
 
-1. Create a new VM, selecting the Windows Server 2022 evaluation ISO.
-2. Add the VirtIO drivers ISO as a second attached drive — Windows won't see your virtual disk during installation without the VirtIO SCSI driver loaded from it.
-3. Allocate at least 8GB RAM and 2 CPU cores, set the SCSI controller to **VirtIO SCSI single**, and enable the **QEMU Guest Agent** option in the System tab.
-4. Set the network interface to the isolated bridge you created in Step 1.
-5. Install Windows Server 2022 (Standard Evaluation, Desktop Experience — the GUI version is easier to manage for a home lab than Server Core).
-6. Once Windows is installed, promote the server to a domain controller via **Server Manager → Add Roles and Features → Active Directory Domain Services**, then run the post-deployment configuration to create a new forest.
+## Starting VM Plan
 
-## Step 3: Configure DNS and DHCP
+Use this as a planning baseline and adjust after observing the guests:
 
-Your domain controller should also handle DNS for the lab (AD DS installs this automatically) and, optionally, DHCP so client VMs get addresses automatically rather than requiring static configuration on each one. This mirrors how most real business networks are actually configured, which is part of the value of practicing it.
+| VM | Starting allocation | Notes |
+|---|---|---|
+| Domain controller | 2 vCPU, 4 GB RAM, 60 GB disk | Enough for a small learning lab; GUI roles and extra services can need more. |
+| Windows client | 2 vCPU, 4 GB RAM, 64 GB disk | Increase for updates, browsers, or security tooling. |
+| Optional second client | 2 vCPU, 4 GB RAM, 64 GB disk | Useful for multi-client policy and lateral-movement exercises. |
 
-## Step 4: Join Client VMs to the Domain
+These are not Microsoft minimum requirements and not a benchmark. Watch actual memory pressure, storage use, update behavior, and host contention.
 
-1. Create Windows 10 or 11 Enterprise Evaluation VMs on the same isolated bridge — these don't need the VirtIO drivers ISO attached, since desktop client installs are less performance-sensitive than the domain controller.
-2. Set each client's DNS to point at your domain controller's IP address so it can resolve the domain name.
-3. From **System → About → Domain or workgroup**, change the domain to match what you created (e.g., `homelab.local`), and authenticate with domain admin credentials when prompted.
-4. Reboot — the client should now show as domain-joined, and you can log in with a domain account rather than a local one.
+## Create the Windows Server VM
 
-## Why Bother With Two Client Machines Instead of One
+1. Create a VM with UEFI/OVMF if that matches the Windows version and your lab plan.
+2. Attach the Windows Server ISO and VirtIO driver ISO.
+3. If the system disk uses a VirtIO SCSI controller, load the matching storage driver during Windows Setup.
+4. If the network device uses VirtIO, install the matching network driver.
+5. Connect the VM only to the lab bridge while building the isolated environment.
+6. Patch Windows before promoting the machine to a domain controller.
 
-If you're building this lab specifically for security practice rather than general sysadmin learning, having two client machines matters — several common attack techniques (lateral movement, NTLM relay attacks) specifically require more than one machine on the domain to demonstrate realistically. For general AD administration practice, one client is enough to get started.
+The QEMU Guest Agent is optional for AD DS itself. It gives Proxmox an additional guest-management channel for information and supported operations; it is not what makes Windows capable of a normal ACPI shutdown.
+
+## Choose a DNS Name Deliberately
+
+Do not use `homelab.local`. Microsoft advises avoiding names used by internet-standard special features such as `.local`, and `.local` is used by multicast DNS.
+
+For an isolated example lab, use a reserved testing name such as:
+
+```text
+ad.example.test
+```
+
+If the lab will integrate with services under a domain you control, a subdomain such as `ad.example.com` is usually easier to operate consistently. Microsoft recommends using names related to a DNS domain registered by the organization and avoiding collision-prone namespaces. See Microsoft's [Active Directory naming guidance](https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/naming-conventions-for-computer-domain-site-ou).
+
+## Install AD DS and Create the Forest
+
+Use Server Manager or current Microsoft PowerShell documentation to install the AD DS role and promote the server to a new forest. Record:
+
+- the full DNS domain name;
+- the NetBIOS name;
+- the Directory Services Restore Mode password;
+- the domain controller's static lab IP;
+- the DNS settings used by each client.
+
+For a small lab, the domain controller should normally provide DNS to the domain clients. A client that points only to a household router or public resolver may fail to locate AD service records even when basic internet DNS works.
+
+Microsoft's [AD DS overview](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview) explains the directory, DNS, authentication, replication, and policy roles involved.
+
+## Join a Windows Client
+
+1. Connect the client VM to the isolated lab bridge.
+2. Set its DNS server to the lab domain controller's IP.
+3. Verify that the client can resolve the domain controller and AD service records.
+4. Join `ad.example.test` with domain credentials.
+5. Restart and sign in with a domain account.
+
+If the client uses VirtIO storage or networking, install the corresponding drivers exactly as you would for the server VM.
+
+## Snapshots Are for Rollback, Not Backup or Licensing
+
+A snapshot can be useful immediately before a risky Group Policy, DNS, or schema experiment. It is not a separate backup, and it should not be treated as a way to bypass evaluation or licensing limits.
+
+Keep any lab state you care about in a separate backup target. Domain controller rollback also has identity and replication implications in multi-DC labs, so read current Microsoft guidance before restoring a snapshot into a replicated environment.
+
+## Useful Lab Exercises
+
+- create users, groups, and organizational units;
+- build and test Group Policy Objects;
+- practice DNS troubleshooting;
+- add a second domain controller and observe replication;
+- test least-privilege administrative delegation;
+- compare on-premises AD DS with Microsoft Entra ID concepts without treating them as the same product.
 
 ## Common Mistakes
 
-- **Skipping the VirtIO drivers step on the domain controller.** This is the single most common point where people get stuck — Windows Setup simply won't see a disk to install to without it.
-- **Not isolating the lab network.** Running AD lab traffic on the same bridge as your other home lab services isn't dangerous by itself, but it makes cleanup harder and risks DHCP/DNS conflicts with your real network.
-- **Forgetting the evaluation license has a clock.** 180 days sounds like a lot until you've been mid-project for five months. Snapshot your VMs once the lab is configured the way you want, so you have a clean rollback point if you need to deal with license expiration.
-- **Under-allocating RAM to save resources elsewhere.** A domain controller under 8GB RAM will run, but sluggishly — this isn't the VM to economize on if you're also running several other services on the same host.
+- assuming a separate bridge is isolated without checking routing and firewall rules;
+- using `.local` for a new AD DNS namespace;
+- assigning client DNS to the household router instead of the domain controller;
+- assuming every Windows VM needs or does not need VirtIO drivers without checking its configured devices;
+- treating a snapshot as the only backup;
+- allocating a fixed amount of RAM by folklore instead of observing the workload.
 
-## FAQ
+## QEMU Guest Agent: Accurate Expectations
 
-**Is this legal to run at home?**
-Yes — Microsoft's evaluation editions are specifically provided for testing, learning, and lab use. You're not licensed for production/business use on an evaluation edition, but a home lab is exactly the intended use case.
+A working guest agent can improve guest visibility and enable supported management operations, including filesystem freeze/thaw coordination in relevant snapshot or backup workflows. Without it, Proxmox can still send a normal virtual power-button/ACPI shutdown request when the guest supports it; the guest agent is not a universal prerequisite for clean shutdown.
 
-**Do I need Proxmox specifically, or does this work on other hypervisors?**
-The Windows Server and AD DS steps are identical on any hypervisor. Proxmox is popular for this specifically because it's free and the snapshot functionality makes experimenting (and rolling back after breaking something) painless.
-
-**How is this different from just running AD in the cloud (Azure AD lab, etc.)?**
-Cloud-hosted labs are convenient but usually cost money past a free trial period, and running locally means no dependency on internet connectivity or a third party's infrastructure while you're learning — you can also practice fully offline once it's set up.
-
----
-
-*Building this on a fresh Proxmox install? Start with our [beginner's home lab guide](/posts/best-home-lab-for-beginners-2026/) and check our [guest agent troubleshooting guide](/posts/proxmox-guest-agent-not-running-fix/) if your Windows VMs show agent errors after setup.*
-
-*Windows guests in this lab will also want a working [QEMU guest agent](/posts/proxmox-guest-agent-not-running-fix/). Without it, Proxmox cannot shut them down cleanly or take filesystem-consistent snapshots.*
+If you enable the agent and Proxmox cannot reach it, use the [QEMU Guest Agent troubleshooting guide](/posts/proxmox-guest-agent-not-running-fix/) and the upstream [Proxmox QEMU Guest Agent documentation](https://pve.proxmox.com/wiki/Qemu-guest-agent).

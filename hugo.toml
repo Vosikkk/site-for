@@ -1,4 +1,4 @@
-baseURL = 'https://runahomelab.com/'   # потім заміниш
+baseURL = 'https://runahomelab.com/'
 locale = "en-US" 
 title = 'Proxmox Homelab Guides: Mini PCs, Fixes and Self-Hosting (2026)'
 theme = 'PaperMod'
@@ -12,7 +12,9 @@ enableGitInfo = true
 [params]
   env = 'production'
   description = 'Practical Proxmox and homelab guides — mini PC picks, guest agent fixes, self-hosted apps, and beginner builds without the fluff.'
-  author = 'Vosik'
+  author = 'Oleksandr Voskolovych'
+  authorURL = 'https://runahomelab.com/about/'
+  authorLinkedIn = 'https://www.linkedin.com/in/sasha-voskolovych/'
   defaultTheme = 'auto'          # auto / dark / light
   ShowShareButtons = false
   ShowReadingTime = true
@@ -41,6 +43,9 @@ enableGitInfo = true
   [[params.socialIcons]]
     name = "github"
     url = "https://github.com/Vosikkk"
+  [[params.socialIcons]]
+    name = "linkedin"
+    url = "https://www.linkedin.com/in/sasha-voskolovych/"
 [menu]
   [[menu.main]]
     identifier = "posts"
@@ -52,6 +57,11 @@ enableGitInfo = true
     name = "About"
     url = "/about/"
     weight = 20
+  [[menu.main]]
+    identifier = "methodology"
+    name = "Methodology"
+    url = "/methodology/"
+    weight = 25
   [[menu.main]]
     identifier = "privacy"
     name = "Privacy"

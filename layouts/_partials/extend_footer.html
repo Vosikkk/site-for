@@ -1,0 +1,12 @@
+<div class="analytics-consent" data-analytics-consent hidden role="dialog" aria-labelledby="analytics-consent-title" aria-describedby="analytics-consent-copy">
+  <div>
+    <strong id="analytics-consent-title">Optional analytics</strong>
+    <p id="analytics-consent-copy">Allow anonymous usage analytics to help improve RunAHomeLab. The site works normally if you decline.</p>
+  </div>
+  <div class="analytics-consent-actions">
+    <button type="button" data-analytics-choice="denied">Decline</button>
+    <button type="button" data-analytics-choice="granted">Allow analytics</button>
+  </div>
+</div>
+{{- $consent := resources.Get "js/analytics-consent.js" | minify | fingerprint }}
+<script defer src="{{ $consent.RelPermalink }}" integrity="{{ $consent.Data.Integrity }}"></script>

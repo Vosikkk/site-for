@@ -2,6 +2,7 @@
 title: "Proxmox Wake-on-LAN Not Working: Fix Host and VM"
 description: "Fix Proxmox Wake-on-LAN for the physical host (BIOS, ethtool, vmbr0) and why a stopped VM cannot use classic magic-packet WoL."
 tags: ["proxmox", "networking", "troubleshooting"]
+lastmod: 2026-09-19
 ---
 
 Wake-on-LAN failing on Proxmox? There are two completely separate problems people mean by this:
@@ -21,13 +22,13 @@ Replace `<interface>` with the physical NIC (`eno1`, `enp3s0`, …), not `vmbr0`
 ethtool <interface> | grep -i wake
 ```
 
-You want `g` in **Supports Wake-on**. If `g` is missing, the card cannot do magic-packet wake. No sysctl will invent that. A cheap add-in NIC is often more reliable than the board’s integrated port.
+You want `g` in **Supports Wake-on**. If `g` is missing, the current NIC/driver combination does not advertise magic-packet wake. A sysctl cannot add a capability that the driver does not expose.
 
 ### Step 2: two BIOS settings, not one
 
 Everyone enables **Wake on LAN** / **Power On by PCI-E**. The setting people miss is **Deep Sleep / ErP Ready / Deep S4/S5**.
 
-If Deep Sleep is allowed, the NIC loses power on shutdown and cannot hear the packet — even with WoL “enabled.” Disable Deep Sleep, or pick the option that keeps standby power on the NIC.
+Names and behavior vary by motherboard. On some systems, an ErP or deep-sleep setting removes standby power from the NIC in S4/S5, so WoL cannot work even when another firmware setting enables it. Check the board manual before changing power options.
 
 Quick test: after shutdown, do the ethernet port lights stay faintly on? If the port goes completely dark, the NIC has no power and WoL cannot work.
 
@@ -44,7 +45,7 @@ ethtool <interface> | grep -i wake
 
 `ethtool -s … wol g` does not persist. On Proxmox the NIC almost always sits behind `vmbr0`, and that is the gotcha.
 
-Add a `post-up` hook in `/etc/network/interfaces` on the **bridge** that owns the physical port, not only on the raw NIC. Example:
+One readable way to persist the setting on a standard Proxmox `ifupdown2` configuration is a `post-up` command in the stanza that brings up the bridge and physical port. Example:
 
 ```
 auto vmbr0
@@ -64,11 +65,11 @@ ifreload -a
 ethtool eno1 | grep -i wake
 ```
 
-Applying WoL only to `eno1` and ignoring the bridge is how the setting silently dies after the next boot or after `ifreload`.
+The command still targets the physical device, `eno1`; the bridge stanza is only the lifecycle hook in this example. A systemd unit tied to the physical interface is another valid persistence method. Whichever method you use, verify the result after a reboot instead of assuming it ran.
 
 ### Host still dead after a kernel update
 
-This happens after some `pve-kernel` updates. NIC drivers reset **Wake-on** to `d`. Re-run `ethtool` and confirm the `post-up` line is still in `interfaces`. If the driver dropped `g` support after the update, that is a hardware/driver issue, not a Proxmox UI issue.
+A driver or power-policy change can reset **Wake-on** to `d`. Re-run `ethtool`, check the boot journal, and confirm the persistence command executed. If `Supports Wake-on` itself changes, investigate the NIC driver and firmware rather than the Proxmox web UI.
 
 ## Waking a virtual machine
 
@@ -78,10 +79,12 @@ Physical WoL depends on the card staying electrically powered while the machine 
 
 What people actually want is “start this VM remotely.” Two practical options:
 
-- **Proxmox API.** Create an API token and call `qm start <vmid>` (or the REST equivalent). This is the supported path.
+- **Proxmox API.** Create a narrowly scoped API token and call the VM start endpoint. `qm start <vmid>` is the equivalent local CLI action; the API does not literally execute that shell command.
 - **A small listener on the host.** Some labs run a script that watches for a packet or HTTP call on the LAN and then runs `qm start`. That is a workaround, not native WoL. Bind it to the LAN only. An open listener that can start VMs is not something you want on the public internet.
 
-If you are setting this up from scratch, use the API. It survives host reboots if the token and systemd unit are set up correctly, and you are not pretending a virtio NIC is a hardware PHY.
+If you are setting this up from scratch, prefer the authenticated API over an unauthenticated packet listener. Keep tokens out of scripts served to browsers and grant only the permissions the start action needs.
+
+> **Evidence note (reviewed September 19, 2026):** the commands above describe Linux NIC state and a standard Proxmox network configuration, not a universal motherboard recipe. Firmware labels, supported sleep states, NIC drivers, and interface names vary. See the [Proxmox network documentation](https://pve.proxmox.com/pve-docs/chapter-sysadmin.html#sysadmin_network_configuration) and the local `ethtool(8)` manual for the installed version.
 
 ## FAQ
 
@@ -89,7 +92,7 @@ If you are setting this up from scratch, use the API. It survives host reboots i
 Yes. Those are the two problems above. Unrelated mechanisms.
 
 **Does this change between Proxmox VE 8 and 9?**  
-No. Host WoL is BIOS + NIC + Linux `ethtool` / `vmbr0`. Same on both.
+The underlying firmware/NIC/Linux mechanism is the same, but drivers, kernels, and network configuration can differ. Recheck the commands and interface names on the installed release.
 
 **My host woke fine and stopped after an update.**  
 Re-check `ethtool`. If Wake-on is `d`, the `post-up` hook did not reapply, or the new driver reset it.

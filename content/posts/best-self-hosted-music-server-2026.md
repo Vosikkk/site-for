@@ -1,6 +1,7 @@
 ---
 title: "Navidrome vs Funkwhale vs Airsonic: Best Self-Hosted Music Server"
 date: 2026-08-14
+lastmod: 2026-09-19
 draft: false
 description: "Navidrome vs Funkwhale vs Airsonic-Advanced in 2026: compare Subsonic support, federation, podcasts, clients, setup complexity, and best use cases."
 tags: ["self-hosting", "homelab", "music"]
@@ -11,7 +12,7 @@ aliases: ["/posts/navidrome-vs-funkwhale/"]
 
 If you want to stream your own music library, the practical choice is usually between **Navidrome**, **Funkwhale**, and **Airsonic-Advanced**. They overlap, but they are built for different jobs: a lightweight personal server, a federated audio platform, or a Java-based Subsonic server.
 
-This is a feature and architecture comparison based on current project documentation, not a claim that we benchmarked every server on identical hardware.
+This is a feature and architecture comparison based on current project documentation, not a claim that we benchmarked every server on identical hardware. Project status and client compatibility can change; the linked upstream sources are the authority for a deployment decision.
 
 ## Quick Answer
 
@@ -25,7 +26,7 @@ Choose **Funkwhale** when ActivityPub federation, publishing, podcasts, or shari
 
 Navidrome is written in Go and its official documentation describes very low resource usage, including support for Raspberry Pi Zero-class hardware. Point it at your existing music folder and it indexes metadata to organize the library.
 
-- **Resource usage:** Low enough to run on the smallest hardware in your home lab
+- **Resource usage:** The project documents support for low-resource hardware, but library size, transcoding, scans, and client concurrency still need measurement on your system
 - **Clients:** No required proprietary client; it supports the Subsonic API and OpenSubsonic extensions, so compatible web, desktop, and mobile clients can connect
 - **Current features:** Multi-user accounts, user-specific libraries, transcoding, sharing, and an optional Jukebox mode are documented by the project
 - **Best for:** Anyone who wants a fast, no-fuss personal music server and is fine using a third-party mobile app
@@ -108,7 +109,7 @@ If Navidrome is the wrong shape for your library, these are the realistic altern
 
 For a first homelab box, the alternative that actually replaces Navidrome is almost always **Funkwhale** (if you care about federation) or **Jellyfin** (if you do not want a second service). Airsonic-Advanced is the legacy-shaped option.
 
-Skip random GitHub clones with one release in 2022. The three in the title plus Jellyfin cover what people mean by "navidrome alternatives" in 2026.
+Avoid choosing an unmaintained fork only because it appears in an old roundup. Check recent releases, security updates, issue activity, documentation, and a migration/export path before committing your library.
 
 If you are comparing pairwise:
 

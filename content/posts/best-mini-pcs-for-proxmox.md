@@ -1,6 +1,7 @@
 ---
 title: "Best Mini PC for Proxmox in 2026 (By Budget and Use)"
 date: 2026-08-17
+lastmod: 2026-09-19
 draft: false
 description: "Best mini PC for Proxmox in 2026 — GMKtec K8 Plus, Beelink SER8, N150 budget boxes, 10GbE class machines, and used Dell/Lenovo tinies."
 tags: [mini-pc, proxmox, hardware, homelab]
@@ -27,9 +28,9 @@ For Proxmox, we care about:
 
 In this guide, we'll focus on the **GMKtec K8 Plus** and **Beelink SER8**, two Mini PCs that make particularly interesting Proxmox home-lab hosts.
 
-> **Affiliate Disclosure:** Some links on Run a Home Lab are affiliate links. If you purchase through these links, we may earn a commission at no additional cost to you.
->
-> **As an Amazon Associate I earn from qualifying purchases.**
+> **Research status (reviewed September 19, 2026):** this is a documentation- and evidence-based buying guide, not a RunAHomeLab hands-on benchmark. Product specifications are checked against manufacturer sources; performance, acoustics, and reliability claims are treated separately from manufacturer marketing. See the [research methodology](/methodology/).
+
+{{< affiliate-disclosure >}}
 
 ---
 
@@ -39,7 +40,7 @@ There is no single winner. There is a winner for the lab you are actually buildi
 
 | Class | Example in 2026 | Best for | Watch-outs |
 |---|---|---|---|
-| **Best expandable daily driver** | GMKtec K8 Plus | Most Proxmox homelabs that want dual 2.5GbE + two NVMe + OCuLink | Cooling and fan noise under load; verify current RAM kit |
+| **Best expandable daily driver** | GMKtec K8 Plus | Proxmox labs that will use dual 2.5GbE, two NVMe slots, or OCuLink | Thermals, fan noise, and passthrough behavior still need configuration-specific verification |
 | **Best quiet all-round host** | Beelink SER8 | Bedroom / office node, one 2.5GbE is enough | Weaker expansion than K8 Plus |
 | **Best low-power / always-on** | Intel N150 class (Beelink EQ14 and similar) | Pi-hole, HA, a few LXCs, light VMs | RAM ceiling and single-channel kits limit VM density |
 | **Best 10GbE / cluster node** | Minisforum MS-01 / MS-A2 class | Storage traffic, dual 10GbE, PCIe HBA/GPU | Price, power, and fan noise jump hard |
@@ -143,12 +144,12 @@ GMKtec lists:
 - 8 cores / 16 threads
 - Radeon 780M graphics
 - 2 × DDR5-5600 SO-DIMM slots
-- up to 96 GB RAM
+- up to 128 GB RAM (current manufacturer specification reviewed September 19, 2026)
 - 2 × M.2 2280 PCIe 4.0 NVMe slots
 - dual 2.5GbE Intel I226V Ethernet
 - 2 × USB4
 - OCuLink PCIe Gen4 ×4
-- Wi-Fi 6
+- Wi-Fi 6E
 
 Source: [GMKtec K8 Plus official specifications](https://www.gmktec.com/products/gmktec-nucbox-k8-plus-mini-pc-amd-ryzen%E2%84%A2-7-8845hs)
 
@@ -180,7 +181,7 @@ One important limitation from GMKtec is that OCuLink is not hot-pluggable. Power
 
 ### RAM
 
-GMKtec lists two SO-DIMM slots and support for up to 96 GB of DDR5-5600 memory.
+GMKtec currently lists two SO-DIMM slots and support for up to 128 GB of DDR5-5600 memory. Published limits and retailer listings have differed over time, so verify the exact unit, current firmware support, and validated module configuration before buying a high-capacity kit.
 
 That gives the K8 Plus a useful upgrade path for virtualization.
 
@@ -278,12 +279,12 @@ It's about everything around the CPU.
 | CPU threads | 16 | 16 |
 | GPU | Radeon 780M | Radeon 780M |
 | RAM slots | 2 × SO-DIMM | 2 × SO-DIMM |
-| Manufacturer RAM support | Up to 96 GB | Up to 256 GB listed by Beelink |
+| Manufacturer RAM support | Up to 128 GB | Up to 256 GB listed by Beelink |
 | NVMe slots | 2 × PCIe 4.0 | 2 × PCIe 4.0 |
 | Ethernet | **2 × 2.5GbE** | **1 × 2.5GbE** |
 | USB4 | 2 × | 1 × full-featured USB4 listed |
 | OCuLink | **Yes** | No |
-| Wi-Fi | Wi-Fi 6 | Wi-Fi 6 |
+| Wi-Fi | Wi-Fi 6E | Wi-Fi 6 |
 | Cooling focus | Compact active cooling | Vapor chamber + quiet fan |
 | Best fit | Networking & expansion | Simple, quiet homelab |
 
@@ -468,9 +469,9 @@ If your goal is the cheapest possible Proxmox cluster, used business PCs deserve
 
 If you want a modern compact machine with strong CPU performance and current connectivity, a new Mini PC can make more sense.
 
-Used tinies win when you want three nodes for quorum and you already accept 1GbE and older CPUs. New mini PCs win when you want 2.5GbE, two NVMe slots, and a CPU that will still feel fine in 2028.
+Used tinies can make sense when you want three nodes for quorum and accept 1GbE and older CPUs. New mini PCs can make more sense when you need features such as 2.5GbE or two NVMe slots. Future performance depends on the workloads you add; a model year is not a guarantee that a CPU will remain sufficient.
 
-A hybrid that works well in practice: one modern mini PC as the "heavy" node (Windows VM, media, Minecraft) and two cheap tinies as lightweight cluster/backup members. That answers "best mini PC for Proxmox" better than pretending one SKU covers every lab.
+One possible hybrid design is a modern mini PC for heavier workloads plus cheaper used systems for lightweight cluster or backup roles. Whether that is sensible depends on quorum design, storage, power use, and whether the extra nodes solve a real requirement.
 
 ---
 

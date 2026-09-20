@@ -1,6 +1,7 @@
 ---
 title: "Intel I225-V NIC Reset Loop on Proxmox VE 9: What We Know So Far"
 date: 2026-08-20
+lastmod: 2026-09-19
 description: "Intel I225-V dropping into NETDEV WATCHDOG reset loops on Proxmox VE 9 with Linux 7.0 kernels? Here's what has actually been reported, how to confirm it, and the current rollback workaround."
 tags: ["proxmox", "homelab", "troubleshooting", "networking"]
 ShowToc: true
@@ -247,4 +248,4 @@ The evidence points toward a kernel/driver regression because the same host chan
 
 ---
 
-*Running a GMKtec K8 Plus or another dual-2.5GbE mini PC? Our [GMKtec K8 Plus review](/posts/gmktec-k8-plus-for-proxmox/) covers its i226V networking hardware. If you're chasing a different networking issue, our [Wake-on-LAN troubleshooting guide](/posts/proxmox-wake-on-lan-not-working/) covers another common class of NIC problems.*
+*Running a GMKtec K8 Plus or another dual-2.5GbE mini PC? Our [GMKtec K8 Plus Proxmox analysis](/posts/gmktec-k8-plus-for-proxmox/) covers its i226-class networking hardware without treating this I225-V report as proof of an identical fault. If you're chasing a different networking issue, our [Wake-on-LAN troubleshooting guide](/posts/proxmox-wake-on-lan-not-working/) covers another common class of NIC problems.*

@@ -13,6 +13,7 @@ tags:
 title: "Proxmox Backup Notifications: Get Failed Backup Alerts in
   Telegram"
 TocOpen: false
+lastmod: 2026-09-19
 ---
 
 A Proxmox backup can fail at 2 AM while everything else keeps running
@@ -39,6 +40,10 @@ One message when the backup breaks.
 
 Proxmox VE and Proxmox Backup Server include a notification system that
 can route events to different notification targets.
+
+The exact targets and fields depend on the installed release. Start with
+the current [Proxmox notification system documentation](https://pve.proxmox.com/pve-docs/chapter-notifications.html)
+rather than copying a webhook body from an older release.
 
 Depending on your setup, those targets can include email, Gotify, and
 webhooks.
@@ -146,10 +151,10 @@ node pve1 · 02:14
 After receiving the test alert, you can tell me whether you'd actually
 connect something like this to your Proxmox or PBS server.
 
-**[Send me a test backup
-alert](https://runahomelab-backup-alert-validation-production.up.railway.app/)**
-
-It takes a few seconds and doesn't require connecting your homelab.
+> **Test paused:** the external Telegram validation link has been disabled
+> while its data handling, retention, and deletion process are documented.
+> Do not send Proxmox credentials, backup logs, webhook secrets, or Telegram
+> tokens to an unverified test service.
 
 ## What I'd Build If People Actually Want It
 
@@ -202,8 +207,7 @@ place?**
 If you run Proxmox VE or Proxmox Backup Server and you'd want to know
 immediately when a backup fails:
 
-**[Send me a test Telegram backup
-alert](https://runahomelab-backup-alert-validation-production.up.railway.app/)**
-
-If enough people actually want to connect it to their homelab, I'll
-build the real Proxmox webhook receiver next.
+The validation test will return only after a public privacy note and a
+reviewable description of the data flow are available. Demand for the idea
+can still be evaluated from article engagement without asking readers to
+send identifiers to an undocumented service.

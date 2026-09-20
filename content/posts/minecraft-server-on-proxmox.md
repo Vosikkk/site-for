@@ -1,85 +1,109 @@
 ---
-title: "Minecraft Server on Proxmox: LXC vs VM, Java vs Bedrock"
+title: "Minecraft Server on Proxmox: LXC vs VM, Sizing, Backups"
 date: 2026-08-16
+lastmod: 2026-09-19
 draft: false
-description: "Host a Minecraft server on Proxmox. LXC vs VM, Java vs Bedrock, RAM/CPU starting points, and how Crafty Controller fits in."
-tags: ["proxmox", "homelab", "self-hosting", "minecraft"]
+description: "Plan a Minecraft server on Proxmox without fake player-count promises: LXC vs VM, starting resources, Paper, Bedrock, isolation, and real backups."
+tags: ["minecraft", "proxmox", "homelab", "self-hosting"]
 ShowToc: true
-TocOpen: true
+TocOpen: false
 ---
 
-Hosting your own Minecraft server on Proxmox gives you something no rented game server can: dedicated resources that aren't shared with strangers, snapshots you can roll back before a risky mod update, and zero monthly hosting fees beyond the electricity your home lab already uses.
+Minecraft can run well in a Proxmox lab, but there is no honest universal answer to “how many players?” Server version, world generation, simulation distance, plugins, mods, CPU single-thread performance, storage latency, and simultaneous host workloads all matter.
 
-The two decisions that actually matter before you start: **LXC or VM**, and **Java or Bedrock**. Get those right and the rest of the setup is straightforward.
+> **Evidence note:** This guide uses upstream project documentation and conservative planning estimates. RunAHomeLab has not benchmarked a fixed Minecraft workload across the hardware discussed here. Treat resource allocations as starting points and measure your own server. See the [research methodology](/methodology/).
 
 ## LXC or VM?
 
-This is the first fork in the road, and the answer depends on which edition you're running.
+An unprivileged LXC can be a resource-efficient home for a Java server when you are comfortable with Linux containers and their shared host kernel. A VM gives a stronger virtualization boundary and a complete guest kernel, at the cost of more memory and storage overhead.
 
-**Use an LXC container for Java Edition.** Java Edition runs on the JVM, which doesn't need direct hardware access — an unprivileged LXC container gives you nearly bare-metal performance with a fraction of the overhead of a full VM. Boot time is seconds, not minutes, and resource allocation is more flexible since containers share the host's kernel.
+Choose based on the operational need:
 
-**Use a VM for Bedrock Edition**, or if you want stronger isolation regardless of edition. Bedrock's dedicated server binary has occasionally had quirks running inside containers depending on the base image, and a VM sidesteps that entirely. A VM is also the safer choice if you're planning to let other people (kids, friends) manage the server themselves — full isolation means a misconfigured server can't affect anything else on your Proxmox host.
+| Situation | Usually the simpler starting point |
+|---|---|
+| Small Java server administered by the host owner | Unprivileged LXC or VM |
+| Untrusted users receive administrative access | VM with restricted Proxmox/network access |
+| Modpack or installer assumes a full OS | VM |
+| Bedrock Dedicated Server | LXC can work, but a VM may reduce container-specific troubleshooting |
+| Lowest guest overhead is the priority | LXC |
 
-If you're not sure, default to LXC for Java. It's what most of the home lab community settles on, and the performance difference is real, not theoretical.
+Neither option is automatically secure. An LXC shares the host kernel; a VM still needs patching, firewalling, credential controls, and safe Proxmox permissions.
 
-## Java Edition or Bedrock Edition?
+## Starting Resource Plan
 
-- **Java Edition** supports mods (Forge, Fabric) and plugins (Paper, Spigot) and has by far the largest server-side community and documentation. If you or your players want mods, shaders, or specific gameplay plugins, this is the only real option.
-- **Bedrock Edition** runs natively on consoles, mobile, and Windows, and is lighter on server resources since there's no JVM overhead. Choose this if most of your players are on phones, tablets, or consoles rather than a gaming PC.
+Use these as initial allocations, then observe tick time, CPU saturation, garbage collection, memory use, and disk latency:
 
-Paper (a high-performance fork of the standard Java server) is the practical default for most home lab setups — it's a drop-in replacement for vanilla Java Edition with substantially better performance and plugin support.
+| Workload | vCPU | Guest RAM | Storage |
+|---|---:|---:|---:|
+| Small vanilla/Paper Java server | 2–4 | 4–6 GB | 20 GB+ |
+| Light plugins or a larger active world | 4 | 6–8 GB | 30 GB+ |
+| Modded pack | 4+ | 8–16 GB | 40 GB+ |
 
-## Resource Allocation: What You Actually Need
+Do not assign every host core or all physical RAM to one guest. Proxmox and the other workloads need headroom, and Minecraft often depends more on the performance of busy threads than on a large nominal core count.
 
-A common mistake is either wildly overallocating (an entire mini PC for one small survival world) or underallocating (trying to run a modded server on 2GB of RAM). Realistic numbers:
+There is intentionally no “20+ players” promise here. Test the real Minecraft version, view/simulation distance, plugins, world, and player behavior you expect.
 
-| Server size | RAM | CPU cores | Notes |
-|---|---|---|---|
-| Small (1-5 players, vanilla/Paper) | 2-4GB | 2 | Comfortable headroom for a survival world |
-| Medium (5-15 players, some plugins) | 4-6GB | 2-4 | Paper handles this well with proper JVM flags |
-| Modded (Forge/Fabric, 1-10 players) | 6-8GB+ | 4 | Modpacks are significantly heavier than vanilla or Paper |
+## Java Edition
 
-With a Paper server and the right JVM flags, even a modest 4-core allocation can comfortably host 20+ players on a non-modded server — the JVM tuning matters more than raw core count for Java Edition specifically.
+For a new Java server:
 
-## Setting Up the LXC Container
+1. Create an unprivileged Linux LXC or a Linux VM.
+2. Install the Java version required by the specific Minecraft/Paper release.
+3. Download the server from the official project source.
+4. Accept the EULA only after reading it.
+5. Set a JVM memory ceiling below the guest's total RAM so the OS and management process retain headroom.
+6. Bind the service only to the intended interface and open only the ports you need.
 
-1. Create an unprivileged LXC container using a Debian or Ubuntu template — 4GB RAM, 2 CPU cores, and 8GB of disk space is a reasonable starting point for a small server.
-2. Update the container and install a Java runtime matching your server version's requirements (recent Minecraft versions need a recent JDK — check the specific version's requirements before installing, since this changes across Minecraft releases).
-3. Open the default Minecraft port (25565/TCP) in the container's firewall if you've enabled one.
-4. Download the server jar (Paper's official downloads page is the standard source if you're using Paper) into the container.
-5. Run the server once to generate the initial files, accept the EULA in `eula.txt`, then start it for real with appropriately sized JVM memory flags matching the RAM you allocated to the container.
+Paper can offer performance and configuration options beyond the vanilla server, but it is not a guarantee that slow hardware will meet a chosen player count. Follow the current [Paper documentation](https://docs.papermc.io/paper/getting-started/) rather than copying old JVM flags from an undated forum post.
 
-## Managing Minecraft on Proxmox with Crafty Controller
+## Bedrock Edition
 
-A raw Paper or Vanilla server is easy to keep running with SSH and a systemd unit. Once you want a browser UI, multiple worlds, file management, logs, scheduled backups, or start/stop controls for someone who should not have shell access, a management layer becomes useful.
+Microsoft distributes the [Bedrock Dedicated Server](https://www.minecraft.net/en-us/download/server/bedrock) separately from the Java server. It uses different software and network defaults. Keep the Java and Bedrock instructions separate, and verify the current supported operating system and port requirements in the official download documentation.
 
-[Crafty Controller on Proxmox LXC](/posts/crafty-controller-proxmox-lxc/) adds that layer without changing the LXC-vs-VM decision above. For a small Java server, you can run Crafty and the Minecraft server in the same LXC as long as you leave memory for the panel and the OS. If you plan to run several worlds or a heavy modpack, size the container for the JVMs rather than the web UI.
+## Management Panel
 
-If you only run one stable Paper server and are comfortable with SSH, Crafty is optional. It is a convenience and management tool, not a requirement for hosting Minecraft on Proxmox.
+If you want a web UI, multi-server management, file editing, and scheduled server-side backups, [Crafty Controller on Proxmox](/posts/crafty-controller-proxmox-lxc/) is one option. A panel adds convenience and another component to patch; it does not replace a backup target or host security.
 
-## Common Pitfalls
+## Backups: Preserve the World Outside the Guest
 
-- **Forgetting to enable the QEMU guest agent** if you went the VM route instead of LXC — without it, Proxmox can't cleanly shut down the VM, and scheduled restarts will hang. (We cover this in detail in our [guest agent troubleshooting guide](/posts/proxmox-guest-agent-not-running-fix/) if you hit that specific error.)
-- **Under-provisioning RAM for modded servers** — modpacks routinely need 2-3x the RAM a vanilla server would, and running out mid-game causes crashes that corrupt world saves more often than people expect.
-- **Not setting up automated backups before players join.** Proxmox snapshots are trivial to schedule and take seconds — set this up before you have a world worth losing, not after.
-- **Running the server on the same VM/container as other exposed services.** Keep it isolated. If a player-facing service has a vulnerability, you don't want it sharing a blast radius with your password manager or photo library.
+Use the Minecraft server's own save/flush controls or stop the service before copying a world when consistency matters. Keep at least one copy outside the VM/LXC and outside the Proxmox node.
 
-Want a web UI on top of the LXC instead of managing `server.jar` over SSH? See [Crafty Controller on Proxmox LXC](/posts/crafty-controller-proxmox-lxc/).
+A Proxmox snapshot is useful for short-term rollback. It is not an independent backup when it lives on the same storage and host as the original. A practical plan combines:
 
-## FAQ
+- application-aware world backups;
+- Proxmox backup jobs to separate storage;
+- at least one off-node or offline copy for important worlds;
+- periodic restore tests.
 
-**Do I need to port forward for friends to join?**
-Yes, unless you're using a tool like Tailscale to give friends access to your home network directly. Port forwarding 25565 on your router to your LXC container's or VM's internal IP is the traditional approach; be aware this does expose the port to the internet, so keep the server software updated.
+## QEMU Guest Agent
 
-**Can I run multiple Minecraft servers on the same Proxmox host?**
-Yes — this is one of the strongest arguments for LXC over VM here, since containers are lightweight enough that running 2-3 small servers (say, a survival world and a creative build server) on modest hardware is completely realistic.
+If you choose a VM, QEMU Guest Agent is useful for guest information and supported management/backup coordination, but a missing agent does not make every normal shutdown impossible. Proxmox can also send a virtual ACPI power-button request when the guest supports it.
 
-**Should I use Crafty Controller?**
-Use it if you want a browser panel, multiple worlds, or you are not the only person who restarts the server. A single Paper instance is fine with systemd.
+Install and enable the agent when you want those integrations, and use the [guest-agent troubleshooting guide](/posts/proxmox-guest-agent-not-running-fix/) if Proxmox cannot communicate with it. LXC containers do not use `qemu-ga`.
 
-**How much does this actually save compared to a paid Minecraft hosting service?**
-Paid hosting for a comparable server (4-8GB RAM) typically runs $10-20/month. On home lab hardware you already own, the electricity cost for that allocation is usually under $2/month — the math favors self-hosting quickly if you're already running a home lab for other services.
+## Cost: Calculate, Do Not Guess
 
----
+Hosting prices and electricity rates vary too much for a durable `$10–20/month` or “under $2” promise. Estimate the home-server energy cost from a measured wall-power average:
 
-*New to home labs? Our [beginner's guide](/posts/best-home-lab-for-beginners-2026/) and [$350 example Proxmox build](/posts/example-350-proxmox-homelab-build/) cover the foundation this guide builds on.*
+```text
+monthly kWh = average watts × 24 × 30 ÷ 1000
+monthly cost = monthly kWh × local electricity rate
+```
+
+Include the entire always-on system, network gear, storage, and backup target when comparing self-hosting with a rented server. Also value your maintenance time and the reliability of your home connection.
+
+## Common Failure Points
+
+- allocating all guest RAM to `-Xmx` and leaving no OS headroom;
+- expecting a player count from RAM alone;
+- generating a large new world while other CPU-heavy services are busy;
+- exposing the game or management panel more broadly than intended;
+- giving friends or children Proxmox administrator access instead of scoped game administration;
+- calling a same-disk snapshot a backup;
+- using outdated Java or tuning instructions for a newer server release.
+
+## What to Measure
+
+After deployment, record the Minecraft version, Java version, plugins/modpack, view and simulation distance, online players, host CPU model, guest allocation, and other host workloads. Without that context, a performance claim is not reusable evidence.
+
+If you are starting from zero, the [beginner homelab guide](/posts/best-home-lab-for-beginners-2026/) and [$350 Proxmox reference build](/posts/example-350-proxmox-homelab-build/) explain the underlying host trade-offs.

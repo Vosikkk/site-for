@@ -17,6 +17,13 @@
   };
 
   function sendEvent(name, parameters) {
+    let consent = null;
+    try {
+      consent = localStorage.getItem("runahomelab_analytics_consent");
+    } catch (_) {
+      return;
+    }
+    if (consent !== "granted") return;
     if (typeof window.gtag !== "function") return;
 
     try {

@@ -1,0 +1,14 @@
+{{- if .IsPage -}}
+{{- $sameAs := slice site.Params.authorLinkedIn "https://github.com/Vosikkk" -}}
+<script type="application/ld+json">
+{{ dict
+  "@context" "https://schema.org"
+  "@type" "Person"
+  "@id" (printf "%s#author" site.Params.authorURL)
+  "name" site.Params.author
+  "url" site.Params.authorURL
+  "sameAs" $sameAs
+  | jsonify | safeJS
+}}
+</script>
+{{- end -}}

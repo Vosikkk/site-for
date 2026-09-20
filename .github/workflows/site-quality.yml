@@ -1,0 +1,17 @@
+name: Site quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  content-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate claims, affiliate tags, and disclosures
+        run: python3 scripts/validate-content.py

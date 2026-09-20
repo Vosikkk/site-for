@@ -1,101 +1,124 @@
 ---
 title: "GMKtec K8 Plus for Proxmox: Specs, Limits, Who It’s For"
 date: 2026-08-17
-description: "Is the GMKtec K8 Plus a good Proxmox host? Dual 2.5GbE, two NVMe slots, OCuLink, RAM ceiling, and when a SER8 or used Tiny is smarter."
+lastmod: 2026-09-19
+description: "Research-backed GMKtec K8 Plus Proxmox analysis: dual 2.5GbE, two NVMe slots, OCuLink, passthrough limits, and what remains unverified."
 tags: ["proxmox", "homelab", "hardware", "mini pc"]
 ShowToc: true
 TocOpen: false
 ---
 
-Our [best mini PCs for Proxmox guide](/posts/best-mini-pcs-for-proxmox/) covers why the GMKtec K8 Plus is worth considering — dual 2.5GbE, two NVMe slots, OCuLink expansion. This article goes further: an actual setup and verification walkthrough on this specific hardware, covering the things a spec sheet can't tell you — whether IOMMU actually gives you usable passthrough groups, and what the OCuLink port is realistically good for in a home lab context rather than just gaming.
+> **Evidence note:** This is a research-backed analysis of the GMKtec K8 Plus as a Proxmox host. It combines [GMKtec's system specifications](https://www.gmktec.com/products/gmktec-nucbox-k8-plus-mini-pc-amd-ryzen%E2%84%A2-7-8845hs), [AMD's Ryzen 7 8845HS specifications](https://www.amd.com/en/products/processors/laptop/ryzen/8000-series/amd-ryzen-7-8845hs.html), Proxmox documentation, and attributable owner reports. It is **not** a first-hand RunAHomeLab hardware benchmark. Community reports identify possible failure modes but do not prove that every unit is affected. See the [research methodology](/methodology/).
 
 ## Quick Take
 
-Yes, with one caveat: the K8 Plus earns its recommendation specifically for **networking and expansion-focused home labs** — router/firewall VMs, multi-network topology, OCuLink-based expansion. If your homelab plans don't touch any of that, the SER8 (which we'll cover separately) is the simpler, quieter choice for the same core hardware.
+The K8 Plus is a **conditional recommendation** for a Proxmox lab that will use its expansion: dual 2.5GbE, two M.2 storage positions, and OCuLink. If the lab only needs one Ethernet port and one system drive, a simpler mini PC or a used business system may offer better value.
 
-## Installing Proxmox on the K8 Plus
+The important distinction is between documented capability and verified behavior. The Ryzen 7 8845HS supports AMD virtualization, but CPU support alone does not guarantee convenient IOMMU grouping, reliable iGPU reset behavior, or compatibility with every OCuLink device.
 
-Standard installation, no surprises: boot the Proxmox VE installer from USB, and the NVMe drive(s) show up normally during setup. Two things specific to this hardware worth flagging before you start:
+## What Is Verified
 
-- **Secure Boot**: if your BIOS ships with Secure Boot enabled by default, disable it before installing, or you'll hit signature verification issues with some kernel modules later — this is a general Proxmox-on-consumer-hardware issue, not specific to GMKtec, but worth checking on first boot into BIOS.
-- **Network interface naming**: the dual Intel i226V ports will show up as separate interfaces (typically `enp` names rather than the old `eth0`/`eth1` convention) — note which physical port maps to which interface name before you start configuring bridges, since they're not always in the order you'd expect from the port labels.
+As reviewed on September 19, 2026, GMKtec lists the K8 Plus with a Ryzen 7 8845HS, Radeon 780M graphics, dual 2.5GbE, two M.2 2280 storage positions, OCuLink, two DDR5-5600 SO-DIMM slots with support up to 128GB, and Wi-Fi 6E. Published limits and retailer listings have differed over time, so confirm the exact configuration and supported memory before ordering. AMD documents the 8845HS as an 8-core/16-thread processor with AMD-V and DDR5 support.
 
-## Verifying IOMMU Actually Works
+Those are platform and system specifications. They do not establish Proxmox throughput, sustained thermals, acoustics, or passthrough reliability on their own.
 
-This is the step that matters most if your interest in this machine is PCI passthrough (for an eGPU via OCuLink, for a NIC, for anything else).
+## Installing Proxmox: What to Check
 
-**Important AMD-specific detail:** on modern AMD platforms like the Ryzen 7 8845HS in this machine, IOMMU (AMD-Vi) is enabled in the kernel by default — you generally don't need to add `amd_iommu=on` to your kernel parameters the way older guides suggest. That flag is an Intel-era instruction that gets silently ignored on AMD systems. What you *do* need is to make sure **SVM and IOMMU are enabled in BIOS** — check under CPU or chipset settings, sometimes labeled differently by GMKtec's BIOS than you might expect from other brands.
+Run the current Proxmox VE installer and verify the exact hardware before building bridges or passthrough rules:
 
-Verify IOMMU is actually active:
-
-```
-journalctl -b 0 | grep -i iommu
-```
-
-You should see AMD-Vi initialization messages. If you see nothing, the BIOS setting is the first thing to check — not the kernel parameter.
-
-Then check your actual IOMMU groups (this is the part that determines whether passthrough will realistically work):
-
-```
-for d in /sys/kernel/iommu_groups/*/devices/*; do n=${d#*/iommu_groups/*}; n=${n%%/*}; printf 'IOMMU group %s ' "$n"; lspci -nns "${d##*/}"; done
+```bash
+lspci -nn
+ip -br link
+lsblk -o NAME,MODEL,SIZE,TYPE
 ```
 
-What you're looking for: whether the device you want to pass through (an OCuLink-connected eGPU, for example) sits in its own IOMMU group, or is grouped together with other devices you can't separate it from. Devices sharing a group can't be split between the host and a VM, or between two VMs — this is the single most common reason passthrough setups fail, and it's a hardware/chipset behavior, not something you can fix in software.
+Map each physical Ethernet jack to its Linux interface rather than assuming the firmware or chassis order matches the interface names.
 
-## OCuLink: What It's Actually Good For in a Home Lab
+### Secure Boot
 
-The OCuLink port gets marketed mainly for eGPU gaming setups, but in a home lab context it has a more specific use: passing through a GPU to a single VM for something like a media transcoding workload, an AI/ML experiment, or a gaming VM alongside your other services — without needing a PCIe riser or open-air case modification the way desktop eGPU passthrough often does.
+Do not disable Secure Boot as a universal first step. Current Proxmox VE supports Secure Boot with its signed boot chain. A third-party or locally built kernel module can still require additional signing or a different Secure Boot decision, so follow the current [Proxmox Secure Boot documentation](https://pve.proxmox.com/pve-docs/chapter-sysadmin.html#sysboot_secure_boot) for the software you actually install.
 
-One hardware limitation worth knowing before you buy anything to plug into it: **GMKtec's own documentation notes the OCuLink port is not hot-pluggable** — connect or disconnect an OCuLink device only with the machine powered off. Factor that into how you plan to use it; it's not a "plug in whenever" port like USB4.
+## IOMMU and Passthrough
 
-## Dual 2.5GbE: Testing It as a Router/Firewall Host
+Enable the relevant virtualization and IOMMU options in firmware, then confirm what the running kernel detected:
 
-This is the feature that most separates the K8 Plus from single-NIC mini PCs, and it's worth being specific about what it enables rather than just restating "dual 2.5GbE" as a spec.
+```bash
+journalctl -b 0 | grep -Ei 'AMD-Vi|IOMMU'
+```
 
-The practical home lab use case: running a router/firewall VM (pfSense or OPNsense) with one 2.5GbE port as WAN and the other as LAN, giving you a real hardware-separated router running as a VM rather than sharing a single physical interface across VLANs. If you want to verify your own throughput once it's set up, `iperf3` between two points on your network is the standard tool — run a server on one end and client on the other, and you'll get real numbers for your specific setup rather than trusting a marketing spec or someone else's benchmark from different network conditions.
+Inspect the real IOMMU groups on the exact BIOS and Proxmox version you are using:
 
-## Thermals in Practice
+```bash
+for d in /sys/kernel/iommu_groups/*/devices/*; do
+  n=${d#*/iommu_groups/*}
+  n=${n%%/*}
+  printf 'IOMMU group %s ' "$n"
+  lspci -nns "${d##*/}"
+done
+```
 
-The K8 Plus uses a dual-fan cooling setup with the Ryzen 7 8845HS configurable across 35W to 70W TDP profiles in BIOS. For a 24/7 home lab host (as opposed to gaming, which is more bursty), running a lower or "balanced" power profile rather than the maximum performance mode is worth trying first — you lose little for typical virtualization workloads and gain meaningfully on noise and heat over years of continuous operation. Check your BIOS's power/performance mode setting after installation and adjust based on your actual workload rather than defaulting to maximum performance.
+`amd_iommu=on` is an AMD kernel parameter, not an “Intel-era” option. Do not add or remove kernel parameters by folklore: check the current Proxmox and kernel documentation and first verify whether AMD-Vi already initialized on your installation.
 
-## Known Issues & Community Reports
+Devices in one IOMMU group normally share an isolation boundary. Passing through an OCuLink-connected device therefore depends on the actual group layout, firmware, device, and VM configuration—not merely on the presence of an OCuLink connector.
 
-The K8 Plus's dual NIC is built on Intel's i226V, which uses the same `igc` kernel driver family as the older I225-V. There are active community threads (Proxmox forum, July–August 2026) reporting a NETDEV watchdog reset loop on this driver family specifically on Proxmox's newer 7.0.x kernel series — the interface repeatedly times out, resets, and renegotiates the link, cycling roughly every 10 seconds. Reports describe the same hardware working stably on the older 6.17.x kernel line, with no fix identified yet as of this writing. We haven't reproduced this ourselves on the K8 Plus specifically, and it's not confirmed whether i226V is affected in the same way as I225-V — but if you hit unexplained NIC drops after a kernel update on this machine, checking `dmesg` for repeated "NETDEV WATCHDOG" and "Reset adapter" lines is worth doing before assuming a hardware fault, and pinning back to a 6.17.x kernel is the community-reported workaround while this is unresolved.
+## OCuLink: Useful, but Not a Promise
 
-Beyond that, we haven't seen widespread complaints specific to this unit beyond the general Proxmox-on-consumer-hardware Secure Boot and interface-naming quirks already covered above.
+OCuLink exposes PCIe connectivity and can be useful for a dedicated GPU or another compatible PCIe device. It is not a general-purpose hot-plug port. Power the system and attached hardware down before changing the connection unless both vendors explicitly document a safe procedure.
 
-## What We Cannot Confirm
+For a Proxmox purchase, treat OCuLink passthrough as a project to validate, not a guaranteed appliance feature. Budget for the dock or adapter, its power supply, and troubleshooting time.
 
-We tested Secure Boot behavior, IOMMU group layout, and basic 2.5GbE throughput firsthand on this unit. We have not independently verified:
+## Dual 2.5GbE
 
-- **Long-term thermal behavior** under sustained 24/7 load over months, as opposed to the shorter testing window covered here
-- **Noise levels in absolute terms** (dB at a measured distance) — the guidance above is based on relative behavior between power profiles, not measured acoustic figures
-- **Whether the NETDEV watchdog issue described above actually affects this unit's i226V chips** — the community reports we found concern I225-V primarily, with I226 mentioned as a related but not confirmed-identical case
+Two physical interfaces can support a router/firewall VM, separated lab networks, or a management/storage split. They do not make a virtualized router automatically resilient: the host, bridge configuration, and VM remain part of the failure domain.
 
-If you've run this specific machine long-term and have data on any of these, we'd genuinely like to hear about it.
+Measure your own network path with a tool such as `iperf3`, using suitable peers and cabling. A 2.5GbE link rate is not the same as an independently verified end-to-end throughput result.
 
-## Who This Machine Is Actually For
+The K8 Plus uses Intel i226-class networking according to the system listing. The related `igc` driver also supports I225-family controllers. A documented I225-V reset-loop report on a different system does **not** prove the K8 Plus i226 controller has the same defect; use the [I225-V investigation](/posts/intel-i225v-proxmox-ve9-reset-loop-verified/) only as a diagnostic pattern if logs show repeated `NETDEV WATCHDOG` or adapter resets.
 
-**Good fit:**
+## Thermals and Noise
 
-- You want to run a router/firewall VM as part of your lab
-- You're planning any PCI passthrough (eGPU, capture card, dedicated NIC)
-- You want room to add an external OCuLink device later without buying new hardware
+The 8845HS can operate across configurable power limits, but RunAHomeLab has not measured K8 Plus temperature, acoustic level, or sustained Proxmox performance. Start with a balanced vendor power profile, monitor the actual host, and change one variable at a time:
 
-**Better off with something simpler (like the SER8):**
+```bash
+sensors
+journalctl -k -b | grep -Ei 'thermal|throttl'
+```
 
-- Single-node lab with no networking experimentation planned
-- Noise is a bigger priority than expansion headroom
-- You don't have a specific passthrough use case in mind
+Manufacturer fan design and power-profile options are specifications, not proof of bedroom-safe noise or long-term thermal behavior.
 
-## FAQ
+## Community Evidence: 8845HS iGPU Passthrough
 
-**Do I need to buy anything extra to use the OCuLink port, or does it work out of the box?** The port itself is built in and functional immediately, but you need a separate OCuLink-to-PCIe adapter or eGPU dock to actually connect something to it — the port alone doesn't include one.
+One K8 Plus owner reported that 8845HS iGPU passthrough could become unreliable after a guest shutdown and that the attempted Radeon reset workarounds were not reliable for their configuration. The report is useful as a buying warning for anyone whose purchase depends on repeatedly switching the iGPU between guests, but it is one configuration—not a population-wide failure rate. Read the [original Proxmox forum report](https://forum.proxmox.com/threads/8845hs-igpu-passthrough.167195/) before deciding whether that use case is acceptable.
 
-**Does enabling IOMMU in BIOS affect performance if I'm not using passthrough?** No measurable impact for typical home lab workloads. There's no reason to leave it disabled even if you're not using passthrough yet — better to have it available for when you do.
+## What Remains Unverified by RunAHomeLab
 
-**Is the fan noise noticeable in a home office or bedroom setup?** This depends heavily on which power profile you run and your case's placement/airflow — running a lower TDP profile (discussed above) is the most effective lever if noise matters to you, more so than any physical placement trick.
+- Proxmox installation behavior on every current BIOS revision
+- the exact IOMMU group layout for every attached OCuLink device
+- sustained 24/7 temperature and fan behavior
+- measured 2.5GbE throughput and packet-loss behavior
+- stable iGPU reset across repeated guest start/stop cycles
+- long-term failure rates
 
----
+These unknowns are why the recommendation remains conditional.
 
-*This is the expandable pick from our [best mini PC for Proxmox](/posts/best-mini-pcs-for-proxmox/) guide. If you want quiet more than dual NIC, look at the SER8 section there.*
+## Who It Is For
+
+**Potentially a good fit:**
+
+- you need two physical 2.5GbE interfaces;
+- you want two internal M.2 storage positions;
+- you have a specific OCuLink experiment and accept validation work;
+- you value compactness more than desktop-class expansion.
+
+**Compare another option when:**
+
+- one NIC and one SSD are sufficient;
+- low acoustic risk matters more than expansion;
+- iGPU passthrough must work predictably after guest restarts;
+- a used business PC offers more RAM or storage expansion at the current price.
+
+## Buying Checklist
+
+Before ordering, verify the exact listing's CPU, installed RAM and module count, SSD capacity, seller, warranty, included power supply, and return policy. Prices and bundled configurations change.
+
+The K8 Plus is the expandable candidate in the [best mini PC for Proxmox](/posts/best-mini-pcs-for-proxmox/) guide. It is not automatically the best choice just because its specification list is longer.

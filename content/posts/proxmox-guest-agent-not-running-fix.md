@@ -2,13 +2,14 @@
 title: "Proxmox QEMU Guest Agent Not Running: Linux & Windows Fix"
 description: "Fix 'QEMU guest agent is not running' and 'A dependency job for qemu-guest-agent.service failed' on Ubuntu, Debian, RHEL or Windows."
 tags: ["proxmox", "troubleshooting", "qemu", "windows", "ubuntu"]
+lastmod: 2026-09-19
 ---
 
 If Proxmox says **QEMU guest agent is not running**, reinstalling the agent is often not the fix.
 
-First check that the agent is enabled in Proxmox, confirm the service is running inside the VM, then **fully stop and start the VM from Proxmox**. A reboot from inside Linux or Windows may not recreate the virtio-serial channel the guest agent needs.
+First check that the agent is enabled in Proxmox, confirm the service is running inside the VM, and verify the virtio-serial channel. If the option was enabled while the VM was running and the channel is absent, a full stop and start from Proxmox is a sensible next step; reinstalling the guest package cannot create a missing host-side virtual device.
 
-If Linux reports **A dependency job for qemu-guest-agent.service failed**, check whether `/dev/virtio-ports/org.qemu.guest_agent.0` exists. When that device is missing, enabling the agent in Proxmox and cold-starting the VM is the important fix; reinstalling the package cannot create the virtual device.
+If Linux reports **A dependency job for qemu-guest-agent.service failed**, check whether `/dev/virtio-ports/org.qemu.guest_agent.0` exists. When that device is missing, first verify the Proxmox VM option and restart the VM from a fully stopped state.
 
 ## Quick fix
 
@@ -169,6 +170,8 @@ qm agent <vmid> ping
 ```
 
 Do not create `/dev/virtio-ports/org.qemu.guest_agent.0` manually. QEMU exposes that virtual device when the VM configuration and startup state are correct. This device-backed service behavior is documented in the [QEMU guest-agent systemd unit](https://gitlab.com/qemu-project/qemu/-/blob/master/contrib/systemd/qemu-guest-agent.service) and the [QEMU Guest Agent documentation](https://www.qemu.org/docs/master/interop/qemu-ga.html).
+
+Proxmox documents the host-side option and supported uses in its [QEMU Guest Agent guide](https://pve.proxmox.com/wiki/Qemu-guest-agent). Package names, unit behavior, and Windows driver paths can change, so confirm the current guest OS and VirtIO documentation before installation.
 
 ## Proxmox Guest Agent not running on Ubuntu / Debian
 
