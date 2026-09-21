@@ -121,4 +121,10 @@ These unknowns are why the recommendation remains conditional.
 
 Before ordering, verify the exact listing's CPU, installed RAM and module count, SSD capacity, seller, warranty, included power supply, and return policy. Prices and bundled configurations change.
 
+### Considering the K8 Plus for Your Proxmox Lab?
+
+If you need dual 2.5GbE, two M.2 storage positions, and OCuLink, check the current configuration, seller, and price before ordering.
+
+**[Check current GMKtec K8 Plus price on Amazon →](https://www.amazon.com/dp/B0DHNTW3H6?tag=minipc-k8-20&utm_source=runahomelab&utm_medium=affiliate&utm_campaign=k8_plus_page&utm_content=buying_checklist_cta)**
+
 The K8 Plus is the expandable candidate in the [best mini PC for Proxmox](/posts/best-mini-pcs-for-proxmox/) guide. It is not automatically the best choice just because its specification list is longer.
