@@ -10,6 +10,8 @@ TocOpen: false
 
 > **Evidence note:** This is a research-backed analysis of the GMKtec K8 Plus as a Proxmox host. It combines [GMKtec's system specifications](https://www.gmktec.com/products/gmktec-nucbox-k8-plus-mini-pc-amd-ryzen%E2%84%A2-7-8845hs), [AMD's Ryzen 7 8845HS specifications](https://www.amd.com/en/products/processors/laptop/ryzen/8000-series/amd-ryzen-7-8845hs.html), Proxmox documentation, and attributable owner reports. It is **not** a first-hand RunAHomeLab hardware benchmark. Community reports identify possible failure modes but do not prove that every unit is affected. See the [research methodology](/methodology/).
 
+{{< affiliate-disclosure >}}
+
 ## Quick Take
 
 The K8 Plus is a **conditional recommendation** for a Proxmox lab that will use its expansion: dual 2.5GbE, two M.2 storage positions, and OCuLink. If the lab only needs one Ethernet port and one system drive, a simpler mini PC or a used business system may offer better value.
