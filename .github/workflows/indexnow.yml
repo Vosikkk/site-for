@@ -1,0 +1,87 @@
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/**'
+      - 'static/**'
+      - 'layouts/**'
+      - 'hugo.toml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notify-indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Wait for site deployment
+        run: sleep 90
+
+      - name: Submit changed URLs to Yandex IndexNow
+        env:
+          INDEXNOW_KEY: rhl-indexnow-20260922-6b45d954e93e6671
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+
+          base = "https://runahomelab.com"
+          key = os.environ["INDEXNOW_KEY"]
+
+          try:
+              changed = subprocess.check_output(
+                  ["git", "diff", "--name-only", "HEAD^", "HEAD"], text=True
+              ).splitlines()
+          except subprocess.CalledProcessError:
+              changed = []
+
+          urls = set()
+          for path in changed:
+              if path.startswith("content/posts/") and path.endswith(".md"):
+                  name = path.rsplit("/", 1)[-1][:-3]
+                  if name != "_index":
+                      urls.add(f"{base}/posts/{name}/")
+              elif path.startswith("content/") and path.endswith(".md"):
+                  rel = path[len("content/"):-3]
+                  if rel.endswith("/_index"):
+                      rel = rel[:-7]
+                  elif rel == "_index":
+                      rel = ""
+                  urls.add(f"{base}/{rel.strip('/')}/" if rel else f"{base}/")
+              elif path.startswith(("layouts/", "static/")) or path == "hugo.toml":
+                  urls.add(f"{base}/")
+
+          if not urls:
+              print("No public page URLs changed; nothing to submit.")
+              raise SystemExit(0)
+
+          payload = json.dumps({
+              "host": "runahomelab.com",
+              "key": key,
+              "keyLocation": f"{base}/{key}.txt",
+              "urlList": sorted(urls)[:10000],
+          }).encode()
+
+          req = urllib.request.Request(
+              "https://yandex.com/indexnow",
+              data=payload,
+              headers={"Content-Type": "application/json; charset=utf-8"},
+              method="POST",
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  print("IndexNow status:", response.status)
+                  print("Submitted URLs:")
+                  print("\n".join(sorted(urls)))
+          except urllib.error.HTTPError as e:
+              print("IndexNow status:", e.code)
+              print(e.read().decode(errors="replace"))
+              if e.code not in (200, 202):
+                  raise
+          PY
