@@ -11,6 +11,12 @@ First check that the agent is enabled in Proxmox, confirm the service is running
 
 If Linux reports **A dependency job for qemu-guest-agent.service failed**, check whether `/dev/virtio-ports/org.qemu.guest_agent.0` exists. When that device is missing, first verify the Proxmox VM option and restart the VM from a fully stopped state.
 
+## Which message do you see?
+
+- **Guest agent not running:** On the **Proxmox host**, first check whether QEMU Guest Agent is enabled for the VM. Start with the [quick fix](#quick-fix).
+- **No guest agent configured:** On the **Proxmox host**, first check **VM → Options → QEMU Guest Agent** is enabled and the change has taken effect. If you enabled it while the VM was running, fully stop and start the VM. See the [VM option check](#make-sure-qemu-guest-agent-is-enabled-in-proxmox) and [configured-agent checks](#no-guest-agent-configured--requires-guest-agent-installed).
+- **A dependency job for qemu-guest-agent.service failed:** **Inside the Linux VM**, first check whether `/dev/virtio-ports/org.qemu.guest_agent.0` exists. Follow the [dependency-failure checks](#fix-a-dependency-job-for-qemu-guest-agentservice-failed).
+
 ## Quick fix
 
 From the Proxmox host:
