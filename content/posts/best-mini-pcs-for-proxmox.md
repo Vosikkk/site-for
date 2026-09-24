@@ -445,6 +445,8 @@ Source: [Proxmox VE hardware requirements](https://www.proxmox.com/en/products/p
 
 A Mini PC isn't automatically the best value.
 
+If you are still choosing between a mini PC, an existing machine, and a used business PC, start with the [home server build planner](/posts/home-server-build-planner/) for a workload-based route.
+
 Used business machines can be excellent homelab hardware.
 
 A used Dell OptiPlex Micro, Lenovo Tiny or HP Mini can offer:

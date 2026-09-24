@@ -142,6 +142,8 @@ That difference may not matter on day one. It matters when the cheapest upgrade 
 
 The comparison should be against a **used office PC**, not necessarily an old rack server. A rack server may be cheap to buy but expensive to power, loud, large, and unnecessary for a first node.
 
+For a decision based on your own services, VM load, and storage expansion needs, use the [home server build planner](/posts/home-server-build-planner/) before choosing a hardware route.
+
 ## Is 16GB Enough, or Should You Buy 32GB?
 
 Start with 16GB when your plan is mainly:

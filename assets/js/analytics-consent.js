@@ -39,6 +39,9 @@
       if (choice === "granted" && typeof window.runahomelabLoadAnalytics === "function") {
         window.runahomelabLoadAnalytics();
       }
+      if (choice === "granted" && typeof window.runahomelabLoadPostHog === "function") {
+        window.runahomelabLoadPostHog();
+      }
     });
   });
 

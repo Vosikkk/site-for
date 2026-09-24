@@ -1,27 +1,27 @@
 ---
 title: "Privacy Policy"
 date: 2026-08-13
-lastmod: 2026-09-19
+lastmod: 2026-09-24
 draft: false
 description: "Privacy Policy for this website."
 ShowToc: false
 ---
 
-Last updated: September 19, 2026
+Last updated: September 24, 2026
 
 This website is a static site. We aim to collect as little data as possible.
 
 ### Analytics
 
-RunAHomeLab uses Google Analytics 4 on an **opt-in** basis only after a visitor chooses **Allow analytics** in the on-site preference notice. If analytics is declined, the Google Analytics script is not loaded.
+RunAHomeLab uses Google Analytics 4 and, when configured, PostHog on an **opt-in** basis only after a visitor chooses **Allow analytics** in the on-site preference notice. If analytics is declined, those analytics scripts are not loaded.
 
-When enabled, Google Analytics may process information such as pages viewed, approximate location derived from IP address, device and browser information, referrer, and interaction events. RunAHomeLab also sends non-personal events for experiments such as the N150 workload checker. We do not intentionally send names, email addresses, server credentials, or other personally identifiable information to Google Analytics.
+When enabled, the analytics providers may process information such as pages viewed, approximate location derived from IP address, device and browser information, referrer, and interaction events. RunAHomeLab also sends coarse interaction events for tools such as the N150 workload checker and home server build planner. PostHog automatic interaction capture is disabled. We do not intentionally send names, email addresses, server credentials, or a detailed hardware profile to either provider.
 
 Your analytics choice is stored locally in your browser. You can change it below; reloading the page will show the choice again.
 
 {{< analytics-preferences >}}
 
-Google acts as the analytics provider. See [Google's privacy policy](https://policies.google.com/privacy) and [Google Analytics data safeguards](https://support.google.com/analytics/answer/6004245) for more information. RunAHomeLab does not sell or rent personal data.
+See [Google's privacy policy](https://policies.google.com/privacy), [Google Analytics data safeguards](https://support.google.com/analytics/answer/6004245), and [PostHog's privacy policy](https://posthog.com/privacy) for more information. RunAHomeLab does not sell or rent personal data.
 
 ### External Links & Affiliate Links
 

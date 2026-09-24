@@ -49,6 +49,8 @@ Hidden costs many beginners forget:
 
 For many beginners, a modern mini PC is a useful starting shape, but a used business PC can offer more memory and storage expansion for the same budget. Choose from the workload and constraints rather than a universal price target.
 
+If you are deciding between reusing a PC, buying a mini PC, or choosing an expandable used machine, use the [home server build planner](/posts/home-server-build-planner/) to compare those routes against your workloads and storage needs.
+
 ### Best Hardware Options for Beginners in 2026
 
 #### 1. Mini PCs (Best Overall Choice)
