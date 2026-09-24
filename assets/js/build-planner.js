@@ -37,15 +37,19 @@
 
     let why;
     if (route === "reuse") {
-      why = "You say you already have a usable or upgradeable PC. Check its actual RAM, drive connections, and workload behavior before paying for a replacement.";
+      why = heavy || expansion ?
+        "Try the PC you own only if it supports the sum of your planned VM memory, host and service headroom, and the required drive bays, connectors, and add-in slots. Check the exact model and run the workloads before treating reuse as sufficient; otherwise compare an expandable PC." :
+        "You say you already have a usable or upgradeable PC. Check its actual RAM, drive connections, and workload behavior before paying for a replacement.";
     } else if (heavy || expansion) {
       why = "Several or heavier VMs, local storage growth, or internal expansion make drive bays, RAM headroom, and upgrade options more useful than the smallest chassis.";
     } else if (priority === "upgrade") {
       why = "You prioritize future upgrades. A business PC is a more flexible starting shape, provided the exact model has the slots and bays you need.";
     } else if (priority === "cost") {
       why = "Compare used business PCs first for initial cost and expansion. Used listings vary, so compare the actual complete system price with a mini PC before buying.";
+    } else if (storage === "uncertain") {
+      why = "Your known workload and smallest/quietest priority make a compact mini PC a provisional route. Your local storage and future expansion needs are unknown, so this does not establish that a mini PC will fit. Estimate the drive count and growth before buying; choose an expandable chassis if those needs require internal space.";
     } else {
-      why = "Your selected workloads do not require several local drives or many full VMs, and compactness matters most. A mini PC is a reasonable starting shape.";
+      why = "You selected limited local storage, no internal expansion requirement, and no heavy VM plan; compactness matters most. A mini PC is a reasonable starting shape if the exact model fits your workloads.";
     }
 
     let mainConstraint;
@@ -57,7 +61,7 @@
     else mainConstraint = "Upgrade headroom and a backup destination, rather than raw CPU speed.";
 
     const ram = heavy ?
-      "Plan around 32–64 GB as a starting range for several or heavier VMs. Add up your intended guest allocations and verify the exact machine’s supported capacity." :
+      "Start with the sum of simultaneous guest RAM allocations plus memory for the host, other services, and headroom. The selected inputs do not establish a required range or upper bound; heavy VM plans can need more than 64 GB. Verify the exact machine’s supported capacity." :
       moderate ?
         "Use 16–32 GB as an initial planning range; favor 32 GB when these services or VMs run together. Verify the applications and guest allocations before buying." :
         "Use 16–32 GB as an initial planning range for light services. Start with what you own if it works; leave room to upgrade if you expect more VMs.";
@@ -80,6 +84,7 @@
     ];
     if (transcoding) verify.push("Jellyfin hardware transcoding for the exact CPU/GPU, codec, operating system, and passthrough path; this tool does not verify it.");
     if (owned !== "none") verify.push("The existing PC’s specifications and real behavior under your workloads; ownership alone does not establish suitability.");
+    if (owned === "suitable" && (heavy || expansion)) verify.push("Before reusing it, confirm that its maximum RAM covers planned guest allocations plus host/services/headroom and that its physical bays, connectors, and slots meet the storage and expansion requirement.");
     if (storage === "uncertain") verify.push("Actual data size and growth before purchasing drives or a chassis.");
 
     const otherRoutes = {
@@ -98,7 +103,9 @@
       alternativeName: ROUTE_NAMES[alternative], why, mainConstraint,
       ram, storageGuidance, upgrade, verify, otherRoutes,
       conflict: priority === "quiet" && (heavy || expansion),
-      uncertain: storage === "uncertain" || owned === "uncertain"
+      uncertain: storage === "uncertain" || owned === "uncertain",
+      showN150Reference: route === "mini" && storage === "light" && !input.internalExpansion &&
+        !transcoding && !workloads.immich && !workloads.minecraft && !workloads.other && !heavy
     };
   }
 
@@ -121,6 +128,7 @@
     const form = section.querySelector("[data-planner-form]");
     const result = section.querySelector("[data-planner-result]");
     const validation = section.querySelector("[data-planner-validation]");
+    let invalidControl = null;
     let started = false;
     let hasResult = false;
     let viewed = false;
@@ -144,6 +152,12 @@
       if (hasResult) sendEvent("build_planner_assumption_edit", { field: event.target.name || "workload" });
       const jellyfin = form.querySelector('[name="jellyfin"]');
       form.querySelector("[data-jellyfin-mode]").hidden = !jellyfin.checked;
+      if (invalidControl) {
+        invalidControl.removeAttribute("aria-invalid");
+        invalidControl.removeAttribute("aria-describedby");
+        invalidControl = null;
+        validation.hidden = true;
+      }
       if (hasResult) result.hidden = true;
     });
 
@@ -166,12 +180,25 @@
         priority: get("priority").value
       });
       if (plan.status !== "ready") {
-        validation.textContent = plan.message;
+        const workloadSelected = ["jellyfin", "immich", "home_assistant", "minecraft", "other_services"].some(function (name) { return get(name).checked; });
+        const missing = ["vm", "storage", "owned", "priority"].find(function (name) { return !get(name).value; });
+        invalidControl = !workloadSelected && get("vm").value === "none" ? get("jellyfin") : get(missing || "vm");
+        validation.textContent = invalidControl === get("jellyfin") ?
+          "Select a workload or choose full VMs." :
+          "Answer " + invalidControl.closest("label").firstChild.textContent.trim() + " to get a route.";
         validation.hidden = false;
         result.hidden = true;
+        invalidControl.setAttribute("aria-invalid", "true");
+        invalidControl.setAttribute("aria-describedby", validation.id);
+        invalidControl.focus();
         return;
       }
       validation.hidden = true;
+      if (invalidControl) {
+        invalidControl.removeAttribute("aria-invalid");
+        invalidControl.removeAttribute("aria-describedby");
+        invalidControl = null;
+      }
       currentRoute = plan.route;
       const set = function (key, value) { result.querySelector('[data-output="' + key + '"]').textContent = value; };
       set("route", plan.routeName);
@@ -197,6 +224,7 @@
       result.querySelectorAll("[data-route-links]").forEach(function (group) {
         group.hidden = group.dataset.routeLinks !== plan.route;
       });
+      result.querySelector("[data-n150-reference]").hidden = !plan.showN150Reference;
       result.hidden = false;
       hasResult = true;
       result.focus({ preventScroll: true });

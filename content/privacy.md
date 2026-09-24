@@ -15,7 +15,7 @@ This website is a static site. We aim to collect as little data as possible.
 
 RunAHomeLab uses Google Analytics 4 and, when configured, PostHog on an **opt-in** basis only after a visitor chooses **Allow analytics** in the on-site preference notice. If analytics is declined, those analytics scripts are not loaded.
 
-When enabled, the analytics providers may process information such as pages viewed, approximate location derived from IP address, device and browser information, referrer, and interaction events. RunAHomeLab also sends coarse interaction events for tools such as the N150 workload checker and home server build planner. PostHog automatic interaction capture is disabled. We do not intentionally send names, email addresses, server credentials, or a detailed hardware profile to either provider.
+When enabled, the analytics providers may process information such as pages viewed, approximate location derived from IP address, device and browser information, referrer, and interaction events. RunAHomeLab also sends coarse interaction events for tools such as the N150 workload checker and home server build planner. PostHog automatic interaction capture excludes the build planner's controls. We do not intentionally send names, email addresses, server credentials, or a detailed hardware profile to either provider.
 
 Your analytics choice is stored locally in your browser. You can change it below; reloading the page will show the choice again.
 

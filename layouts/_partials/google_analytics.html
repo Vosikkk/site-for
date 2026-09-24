@@ -2,7 +2,7 @@
 <script>
 (() => {
   const storageKey = "runahomelab_analytics_consent";
-  const measurementId = {{ . | jsonify }};
+  const measurementId = {{ . | jsonify | safeJS }};
 
   window.runahomelabLoadAnalytics = function () {
     if (window.runahomelabAnalyticsLoaded) return;

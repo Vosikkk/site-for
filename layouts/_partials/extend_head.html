@@ -36,7 +36,6 @@ window.runahomelabLoadPostHog = function () {
 posthog.init({{ $posthogKey | jsonify | safeJS }}, {
     api_host: {{ $posthogHost | jsonify | safeJS }},
     defaults: '2026-05-30',
-    autocapture: false,
     capture_exceptions: {
         capture_unhandled_errors: true,
         capture_unhandled_rejections: true,

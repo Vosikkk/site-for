@@ -1,5 +1,5 @@
 {{- $id := printf "build-planner-%d" .Ordinal -}}
-<section class="build-planner" data-build-planner aria-labelledby="{{ $id }}-title">
+<section class="build-planner ph-no-capture" data-build-planner aria-labelledby="{{ $id }}-title">
   <div class="build-planner__header">
     <p class="build-planner__eyebrow">Home server build planner</p>
     <h3 id="{{ $id }}-title">Find your starting hardware route</h3>
@@ -16,11 +16,11 @@
         <label><input type="checkbox" name="minecraft"> Minecraft server</label>
         <label><input type="checkbox" name="other_services"> Other containers or services</label>
       </div>
-      <div class="build-planner__subchoice" data-jellyfin-mode hidden>
-        <span>Jellyfin use</span>
+      <fieldset class="build-planner__subchoice" data-jellyfin-mode hidden>
+        <legend>Jellyfin use</legend>
         <label><input type="radio" name="jellyfin_mode" value="direct" checked> Direct play</label>
         <label><input type="radio" name="jellyfin_mode" value="transcoding"> Transcoding</label>
-      </div>
+      </fieldset>
       <label class="build-planner__field">Full virtual machines
         <select name="vm">
           <option value="">Choose one</option>
@@ -60,7 +60,7 @@
       </label>
     </fieldset>
     <button class="build-planner__button" type="submit">Plan my build type</button>
-    <p class="build-planner__error" data-planner-validation role="alert" hidden></p>
+    <p id="{{ $id }}-validation" class="build-planner__error" data-planner-validation role="alert" hidden></p>
   </form>
 
   <div class="build-planner__result" data-planner-result aria-live="polite" tabindex="-1" hidden>
@@ -71,7 +71,7 @@
     <dl>
       <div><dt>Alternative route</dt><dd data-output="alternative"></dd></div>
       <div><dt>Main constraint</dt><dd data-output="constraint"></dd></div>
-      <div><dt>RAM planning range</dt><dd data-output="ram"></dd></div>
+      <div><dt>RAM planning guidance</dt><dd data-output="ram"></dd></div>
       <div><dt>Storage planning</dt><dd data-output="storage"></dd></div>
       <div><dt>Upgrade path</dt><dd data-output="upgrade"></dd></div>
     </dl>
@@ -84,8 +84,8 @@
       <p>Start with the <a href="/posts/best-home-lab-for-beginners-2026/" data-planner-link="guide" data-link-id="beginner">beginner home lab guide</a>. If your current machine runs short, compare the <a href="/posts/example-350-proxmox-homelab-build/" data-planner-link="guide" data-link-id="build350">$350 reference build</a>.</p>
     </div>
     <div class="build-planner__links" data-route-links="mini" hidden>
-      <p>Compare the <a href="/posts/best-mini-pcs-for-proxmox/" data-planner-link="guide" data-link-id="mini_guide">mini PC options and their limits</a>. An existing N150 reference is the <a href="/posts/example-350-proxmox-homelab-build/" data-planner-link="guide" data-link-id="build350">$350 build</a>.</p>
-      <p>If that N150 configuration fits your requirements, <a href="https://www.amazon.com/dp/B09LC9JWVQ?tag=build350-n150-20" rel="sponsored noopener" data-planner-link="product" data-link-id="n150_reference">check the exact current listing</a>. Verify the selected RAM, SSD, seller, warranty, and price; it is an example, not an automatic recommendation.</p>
+      <p>Compare the <a href="/posts/best-mini-pcs-for-proxmox/" data-planner-link="guide" data-link-id="mini_guide">mini PC options and their limits</a> before choosing a model.</p>
+      <p data-n150-reference hidden>For limited local storage and lighter workloads, compare the existing N150 <a href="/posts/example-350-proxmox-homelab-build/" data-planner-link="guide" data-link-id="build350">$350 reference build</a>. If that configuration fits your requirements, <a href="https://www.amazon.com/dp/B09LC9JWVQ?tag=build350-n150-20" rel="sponsored noopener" data-planner-link="product" data-link-id="n150_reference">check the exact current listing</a>. Verify the selected RAM, SSD, seller, warranty, and price; it is an example, not an automatic recommendation.</p>
     </div>
     <div class="build-planner__links" data-route-links="expandable" hidden>
       <p>Use the <a href="/posts/example-350-proxmox-homelab-build/" data-planner-link="guide" data-link-id="used_comparison">new N150 versus used business PC comparison</a> and the <a href="/posts/best-mini-pcs-for-proxmox/" data-planner-link="guide" data-link-id="mini_alternative">mini PC guide</a> before committing to a listing.</p>

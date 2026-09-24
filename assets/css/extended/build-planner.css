@@ -53,13 +53,13 @@
   accent-color: #4f7cff;
 }
 
-.build-planner__subchoice {
+.build-planner fieldset.build-planner__subchoice {
   margin: 10px 0;
   padding: 10px 12px;
   border-left: 2px solid var(--border);
 }
 
-.build-planner__subchoice span { display: block; font-weight: 600; }
+.build-planner__subchoice legend { margin: 0; font-weight: 600; }
 .build-planner__subchoice label { display: inline-flex; gap: 7px; margin: 8px 18px 0 0; cursor: pointer; }
 .build-planner__field { display: block; margin: 12px 0; font-weight: 600; }
 .build-planner__field select {
