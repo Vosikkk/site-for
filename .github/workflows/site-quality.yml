@@ -15,3 +15,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate claims, affiliate tags, and disclosures
         run: python3 scripts/validate-content.py
+      - name: Test home server build planner decisions
+        run: node --test tests/build-planner.test.js
